@@ -62,11 +62,20 @@ jobs:
         shell: msys2 {0}
         run: cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
 
-      - name: Build and gate (Windows)
+      - name: Configure (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: cmake --build build
+
+      - name: Gate (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
         run: |
-          cmake --build build
           ctest --test-dir build
           ./build/modern_star --verify
 
