@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.7.1
+
+- Patch: L1 differential harness (tools/diff_engines.py, frozen
+  36,783-case grid + bounds) and L2 independent anchors
+  (J2000/equinox/ayanamsa-rate). Validation only, no behavior change.
+
 ## 2.7.0
 
 - Minor: second engine — `--engine dos|swisseph` (Swiss Ephemeris

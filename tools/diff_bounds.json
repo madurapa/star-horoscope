@@ -1,0 +1,39 @@
+{
+ "meta": {
+  "methodology": "monthly 1900-01..2100-12 d=1 12:00 x cities 1-15 Nirayana; yearly x 1,7,12 Sayana",
+  "cases": 36783,
+  "quick": false
+ },
+ "max_abs_arcsec": {
+  "Lagna": 150,
+  "Chandra": 376,
+  "Ravi": 167,
+  "Budha": 190,
+  "Sikuru": 220,
+  "Kuja": 279,
+  "Guru": 410,
+  "Shani": 1817,
+  "Raahu": 120,
+  "Kethu": 120,
+  "Urenus": 1427,
+  "Neptune": 407,
+  "Pluto": 4851,
+  "ayanamsa": 118.45439999999456
+ },
+ "worst_at": {
+  "Lagna": "2089-02 city=11 N",
+  "Chandra": "2064-04 city=1 N",
+  "Ravi": "1978-05 city=3 N",
+  "Budha": "2013-05 city=1 N",
+  "Sikuru": "2046-01 city=2 N",
+  "Kuja": "2097-08 city=3 N",
+  "Guru": "2048-12 city=1 N",
+  "Shani": "1983-05 city=1 N",
+  "Raahu": "1900-03 city=14 N",
+  "Kethu": "1900-03 city=14 N",
+  "Urenus": "1935-12 city=1 N",
+  "Neptune": "2096-08 city=1 N",
+  "Pluto": "2100-01 city=1 S",
+  "ayanamsa": "1900-01 city=12 N"
+ }
+}
