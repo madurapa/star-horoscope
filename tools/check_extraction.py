@@ -6,10 +6,13 @@ is either a transcription bug or an extraction bug — both worth knowing.
 """
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = Path("/tmp/strings_check.json")
+# Portable temp dir (tempfile, not /tmp): test processes run native on
+# Windows, where POSIX paths don't resolve.
+OUT = Path(tempfile.gettempdir()) / "strings_check.json"
 r = subprocess.run([sys.executable, str(ROOT / "legacy" / "scripts" / "extract_strings.py"),
                     str(ROOT / "legacy" / "STAR.EXE.asm"), str(OUT)],
                    capture_output=True, text=True)

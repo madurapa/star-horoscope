@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.11
+
+- Patch: portable temp dirs in test tools (tempfile, not /tmp —
+  Windows test processes run native, where POSIX paths fail).
+
 ## 2.8.10
 
 - Patch: CI ctest runs with --output-on-failure so failures

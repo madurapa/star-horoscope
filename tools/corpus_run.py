@@ -7,6 +7,7 @@ Loop: build once, run every case, diff. Exit non-zero on any miss.
 """
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 import os
 
@@ -28,7 +29,9 @@ def find_binary():
         if c.exists():
             return str(c)
     # fall back to building (keep in sync with the CMake modern_star target)
-    out = "/tmp/modern_star.exe" if os.name == "nt" else "/tmp/modern_star"
+    # NOTE: tempfile, not /tmp — test processes run native on Windows.
+    tmpbase = Path(tempfile.gettempdir()) / "star_corpus_build"
+    out = str(tmpbase) + (".exe" if os.name == "nt" else "")
     cmd = ["g++", "-std=c++20", "-O2", "-Wall", "-Wextra", "-Isrc",
            "-Ithird_party/swisseph",
            "src/main.cpp", "src/CLI.cpp", "src/VargaEngine.cpp",
