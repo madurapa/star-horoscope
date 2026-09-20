@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.2
+
+- Patch: CI builds on main pushes (releases still tag-only);
+  MinGW make added for the Windows leg.
+
 ## 2.8.1
 
 - Patch: release-notes convention recorded (every GitHub Release

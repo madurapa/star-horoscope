@@ -7,6 +7,7 @@ name: release
 
 on:
   push:
+    branches: ["main"]  # CI builds only; releases fire on tags (see below)
     tags: ["v*"]
   pull_request:
   workflow_dispatch:
@@ -35,7 +36,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
-          install: mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-python
+          install: mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-python mingw-w64-ucrt-x86_64-make
 
       - name: Configure and build (POSIX)
         if: runner.os != 'Windows'
