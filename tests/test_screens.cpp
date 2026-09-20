@@ -75,6 +75,18 @@ int main(int argc, char* argv[]) {
     const HoroscopeOwner owner{"Test User", 1981, 12, 8, 12, 55};
     const HoroscopeResult h = computeHoroscope(owner, cityByIndex(7).coord, true);
 
+    // Phase-1 array mirror proof: lonByPlanet must equal the map values.
+    for (int i = 0; i < 13; ++i) {
+        const PlanetLongitude& a =
+            h.output.lonByPlanet[static_cast<std::size_t>(i)];
+        const PlanetLongitude& b =
+            h.output.longitudes.at(kPlanetNames[static_cast<std::size_t>(i)]);
+        if (a.ecliptic != b.ecliptic || a.rasiRel != b.rasiRel) {
+            ++g_fail;
+            std::printf("FAIL lonByPlanet[%d]\n", i);
+        }
+    }
+
     checkScreen("screen05", splitLines(renderScreen07(h.output, true)),
                 readLines(screens + "/screen05.txt"));
     checkScreen("screen06", splitLines(renderScreen08(h.output)),

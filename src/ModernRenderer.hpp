@@ -655,10 +655,10 @@ inline std::string renderHouseTable(const AstroEngineOutput& output, int width,
     t.rightCols = {3};  // counts right-aligned
     t.specialCols = {0};
     t.valueCols = {1, 3, 5};
-    for (const std::string& key : houseTableOrder()) {
-        const PlanetLongitude* pl = findLongitude(output, key);
-        if (pl == nullptr) continue;
-        const double dec = pl->ecliptic.toDecimal();
+    for (int i = 0; i < 13; ++i) {
+        const PlanetLongitude& pl =
+            output.lonOf(static_cast<Planet>(i));
+        const double dec = pl.ecliptic.toDecimal();
         std::string nak, pada;
         if (VargaEngine::normUp(dec) <= 360.0) {
             int nak0 = static_cast<int>(dec / 13.333333333333334);
@@ -668,11 +668,10 @@ inline std::string renderHouseTable(const AstroEngineOutput& output, int width,
             pada = std::to_string(nakshatraPada(dec));
         }
         const int rasi = VargaEngine::GetRashiIndex(dec);
-        std::string av;
-        const auto it = output.avastha.find(key);
-        if (it != output.avastha.end()) av = it->second;
-        t.rows.push_back({displayPlanet(key), formatDeg(pl->ecliptic), nak, pada,
-                          rasiName(rasi), formatDeg(pl->rasiRel), av});
+        const std::string av = output.avastha[static_cast<std::size_t>(i)];
+        t.rows.push_back({displayPlanet(kPlanetNames[static_cast<std::size_t>(i)]),
+                          formatDeg(pl.ecliptic), nak, pada,
+                          rasiName(rasi), formatDeg(pl.rasiRel), av});
     }
     out += renderTable(t, width, color, boxed);
     return out;
@@ -684,12 +683,13 @@ inline std::string renderShadvargaNames(const AstroEngineOutput& output, int wid
     Table t;
     t.head = {"Graha", "Rashi", "Navamsa", "Hora", "Drekkana", "Dvadasamsa", "Trimshamsa"};
     t.specialCols = {0};  // seats are rasi names: plain descriptors
-    for (const std::string& key : houseTableOrder()) {
-        const PlanetLongitude* pl = findLongitude(output, key);
-        if (pl == nullptr) continue;
+    for (int i = 0; i < 13; ++i) {
+        const PlanetLongitude& pl =
+            output.lonOf(static_cast<Planet>(i));
         const std::array<int, 6> sv =
-            VargaEngine::GetShadvarga(pl->ecliptic.toDecimal());
-        t.rows.push_back({displayPlanet(key), rasiName(sv[0]), rasiName(sv[1]), rasiName(sv[2]),
+            VargaEngine::GetShadvarga(pl.ecliptic.toDecimal());
+        t.rows.push_back({displayPlanet(kPlanetNames[static_cast<std::size_t>(i)]),
+                          rasiName(sv[0]), rasiName(sv[1]), rasiName(sv[2]),
                           rasiName(sv[3]), rasiName(sv[4]), rasiName(sv[5])});
     }
     out += renderTable(t, width, color, boxed);
@@ -698,9 +698,10 @@ inline std::string renderShadvargaNames(const AstroEngineOutput& output, int wid
 
 inline std::string renderShadvargaHouses(const AstroEngineOutput& output, int width,
                                          bool color, bool boxed = false) {
-    const PlanetLongitude* lagna = findLongitude(output, "Lagna");
-    std::array<int, 6> lagSv = {12, 5, 4, 12, 1, 6};
-    if (lagna != nullptr) lagSv = VargaEngine::GetShadvarga(lagna->ecliptic.toDecimal());
+    // Array read; the old null-fallback was dead (Engine always provides
+    // Lagna; see renderScreen0914 note).
+    std::array<int, 6> lagSv = VargaEngine::GetShadvarga(
+        output.lonOf(Planet::Lagna).ecliptic.toDecimal());
     std::string out =
         sectionTitle("Shadvarga Positions", width, color);
     Table t;
@@ -712,13 +713,14 @@ inline std::string renderShadvargaHouses(const AstroEngineOutput& output, int wi
         if (l < 1 || l > 12) return s;
         return ((s - l + 12) % 12) + 1;
     };
-    for (const std::string& key : houseTableOrder()) {
-        if (key == "Lagna") continue;
-        const PlanetLongitude* pl = findLongitude(output, key);
-        if (pl == nullptr) continue;
+    for (int i = 0; i < 13; ++i) {
+        const Planet p = static_cast<Planet>(i);
+        if (p == Planet::Lagna) continue;
+        const PlanetLongitude& pl = output.lonOf(p);
         const std::array<int, 6> sv =
-            VargaEngine::GetShadvarga(pl->ecliptic.toDecimal());
-        t.rows.push_back({displayPlanet(key), std::to_string(rel(sv[0], lagSv[0])),
+            VargaEngine::GetShadvarga(pl.ecliptic.toDecimal());
+        t.rows.push_back({displayPlanet(kPlanetNames[static_cast<std::size_t>(i)]),
+                          std::to_string(rel(sv[0], lagSv[0])),
                           std::to_string(rel(sv[1], lagSv[1])),
                           std::to_string(rel(sv[2], lagSv[2])),
                           std::to_string(rel(sv[3], lagSv[3])),
@@ -736,10 +738,10 @@ struct ChartSet {
 };
 
 inline ChartSet buildCharts(const AstroEngineOutput& output) {
-    auto seats = [&](const std::string& planet, int varga) {
-        const PlanetLongitude* pl = findLongitude(output, planet);
-        if (pl == nullptr) return 1;
-        return VargaEngine::GetShadvarga(pl->ecliptic.toDecimal())[static_cast<size_t>(varga)];
+    // Phase-1 array read (pmap resolves the legacy string keys).
+    auto seats = [&](Planet p, int varga) {
+        return VargaEngine::GetShadvarga(
+            output.lonOf(p).ecliptic.toDecimal())[static_cast<size_t>(varga)];
     };
     const std::vector<std::string> keys = {"Chandra", "Ravi",   "Budha", "Sikuru", "Kuja",
                                            "Guru",    "Shani",  "Raahu", "Kethu"};
@@ -754,23 +756,23 @@ inline ChartSet buildCharts(const AstroEngineOutput& output) {
                                                 {"Kethu", Planet::Kethu}};
     auto planetSeats = [&](int varga) {
         std::vector<std::pair<std::string, int>> ps;
-        for (const auto& k : keys) ps.push_back({kendraGlyph(pmap.at(k)), seats(k, varga)});
+        for (const auto& k : keys) ps.push_back({kendraGlyph(pmap.at(k)), seats(pmap.at(k), varga)});
         return ps;
     };
     ChartSet c;
-    c.lagna = makeKendra(seats("Lagna", 0), rasiName(seats("Lagna", 0)), "Lagna", planetSeats(0));
-    c.navamsa = makeKendra(seats("Lagna", 1), rasiName(seats("Lagna", 1)), "Navamsa",
+    c.lagna = makeKendra(seats(Planet::Lagna, 0), rasiName(seats(Planet::Lagna, 0)), "Lagna", planetSeats(0));
+    c.navamsa = makeKendra(seats(Planet::Lagna, 1), rasiName(seats(Planet::Lagna, 1)), "Navamsa",
                            planetSeats(1));
-    c.hora = makeKendra(seats("Lagna", 2), rasiName(seats("Lagna", 2)), "Hora", planetSeats(2));
-    c.drekkana = makeKendra(seats("Lagna", 3), rasiName(seats("Lagna", 3)), "Drekkana",
+    c.hora = makeKendra(seats(Planet::Lagna, 2), rasiName(seats(Planet::Lagna, 2)), "Hora", planetSeats(2));
+    c.drekkana = makeKendra(seats(Planet::Lagna, 3), rasiName(seats(Planet::Lagna, 3)), "Drekkana",
                             planetSeats(3));
-    c.dvadasamsa = makeKendra(seats("Lagna", 4), rasiName(seats("Lagna", 4)), "Dvadasamsa",
+    c.dvadasamsa = makeKendra(seats(Planet::Lagna, 4), rasiName(seats(Planet::Lagna, 4)), "Dvadasamsa",
                               planetSeats(4));
-    c.trimshamsa = makeKendra(seats("Lagna", 5), rasiName(seats("Lagna", 5)), "Trimshamsa",
+    c.trimshamsa = makeKendra(seats(Planet::Lagna, 5), rasiName(seats(Planet::Lagna, 5)), "Trimshamsa",
                               planetSeats(5));
-    c.sun = makeKendra(seats("Ravi", 0), rasiName(seats("Ravi", 0)), "Sun", planetSeats(0));
+    c.sun = makeKendra(seats(Planet::Ravi, 0), rasiName(seats(Planet::Ravi, 0)), "Sun", planetSeats(0));
     c.moon =
-        makeKendra(seats("Chandra", 0), rasiName(seats("Chandra", 0)), "Moon", planetSeats(0));
+        makeKendra(seats(Planet::Chandra, 0), rasiName(seats(Planet::Chandra, 0)), "Moon", planetSeats(0));
     return c;
 }
 
@@ -847,12 +849,9 @@ inline KeyRows birthProfileRows(const HoroscopeOwner& owner, const std::string& 
 }
 
 inline KeyRows astroRows(const AstroEngineOutput& output) {
-    double lagnaDec = 0.0;
-    AngularDegrees lagnaRel{};
-    if (const PlanetLongitude* lagnaPl = findLongitude(output, "Lagna")) {
-        lagnaDec = lagnaPl->ecliptic.toDecimal();
-        lagnaRel = lagnaPl->rasiRel;
-    }
+    // Array read; Engine always provides Lagna (see renderScreen07 note).
+    const double lagnaDec = output.lonOf(Planet::Lagna).ecliptic.toDecimal();
+    const AngularDegrees lagnaRel = output.lonOf(Planet::Lagna).rasiRel;
     return {{"Julian Date", formatJulianDate(output.julianDate)},
             {"Ayanamsa", formatDeg(output.ayanamsa)},
             {"Lagna", rasiName(VargaEngine::GetRashiIndex(lagnaDec))},

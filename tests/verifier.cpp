@@ -206,8 +206,11 @@ int main(int argc, char* argv[]) {
         {"Shani", "Nidra"}, {"Raahu", "Upeveshana"}, {"Kethu", "Nethrapani"},
     };
     for (const auto& av : avExp) {
-        const auto it = h.output.avastha.find(av.first);
-        const char* got = (it == h.output.avastha.end()) ? "" : it->second.c_str();
+        int pi = -1;
+        for (int i = 0; i < 13; ++i)
+            if (av.first == kPlanetNames[static_cast<std::size_t>(i)]) pi = i;
+        const char* got =
+            (pi < 0) ? "" : h.output.avastha[static_cast<std::size_t>(pi)].c_str();
         checkStr(("Av-" + av.first).c_str(), got, av.second);
     }
 
@@ -223,7 +226,7 @@ int main(int argc, char* argv[]) {
             {"Lagna", 304, 31, 20}, {"Chandra", 162, 16, 44}, {"Ravi", 145, 31, 46},
             {"Budha", 158, 48, 50}, {"Sikuru", 187, 9, 27}, {"Kuja", 86, 21, 56},
             {"Guru", 111, 53, 32}, {"Shani", 348, 43, 6}, {"Raahu", 304, 29, 39},
-            {"Kethu", 124, 29, 39}, {"Urenus", 41, 45, 50}, {"Neptun", 339, 3, 9},
+            {"Kethu", 124, 29, 39}, {"Urenus", 41, 45, 50}, {"Neptune", 339, 3, 9},
             {"Pluto", 278, 40, 3},
         };
         for (const auto& c : cells) {
@@ -249,7 +252,7 @@ int main(int argc, char* argv[]) {
             ++g_pass;
             std::printf("ok   T3-balance-lord %s\n", kDasaCycle[b3.lordCycleIdx].name);
         }
-        // Note: kDasaCycle uses "Sandu" spelling; Engine aliases cover it.
+        // Note: kDasaCycle uses "Sandu" spelling (dasa-table slot, independent of Engine keys).
         checkYmd("T3-balance", b3.ymd, 8, 3, 14);
         checkStr("T3-day", h3.panchanga.weekday, "Saturday");
         checkStr("T3-neketha", h3.panchanga.nakshatra, "Hata");
@@ -278,7 +281,7 @@ int main(int argc, char* argv[]) {
             {"Lagna", 358, 25, 3}, {"Chandra", 32, 58, 9}, {"Ravi", 256, 7, 53},
             {"Budha", 254, 51, 21}, {"Sikuru", 299, 36, 46}, {"Kuja", 176, 16, 51},
             {"Guru", 212, 6, 53}, {"Shani", 200, 7, 11}, {"Raahu", 114, 26, 34},
-            {"Kethu", 294, 26, 34}, {"Urenus", 241, 19, 21}, {"Neptun", 264, 15, 20},
+            {"Kethu", 294, 26, 34}, {"Urenus", 241, 19, 21}, {"Neptune", 264, 15, 20},
             {"Pluto", 205, 54, 32},
         };
         for (const auto& c : cells) {
@@ -315,7 +318,7 @@ int main(int argc, char* argv[]) {
             {"Lagna", 329, 32, 36}, {"Chandra", 186, 30, 17}, {"Ravi", 169, 43, 46},
             {"Budha", 183, 0, 55}, {"Sikuru", 211, 21, 25}, {"Kuja", 110, 33, 53},
             {"Guru", 136, 5, 26}, {"Shani", 12, 54, 59}, {"Raahu", 328, 41, 32},
-            {"Kethu", 148, 41, 32}, {"Urenus", 65, 57, 43}, {"Neptun", 3, 15, 2},
+            {"Kethu", 148, 41, 32}, {"Urenus", 65, 57, 43}, {"Neptune", 3, 15, 2},
             {"Pluto", 302, 51, 55},
         };
         for (const auto& c : cells) {

@@ -95,17 +95,17 @@ inline const char* avasthaName(int idx) noexcept {
 // PROVENANCE: DECODED (Real48 40/3, inherits AstroTime::kNakshatraSpan).
 inline constexpr double kNakSpanAv = 13.333333333328483;  // real48 40/3 (AstroTime::kNakshatraSpan)
 
-// Full per-run avastha table. modeLon: planet -> MODE longitude in degrees
-// (decimal, any range; negatives wrap up, >= 360 stays raw). Must contain
-// Lagna + the 9 planets. Returns planet -> state ("" for Lagna/outers).
+// Full per-run avastha table. modeLon: Planet-indexed MODE longitudes
+// (decimal, any range; negatives wrap up, >= 360 stays raw). Returns
+// Planet-indexed states ("" for Lagna/outers).
 // e02: precomputed avasthaE02(birth, sunriseTable).
-[[nodiscard]] inline std::map<std::string, std::string> avasthaTable(
-    const std::map<std::string, double>& modeLon, long e02) {
-    // PROVENANCE: DECODED (sub_23A58 call sites in PROGRAM).
-    static const char* const kOrder[10] = {
-        "Lagna", "Chandra", "Ravi", "Budha", "Sikuru",
-        "Kuja", "Guru", "Shani", "Raahu", "Kethu"};
-    std::map<std::string, std::string> out;
+[[nodiscard]] inline std::array<std::string, 13> avasthaTable(
+    const std::array<double, 13>& modeLon, long e02) {
+    // PROVENANCE: DECODED (sub_23A58 call sites in PROGRAM; Planet order preserves the stale-carry sequence).
+    static constexpr Planet kOrder[10] = {
+        Planet::Lagna, Planet::Chandra, Planet::Ravi, Planet::Budha, Planet::Sikuru,
+        Planet::Kuja, Planet::Guru, Planet::Shani, Planet::Raahu, Planet::Kethu};
+    std::array<std::string, 13> out{};
     // PROVENANCE: UNOBSERVED (DF8/DFA stale-carry mechanism undisclosed; inferred from Invalid_Time 9/9).
     long df4 = 0;   // word_27DF4 (nak+1), stale-carry, init 0
     long dfc = 0;   // word_27DFC (rasi), stale-carry, init 0
@@ -113,10 +113,9 @@ inline constexpr double kNakSpanAv = 13.333333333328483;  // real48 40/3 (AstroT
     long dfa = 0;   // word_27DFA (Lagna's DFC)
     bool lagnaValid = false;
     for (int ci = 0; ci < 10; ++ci) {
-        const std::string pl = kOrder[ci];
-        const auto it = modeLon.find(pl);
-        if (it == modeLon.end()) continue;
-        const double raw = it->second;
+        const Planet pl = kOrder[ci];
+        const std::size_t pi = static_cast<std::size_t>(pl);
+        const double raw = modeLon[pi];
         double w = raw;
         while (w < 0.0) w += 360.0;  // normUp
         // Nak finder covers w in [0,360); rasi finder covers w in [0,360]
@@ -135,24 +134,24 @@ inline constexpr double kNakSpanAv = 13.333333333328483;  // real48 40/3 (AstroT
         if (ci == 0) {
             dfa = dfc;
             lagnaValid = (w <= 360.0);
-            out[pl] = "";
+            out[pi] = "";
             continue;
         }
         if (ci == 1) df8 = lagnaValid ? df4 : 0;  // flag anomaly: 0 if Lagna OOR
         if (w > 360.0) {
-            out[pl] = "";
+            out[pi] = "";
             continue;
         }
         const long rasi = dfc;
         const double rel = w - static_cast<double>(rasi - 1) * 30.0;
         const long e00 = static_cast<long>(rel) + 1;  // Trunc(rel)+1
-        const int code = avasthaPlanetCode(pl);
+        const int code = avasthaPlanetCode(kPlanetNames[pi]);
         const long total = df4 * code * e00 + e02 + df8 + (lagnaValid ? dfa : 0);
         if (total < 0) {
-            out[pl] = "";
+            out[pi] = "";
             continue;
         }
-        out[pl] = avasthaName(static_cast<int>(total % 12));
+        out[pi] = avasthaName(static_cast<int>(total % 12));
     }
     return out;
 }

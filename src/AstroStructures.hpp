@@ -88,9 +88,42 @@ enum class Planet : std::uint8_t {
     Shani, Raahu, Kethu, Urenus, Neptune, Pluto
 };
 
+// PROVENANCE: FITTED (Planet order == screen05 house-table order, ex-houseTableOrder).
 inline constexpr std::array<const char*, 13> kPlanetNames{
     "Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja", "Guru",
     "Shani", "Raahu", "Kethu", "Urenus", "Neptune", "Pluto"};
+
+// ---------------------------------------------------------------- Per-slot display names
+// Phase-1 array-indexed storage backbone: one canonical spelling table per
+// (planet, output slot), replacing string-keyed aliases ("Sandu"/"Chandra"/
+// "Chadra", "Rahu"/"Raahu", "Ketu"/"Kethu", "Neptun"/"Neptune", "Rav1"...).
+// Every cell mirrors a tested legacy mapping (see tests/test_slot_names.cpp);
+// behavior change needs re-baselining, never silent edits.
+enum class NameSlot : std::uint8_t { House, Shadvarga, HoraA, HoraB, Dasa, Balance };
+
+// PROVENANCE: FITTED (each cell mirrors a tested legacy mapping; see tests/test_slot_names.cpp).
+[[nodiscard]] inline const char* planetSlotName(Planet p, NameSlot s) noexcept {
+    static const char* const k[13][6] = {
+        // House,     Shadvarga, HoraA,     HoraB,    Dasa,    Balance
+        {"Lagna",  "Lagna",   "",        "",       "",      "Lagna"  },  // Lagna
+        {"Sandu",  "Chandra", "Chandra", "Chadra", "Sandu", "Chandra"},  // Chandra
+        {"Ravi",   "Rav1",    "Ravi",    "Ravi",   "Ravi",  "Rav1"   },  // Ravi
+        {"Budha",  "Budha",   "Budha",   "Budha",  "Budha", "Budha"  },  // Budha
+        {"Sikuru", "Sikuru",  "Sikuru",  "Sikuru", "Sikuru","Sikuru" },  // Sikuru
+        {"Kuja",   "Kuja",    "Kuja",    "Kuja",   "Kuja",  "Kuja"   },  // Kuja
+        {"Guru",   "Guru",    "Guru",    "Guru",   "Guru",  "Guru"   },  // Guru
+        {"Shani",  "Shani",   "Shani",   "Shani",  "Shani", "Shani"  },  // Shani
+        {"Raahu",  "Raahu",   "",        "",       "Rahu",  "Raahu"  },  // Raahu
+        {"Kethu",  "Kethu",   "",        "",       "Ketu",  "Kethu"  },  // Kethu
+        {"Urenus", "Urenes",  "",        "",       "",      "Urenes" },  // Urenus
+        {"Neptun", "Neptune", "",        "",       "",      "Neptune"},  // Neptune
+        {"Pluto",  "Pluuto",  "",        "",       "",      "Pluuto" },  // Pluto
+    };
+    const int pi = static_cast<int>(p);
+    const int si = static_cast<int>(s);
+    if (pi < 0 || pi > 12 || si < 0 || si > 5) return "";
+    return k[pi][si];
+}
 
 // Rasi indices pinned by screen07 numeric matrix (Mesha=1 .. Meena=12).
 // PROVENANCE: FITTED (screen07 numeric matrix).
@@ -157,13 +190,16 @@ struct PlanetLongitude {
 // ---------------------------------------------------------------- Engine output (Phase 4 assert target)
 struct AstroEngineOutput {
     std::map<std::string, PlanetLongitude> longitudes;  // keyed "Lagna","Chandra",...
-    std::map<std::string, std::string> avastha;  // planet -> AVASTHA ("" if blank)
+    // Phase-1 array-indexed storage: same values keyed by Planet instead of
+    // spelling aliases (populated by Engine; consumers migrate one site at
+    // a time, then the alias keys drop).
+    std::array<PlanetLongitude, 13> lonByPlanet{};
+    [[nodiscard]] const PlanetLongitude& lonOf(Planet p) const noexcept {
+        return lonByPlanet[static_cast<std::size_t>(p)];
+    }
+    std::array<std::string, 13> avastha{};  // Planet-indexed AVASTHA ("" if blank)
     double julianDate = 0.0;
     AngularDegrees ayanamsa{};
-
-    [[nodiscard]] const AngularDegrees& get_longitude(const std::string& planet) const {
-        return longitudes.at(planet).ecliptic;
-    }
 };
 
 }  // namespace star

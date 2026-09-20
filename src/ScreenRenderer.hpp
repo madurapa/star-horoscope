@@ -182,14 +182,8 @@ inline std::string renderScreen06() {
     return "\"SAYANA\"  method  or \"NRAYANA\"  method (S/N) ?N";
 }
 
-// Screen order for the Nirayana house table (screen05 spellings).
-// PROVENANCE: FITTED (screen05 planet order/spellings).
-inline const std::vector<std::string>& houseTableOrder() {
-    static const std::vector<std::string> kOrder = {
-        "Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
-        "Guru", "Shani", "Raahu", "Kethu", "Urenus", "Neptune", "Pluto"};
-    return kOrder;
-}
+// (houseTableOrder removed slice C: Planet order + kPlanetNames carry the
+// screen05 sequence; the FITTED tag moved with it.)
 
 // Screen display spelling: Moon prints as "Sandu", Neptune as "Neptun".
 // PROVENANCE: FITTED (screen05 spelling rule).
@@ -199,19 +193,13 @@ inline std::string displayPlanetName(const std::string& key) {
     return key;
 }
 
-// Look up a longitude, accepting Chandra/Sandu and Neptune/Neptun aliases.
+// Canonical-key lookup (harness compat; product paths use lonOf).
+// The old Chandra/Sandu + Neptune/Neptun alias fallbacks dropped with the
+// Engine alias keys (slice C); canonical keys always hit.
 inline const PlanetLongitude* findLongitude(const AstroEngineOutput& output,
                                             const std::string& key) {
     auto it = output.longitudes.find(key);
     if (it != output.longitudes.end()) return &it->second;
-    if (key == "Chandra") {
-        it = output.longitudes.find("Sandu");
-        if (it != output.longitudes.end()) return &it->second;
-    }
-    if (key == "Neptune") {
-        it = output.longitudes.find("Neptun");
-        if (it != output.longitudes.end()) return &it->second;
-    }
     return nullptr;
 }
 
@@ -238,10 +226,13 @@ inline std::string renderScreen07(const AstroEngineOutput& output, bool /*niraya
         "                            NIRAYANA  TABLE  OF HOUSES\n\n"
         "PLANET      LONGITUDE    NEKETH   PADA RASI      RASI LONGITUDE   AVASTHA\n"
         "____________________________________________________________________________\n";
-    for (const std::string& key : houseTableOrder()) {
-        const PlanetLongitude* pl = findLongitude(output, key);
-        if (pl == nullptr) continue;
-        const double dec = pl->ecliptic.toDecimal();
+    // Phase-1 array read: canonical Planet order == houseTableOrder keys;
+    // planetSlotName(House) == displayPlanetName (see test_slot_names).
+    for (int i = 0; i < 13; ++i) {
+        const Planet p = static_cast<Planet>(i);
+        const PlanetLongitude& pl = output.lonOf(p);
+        const char* disp = planetSlotName(p, NameSlot::House);
+        const double dec = pl.ecliptic.toDecimal();
         const double vUp = VargaEngine::normUp(dec);
         // Finder-loop bounds: rasi blocks match w in [0,360] (Meena jbe-360);
         // whole tail blank when out of range (Invalid_Time Lagna-591).
@@ -252,30 +243,28 @@ inline std::string renderScreen07(const AstroEngineOutput& output, bool /*niraya
             // Finder-loop bounds: whole tail (NEKETH/PADA/RASI/rel/AVASTHA)
             // blank; observed Invalid_Time Lagna-591 prints DMS only.
             std::snprintf(row, sizeof(row), "%-8s%3d   %2d     %2d",
-                displayPlanetName(key).c_str(),
-                pl->ecliptic.deg, pl->ecliptic.min, pl->ecliptic.sec);
+                disp,
+                pl.ecliptic.deg, pl.ecliptic.min, pl.ecliptic.sec);
             out += std::string(row) + "\n";
-            if (key == "Lagna") out += "\n";
+            if (p == Planet::Lagna) out += "\n";
             continue;
         }
         int nak0 = static_cast<int>(dec / 13.333333333333334);
         if (nak0 < 0) nak0 = 0;
         if (nak0 > 26) nak0 = 26;
         const int pada = nakshatraPada(dec);
-        const AngularDegrees& rel = pl->rasiRel;  // raw split, no carry
-        const char* avastha = "";
-        const auto avIt = output.avastha.find(key);
-        if (avIt != output.avastha.end()) avastha = avIt->second.c_str();
+        const AngularDegrees& rel = pl.rasiRel;  // raw split, no carry
+        const char* avastha = output.avastha[static_cast<std::size_t>(i)].c_str();
         std::snprintf(row, sizeof(row), "%-8s%3d   %2d     %2d  %-10s %d %-11s%2d   %2d     %2d   %s",
-            displayPlanetName(key).c_str(),
-            pl->ecliptic.deg, pl->ecliptic.min, pl->ecliptic.sec,
+            disp,
+            pl.ecliptic.deg, pl.ecliptic.min, pl.ecliptic.sec,
             nakshatraName(nak0), pada, displayRasiHouse(rasiIdx).c_str(),
             rel.deg, rel.min, rel.sec, avastha);
         std::string line(row);
         while (!line.empty() && (line.back() == ' ' || line.back() == '\t'))
             line.pop_back();
         out += line + "\n";
-        if (key == "Lagna") out += "\n";
+        if (p == Planet::Lagna) out += "\n";
     }
     out += "____________________________________________________________________________\n";
     return out;
@@ -302,11 +291,12 @@ inline std::string renderScreen08(const AstroEngineOutput& output) {
         "SHAD VARGA OF Test User\n\n"
         "GRHAYA    RASHI    NAVAMSAKA    HORA    DESHKANA   DVADASANSAKA TRISHANSAKA\n"
         "---------------------------------------------------------------------------\n";
-    for (const std::string& key : houseTableOrder()) {
-        const PlanetLongitude* pl = findLongitude(output, key);
-        if (pl == nullptr) continue;
+    // Phase-1 array read (see renderScreen07 note).
+    for (int i = 0; i < 13; ++i) {
+        const Planet p = static_cast<Planet>(i);
+        const PlanetLongitude& pl = output.lonOf(p);
         const std::array<int, 6> sv =
-            VargaEngine::GetShadvarga(pl->ecliptic.toDecimal());
+            VargaEngine::GetShadvarga(pl.ecliptic.toDecimal());
         // GetShadvarga order: {Rashi, Navamsa, Hora, Deshkana, Dvadasansa, Trishansa}.
         // Row grid mirrors screen06: 8-char name, then five 11-char varga
         // columns plus the trailing sign (no padding). EXCEPTION (Invalid_Time
@@ -325,7 +315,7 @@ inline std::string renderScreen08(const AstroEngineOutput& output) {
             return std::string(b);
         };
         char head[64];
-        std::snprintf(head, sizeof(head), "%-8s| %-11s%-11s", displayShadvargaName(key).c_str(),
+        std::snprintf(head, sizeof(head), "%-8s| %-11s%-11s", planetSlotName(p, NameSlot::Shadvarga),
                       rasiName(sv[0]), rasiName(sv[1]));
         out += std::string(head) + cell(sv[2], 11, 10) + cell(sv[3], 11, 9) +
                cell(sv[4], 11, 14) + rasiName(sv[5]) + "\n";
@@ -335,21 +325,22 @@ inline std::string renderScreen08(const AstroEngineOutput& output) {
 
 // Screen 9 (screen07.txt content): house numbers from Lagna's varga seats.
 inline std::string renderScreen0914(const AstroEngineOutput& output) {
-    const PlanetLongitude* lagna = findLongitude(output, "Lagna");
-    // PROVENANCE: FITTED (fallback: screen06 Lagna row).
-    std::array<int, 6> lagSv = {12, 5, 4, 12, 1, 6};  // fallback: screen06 Lagna row
-    if (lagna != nullptr) lagSv = VargaEngine::GetShadvarga(lagna->ecliptic.toDecimal());
+    // Array read; the old null-fallback was dead (Engine always provides
+    // Lagna — Invalid_Time Lagna-591 flows through GetShadvarga below, and
+    // the {12,5,4,12,1,6} screen06-Lagna-row fallback survives in ModernRenderer).
+    const std::array<int, 6> lagSv =
+        VargaEngine::GetShadvarga(output.lonOf(Planet::Lagna).ecliptic.toDecimal());
 
     std::string out =
         "GRAHA  POSITIONS  IN  SHAD  VARGA\n\n"
         "GRHAYA        RASHI  NAVAMSAKA HORA DESHKANA DVADASANSA TRISHANSA\n"
         "-----------------------------------------------------------------\n";
-    for (const std::string& key : houseTableOrder()) {
-        if (key == "Lagna") continue;
-        const PlanetLongitude* pl = findLongitude(output, key);
-        if (pl == nullptr) continue;
+    for (int i = 0; i < 13; ++i) {
+        const Planet p = static_cast<Planet>(i);
+        if (p == Planet::Lagna) continue;
+        const PlanetLongitude& pl = output.lonOf(p);
         const std::array<int, 6> sv =
-            VargaEngine::GetShadvarga(pl->ecliptic.toDecimal());
+            VargaEngine::GetShadvarga(pl.ecliptic.toDecimal());
         // Lagna-relative house ((sv-lag+12)%12)+1, except when the Lagna seat
         // is invalid (gated -1, e.g. Invalid_Time Lagna-591 Hora/Deshkana/
         // Dvadasansa): the binary then shows the ABSOLUTE seat (proven on
@@ -360,7 +351,7 @@ inline std::string renderScreen0914(const AstroEngineOutput& output) {
         };
         char row[160];
         std::snprintf(row, sizeof(row), "%-12s|%5d  %8d  %5d  %5d  %6d  %7d\n",
-            displayPlanetName(key).c_str(),
+            planetSlotName(p, NameSlot::House),
             rel(sv[0], lagSv[0]), rel(sv[1], lagSv[1]), rel(sv[2], lagSv[2]),
             rel(sv[3], lagSv[3]), rel(sv[4], lagSv[4]), rel(sv[5], lagSv[5]));
         out += row;
@@ -785,12 +776,9 @@ inline std::string renderScreen12(const HoroscopeOwner& owner, const GeoCoord& g
     HMS setHms = displayHms(setH);
     setHms.h %= 12;  // 12-hour clock as printed ("5 51 45" for 17:51:45)
 
-    double lagnaDec = 0.0;
-    AngularDegrees lagnaRel{};
-    if (const PlanetLongitude* lagnaPl = findLongitude(output, "Lagna")) {
-        lagnaDec = lagnaPl->ecliptic.toDecimal();
-        lagnaRel = lagnaPl->rasiRel;  // raw split, no carry
-    }
+    // Array read; Engine always provides Lagna (see renderScreen07 note).
+    const double lagnaDec = output.lonOf(Planet::Lagna).ecliptic.toDecimal();
+    const AngularDegrees lagnaRel = output.lonOf(Planet::Lagna).rasiRel;  // raw split, no carry
     const int lagnaRasi = VargaEngine::GetRashiIndex(lagnaDec);
     const int lagnaNav = VargaEngine::GetNavamshaIndex(lagnaDec);
     const std::string dasaLord = balanceLordDisplay(kDasaCycle[bal.lordCycleIdx].name);

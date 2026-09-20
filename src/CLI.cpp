@@ -523,12 +523,15 @@ static std::string jsonText(const HoroscopeOwner& owner, const HoroscopeResult& 
     js << "  \"ayanamsa_deg\": " << h.ayanamsaDeg << ",\n";
     js << "  \"longitudes\": {\n";
     bool first = true;
-    for (const std::string& k : houseTableOrder()) {
-        const PlanetLongitude* pl = findLongitude(h.output, k);
-        if (pl == nullptr) continue;
+    // Phase-1 array read: canonical Planet order == houseTableOrder keys,
+    // so JSON keys stay byte-identical (proven by pre/post diff, Session 54).
+    for (int i = 0; i < 13; ++i) {
+        const char* k = kPlanetNames[static_cast<std::size_t>(i)];
+        const PlanetLongitude& pl =
+            h.output.lonOf(static_cast<Planet>(i));
         if (!first) js << ",\n";
         first = false;
-        js << "    \"" << k << "\": \"" << formatDMS(pl->ecliptic) << "\"";
+        js << "    \"" << k << "\": \"" << formatDMS(pl.ecliptic) << "\"";
     }
     js << "\n  }\n}\n";
     return js.str();
@@ -699,10 +702,10 @@ int CLI::runBaselineLegacy() const {
     if (show(6)) emit(renderScreen08(h.output) + "\n");
     if (show(7)) emit(renderScreen0914(h.output) + "\n");
 
-    auto seats = [&](const std::string& planet, int varga) {
-        const PlanetLongitude* pl = findLongitude(h.output, planet);
-        if (pl == nullptr) return 1;
-        return VargaEngine::GetShadvarga(pl->ecliptic.toDecimal())[static_cast<size_t>(varga)];
+    // Phase-1 array read (pmap resolves the legacy string keys).
+    auto seats = [&](Planet p, int varga) {
+        return VargaEngine::GetShadvarga(
+            h.output.lonOf(p).ecliptic.toDecimal())[static_cast<size_t>(varga)];
     };
     const std::vector<std::string> keys = {"Chandra", "Ravi",   "Budha", "Sikuru", "Kuja",
                                            "Guru",    "Shani",  "Raahu", "Kethu"};
@@ -717,38 +720,38 @@ int CLI::runBaselineLegacy() const {
                                                 {"Kethu", Planet::Kethu}};
     auto planetSeats = [&](int varga) {
         std::vector<std::pair<std::string, int>> ps;
-        for (const auto& k : keys) ps.push_back({kendraGlyph(pmap.at(k)), seats(k, varga)});
+        for (const auto& k : keys) ps.push_back({kendraGlyph(pmap.at(k)), seats(pmap.at(k), varga)});
         return ps;
     };
-    const int lagRashi = seats("Lagna", 0);
+    const int lagRashi = seats(Planet::Lagna, 0);
     if (show(8))
         emit(renderKendraPair(makeKendra(lagRashi, rasiName(lagRashi), "LAGNA", planetSeats(0)),
                               "LAGNA   KENDRAYA",
-                              makeKendra(seats("Lagna", 1), rasiName(seats("Lagna", 1)),
+                              makeKendra(seats(Planet::Lagna, 1), rasiName(seats(Planet::Lagna, 1)),
                                          "NAVAMSAKA", planetSeats(1)),
                               "NAVAMSAKA   KENDRAYA") +
              "\n");
     if (show(9))
-        emit(renderKendraPair(makeKendra(seats("Lagna", 2), rasiName(seats("Lagna", 2)), "HORA",
+        emit(renderKendraPair(makeKendra(seats(Planet::Lagna, 2), rasiName(seats(Planet::Lagna, 2)), "HORA",
                                          planetSeats(2)),
                               "HORA   KENDRAYA",
-                              makeKendra(seats("Lagna", 3), rasiName(seats("Lagna", 3)),
+                              makeKendra(seats(Planet::Lagna, 3), rasiName(seats(Planet::Lagna, 3)),
                                          "DESHKANA", planetSeats(3)),
                               "DESHKANA   KENDRAYA") +
              "\n");
     if (show(10))
-        emit(renderKendraPair(makeKendra(seats("Lagna", 4), rasiName(seats("Lagna", 4)),
+        emit(renderKendraPair(makeKendra(seats(Planet::Lagna, 4), rasiName(seats(Planet::Lagna, 4)),
                                          "DVADASANSA", planetSeats(4)),
                               "DVADASHANSAKA   KENDRAYA",
-                              makeKendra(seats("Lagna", 5), rasiName(seats("Lagna", 5)),
+                              makeKendra(seats(Planet::Lagna, 5), rasiName(seats(Planet::Lagna, 5)),
                                          "TRISANSAKA", planetSeats(5)),
                               "TRISANSAKA   KENDRAYA") +
              "\n");
     if (show(11))
-        emit(renderKendraPair(makeKendra(seats("Ravi", 0), rasiName(seats("Ravi", 0)),
+        emit(renderKendraPair(makeKendra(seats(Planet::Ravi, 0), rasiName(seats(Planet::Ravi, 0)),
                                          "SOORYARASI", planetSeats(0)),
                               "SOORYA   KENDRAYA",
-                              makeKendra(seats("Chandra", 0), rasiName(seats("Chandra", 0)),
+                              makeKendra(seats(Planet::Chandra, 0), rasiName(seats(Planet::Chandra, 0)),
                                          "SANDURASI", planetSeats(0)),
                               "CHANDRA   KENDRAYA") +
              "\n");

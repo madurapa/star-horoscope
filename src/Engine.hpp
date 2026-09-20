@@ -14,6 +14,7 @@
 //    lived in the first verifier draft).
 
 #include <cmath>
+#include <array>
 #include <map>
 #include <string>
 
@@ -96,17 +97,16 @@ struct HoroscopeResult {
     std::map<std::string, double> dec;
     dec["Lagna"] = lagnaNiray;
     dec["Chandra"] = r.moonNirayanaDeg;
-    dec["Sandu"] = r.moonNirayanaDeg;  // screen05 spelling alias
     dec["Ravi"] = raviNiray;
     for (const auto& kv : kPlanetElements) {
         // planetSayana applies the ayanamsa itself when nirayana=true.
-        dec[kv.first] = norm(planetSayana(kv.second, t1900, r.jd, sun.lon, rsun, nirayana));
+        // Canonical key (element table spells it "Neptun"); slice C keeps
+        // exactly the 13 canonical keys, no spelling aliases.
+        const std::string key = (kv.first == "Neptun") ? "Neptune" : kv.first;
+        dec[key] = norm(planetSayana(kv.second, t1900, r.jd, sun.lon, rsun, nirayana));
     }
-    dec["Neptune"] = dec["Neptun"];  // canonical alias
     dec["Raahu"] = rahuNiray;
-    dec["Rahu"] = rahuNiray;  // dasa-table spelling alias
     dec["Kethu"] = ketuNiray;
-    dec["Ketu"] = ketuNiray;  // dasa-table spelling alias
 
     for (const auto& kv : dec) {
         // Display keeps raw positives (Lagna 591:11:18) and wraps negatives
@@ -121,6 +121,11 @@ struct HoroscopeResult {
         const AngularDegrees rasiRel{relD, ecl.min, ecl.sec};
         r.output.longitudes[kv.first] = PlanetLongitude{ecl, rasiRel};
     }
+    // Phase-1 array mirror: canonical Planet order (kPlanetNames), same
+    // values as the map by construction (proven in test_screens.cpp).
+    for (int i = 0; i < 13; ++i)
+        r.output.lonByPlanet[static_cast<std::size_t>(i)] =
+            r.output.longitudes[kPlanetNames[static_cast<std::size_t>(i)]];
     r.output.julianDate = r.jd;
     r.output.ayanamsa = AngularDegrees::fromDecimal(r.ayanamsaDeg);
     // Panchanga limbs follow the display mode: Nirayana positions in N mode
@@ -140,7 +145,10 @@ struct HoroscopeResult {
     r.setH = 24.0 - nts.riseH;
     // Avastha (sub_23A58 formula) over MODE longitudes + E02.
     const long e02 = avasthaE02(r.birthDecHours, r.riseH);
-    r.output.avastha = avasthaTable(dec, e02);
+    std::array<double, 13> modeDec{};
+    for (int i = 0; i < 13; ++i)
+        modeDec[static_cast<std::size_t>(i)] = dec[kPlanetNames[static_cast<std::size_t>(i)]];
+    r.output.avastha = avasthaTable(modeDec, e02);
     return r;
 }
 
