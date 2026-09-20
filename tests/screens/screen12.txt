@@ -1,0 +1,24 @@
+NAME  : Test User
+
+DATE OF BIRTH: 1981-12-8 at Latitude  6 37 N Longitude 80 24 E (Geocentric)
+JULIAN DATE  : 2444946.809
+
+LAGNA : Meena   (    4   50     42)        NAVAMSAKA  : Sinha
+
+PANCHANGAYA
+DAY    : Tuesday              NEKATHA : Asvida           PADAYA  :  3
+THITIYA: Pura-Doloswaka  -12  YOGAYA  : Parigha          KARANAYA:  Bava
+
+TIMES
+                                   Hrs   Min   Sec
+Birth   time                  -    12   55      0
+Sinhala time                  -    16   56     52
+True local mean time          -    12   46     36
+Universal  time               -     7   25      0
+Universal  Siderial     time  -    12   24     29
+Local  mean   siderial   time -    17   54     29
+Sun rise time                 -     6    8     15
+Sun set time                  -     5   51     45
+
+DASA BALANCE     :   Kethu   2 Years  0 Months  23 Days  From Birth Onwards
+AYANAMSA(Arc-Ray):   23   34     21

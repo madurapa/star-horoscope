@@ -1,0 +1,348 @@
+
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+
+
+"SAYANA"  method  or "NRAYANA"  method (S/N) ?N
+
+                            NIRAYANA  TABLE  OF HOUSES
+
+PLANET      LONGITUDE    NEKETH   PADA RASI      RASI LONGITUDE   AVASTHA
+____________________________________________________________________________
+Lagna   350   49     26  Revathee   2 Meena      20   49     26
+
+Sandu   256    6     15  Puvasala   1 Dhanu      16    6     15   Agamana
+Ravi    261   25      9  Puvasala   3 Dhanu      21   25      9   Agamana
+Budha   255   34      9  Puvasala   1 Dhanu      15   34      9   Agamana
+Sikuru  223   31     59  Anura      4 Wrschika   13   31     59   Nuthyalipsa
+Kuja    307   50     28  Siyavsa    1 Kumba       7   50     28   Nuthyalipsa
+Guru      1   39     39  Asvida     1 Mesha       1   39     39   AAgama
+Shani    16   28     57  Berana     1 Mesha      16   28     57   AAgama
+Raahu   100   57     56  Pushha     3 Kataka     10   57     56   Agamana
+Kethu   280   57     56  Suvana     1 Makara     10   57     56   Prakasha
+Urenus  291   24     51  Suvana     4 Makara     21   24     51
+Neptun  279   28     25  Utrasala   4 Makara      9   28     25
+Pluto   227   29     46  Deta       1 Wrschika   17   29     46
+____________________________________________________________________________
+
+SHAD VARGA OF Moon06
+
+GRHAYA    RASHI    NAVAMSAKA    HORA    DESHKANA   DVADASANSAKA TRISHANSAKA
+---------------------------------------------------------------------------
+Lagna   | Meena      Makara     Sinha      Wrschika   Wrschika   Makara
+Chandra | Dhanu      Sinha      Kataka     Mesha      Mituna     Dhanu
+Rav1    | Dhanu      Thula      Kataka     Sinha      Sinha      Mituna
+Budha   | Dhanu      Sinha      Kataka     Mesha      Mituna     Dhanu
+Sikuru  | Wrschika   Wrschika   Kataka     Meena      Mesha      Meena
+Kuja    | Kumba      Dhanu      Sinha      Kumba      Wrushaba   Kumba
+Guru    | Mesha      Mesha      Sinha      Mesha      Mesha      Mesha
+Shani   | Mesha      Sinha      Kataka     Sinha      Thula      Dhanu
+Raahu   | Kataka     Thula      Kataka     Wrschika   Wrschika   Kanya
+Kethu   | Makara     Mesha      Kataka     Wrushaba   Wrushaba   Kanya
+Urenes  | Makara     Kataka     Sinha      Kanya      Kanya      Makara
+Neptune | Makara     Meena      Kataka     Makara     Mesha      Kanya
+Pluuto  | Wrschika   Dhanu      Sinha      Meena      Wrushaba   Meena
+
+GRAHA  POSITIONS  IN  SHAD  VARGA
+
+GRHAYA        RASHI  NAVAMSAKA HORA DESHKANA DVADASANSA TRISHANSA
+-----------------------------------------------------------------
+Chandra     |  10       8      12       6       8      12
+Ravi        |  10      10      12      10      10       6
+Budha       |  10       8      12       6       8      12
+Sikuru      |   9      11      12       5       6       3
+Guru        |   2       4       1       6       6       4
+Kuja        |  12      12       1       4       7       2
+Shani       |   2       8      12      10      12      12
+Raahu       |   5      10      12       1       1       9
+Kethu       |  11       4      12       7       7       9
+Urenus      |  11       7       1      11      11       1
+Neptune     |  11       3      12       3       6       9
+Pluuto      |   9      12       1       5       7       3
+
+┌─────────────┬──────────┬─────────────┬─────────────┬──────────┬─────────────┐
+│ .   Gu      │          │           . │ .           │          │           . │
+│   . Sh      │          │     Ku  .   │   .         │          │     Ku  .   │
+│     .       │          │       . Ke  │     .  2    │          │       .     │
+│       .     │    1     │     .       │       .     │    1     │     .       │
+│   3     .   │          │   .         │   3     .   │          │   .         │
+│           . │          │ .           │           . │          │ .        Si │
+├─────────────┼──────────┼─────────────┼─────────────┼──────────┼─────────────┤
+│             │          │             │  Ke         │          │             │
+│             │          │ Rv          │             │          │ Rv          │
+│      4      │Meena     │      Ch     │             │Makara    │ Ra          │
+│             │LAGNA     │ Bu          │             │NAVAMSAKA │             │
+│             │          │             │  Gu         │          │             │
+├─────────────┼──────────┼─────────────┼─────────────┼──────────┼─────────────┤
+│           . │          │ .           │           . │          │ .           │
+│         .   │          │   .         │         .   │          │   .         │
+│     Ra.     │          │     .       │  5    .     │          │     .  9    │
+│     .       │    7     │       .Si   │     .       │    7     │       .     │
+│   .     6   │          │    8    .   │   .     6   │          │Bu     Sh.   │
+│ .           │          │           . │ .           │          │Ch         . │
+└─────────────┴──────────┴─────────────┴─────────────┴──────────┴─────────────┘
+
+            LAGNA   KENDRAYA                      NAVAMSAKA   KENDRAYA
+
+┌─────────────┬──────────┬─────────────┬─────────────┬──────────┬─────────────┐
+│ .           │          │    Ke  Rv . │ .           │          │           . │
+│   .         │Ku    Gu  │Sh       .   │   .         │          │ 12      .   │
+│     .  2    │          │Si  Bu .     │     .  2    │          │       .     │
+│       .     │          │ Ch  .       │       .     │          │     .       │
+│   3     .   │          │Ra .   11    │   3     .   │Ra        │   .   11    │
+│           . │          │ .           │           . │          │ .           │
+├─────────────┼──────────┼─────────────┼─────────────┼──────────┼─────────────┤
+│             │          │             │             │          │             │
+│             │          │             │             │          │ Rv          │
+│      4      │Sinha     │      10     │             │Wrschika  │             │
+│             │HORA      │             │      Ku     │DESHKANA  │             │
+│             │          │             │             │          │      Sh     │
+├─────────────┼──────────┼─────────────┼─────────────┼──────────┼─────────────┤
+│           . │          │ .           │           . │   Ke     │ .           │
+│         .   │          │   .         │         .   │          │   .         │
+│  5    .     │          │     .  9    │ Si    .  Gu │          │     .  9    │
+│     .       │    7     │       .     │     .       │          │       .     │
+│   .     6   │          │    8    .   │   .         │          │    8    .   │
+│ .           │          │           . │ . Bu     Ch │          │           . │
+└─────────────┴──────────┴─────────────┴─────────────┴──────────┴─────────────┘
+
+            HORA   KENDRAYA                        DESHKANA   KENDRAYA
+
+┌─────────────┬──────────┬─────────────┬─────────────┬──────────┬─────────────┐
+│ .           │          │           . │ .           │          │           . │
+│   .         │          │Sh       .   │   .      Ku │          │Sh       .   │
+│     .  2    │          │       .     │     .       │          │    Bu .     │
+│       .     │          │     .       │       .     │    1     │ Ch  .       │
+│   3     .   │Ra        │   .   11    │         .   │          │   .   11    │
+│           . │          │ .           │    Si     . │          │ .           │
+├─────────────┼──────────┼─────────────┼─────────────┼──────────┼─────────────┤
+│             │          │             │             │          │             │
+│             │          │ Rv          │             │          │             │
+│      4      │Wrschika  │             │             │Makara    │      10     │
+│             │DVADASANSA│             │             │TRISANSAKA│             │
+│             │          │             │  Gu         │          │             │
+├─────────────┼──────────┼─────────────┼─────────────┼──────────┼─────────────┤
+│           . │   Ke     │ .           │           . │          │ .        Ke │
+│         .   │          │   .         │         .   │          │   .         │
+│  5    .  Gu │          │     .  9    │  5    .     │          │     .       │
+│     .    Si │      Ku  │       .     │     .       │    7     │       .   Ra│
+│   .         │          │Bu       .   │   .      Rv │          │    8    .   │
+│ .           │          │Ch         . │ .           │          │           . │
+└─────────────┴──────────┴─────────────┴─────────────┴──────────┴─────────────┘
+
+        DVADASHANSAKA   KENDRAYA                   TRISANSAKA   KENDRAYA
+
+┌─────────────┬──────────┬─────────────┬─────────────┬──────────┬─────────────┐
+│ .      Ke   │          │           . │ .      Ke   │          │           . │
+│   .         │          │         .   │   .         │          │         .   │
+│     .       │      Rv  │Si     .     │     .       │      Rv  │Si     .     │
+│       .     │      Bu  │     .       │       .     │      Bu  │     .       │
+│Ku       .   │      Ch  │   .   11    │Ku       .   │      Ch  │   .   11    │
+│           . │          │ .           │           . │          │ .           │
+├─────────────┼──────────┼─────────────┼─────────────┼──────────┼─────────────┤
+│             │          │             │             │          │             │
+│             │          │             │             │          │             │
+│      4      │Dhanu     │      10     │      4      │Dhanu     │      10     │
+│             │SOORYARASI│             │             │SANDURASI │             │
+│             │          │             │             │          │             │
+├─────────────┼──────────┼─────────────┼─────────────┼──────────┼─────────────┤
+│ Gu      Sh. │          │ .           │ Gu      Sh. │          │ .           │
+│         .   │          │   .         │         .   │          │   .         │
+│       .     │          │     .  9    │       .     │          │     .  9    │
+│     .       │    7     │       .     │     .       │    7     │       .     │
+│   .     6   │          │         .   │   .     6   │          │         .   │
+│ .           │          │    Ra     . │ .           │          │    Ra     . │
+└─────────────┴──────────┴─────────────┴─────────────┴──────────┴─────────────┘
+
+            SOORYA   KENDRAYA                      CHANDRA   KENDRAYA
+
+NAME  : Moon06
+
+DATE OF BIRTH: 2000-1-6 at Latitude  5 58 N Longitude 80 13 E (Geocentric)
+JULIAN DATE  : 2451549.771
+
+LAGNA : Meena   (   20   49     26)        NAVAMSAKA  : Makara
+
+PANCHANGAYA
+DAY    : Thursday             NEKATHA : Puvasala         PADAYA  :  1
+THITIYA:  Amaawaka-15         YOGAYA  : Drava            KARANAYA:  Naaga
+
+TIMES
+                                   Hrs   Min   Sec
+Birth   time                  -    12    0      0
+Sinhala time                  -    14    7     47
+True local mean time          -    11   50     52
+Universal  time               -     6   30      0
+Universal  Siderial     time  -    13   21     31
+Local  mean   siderial   time -    18   51     31
+Sun rise time                 -     6   20     53
+Sun set time                  -     5   39      7
+
+DASA BALANCE     :   Sikuru  15 Years  10 Months  3 Days  From Birth Onwards
+AYANAMSA(Arc-Ray):   23   49     30
+
+KALA HORAVA : Chandra   PANCHAMA HORAVA : Guru     SUKSHAMA HORAVA : Guru
+
+GANA  :       Maanusha    YONI :        Vendiri     RUXHA :        Hopalu#
+LINGA :         Sthree    NAADI:          Madya     PAXHI :         Kukuta
+GOTHRA:       Pulasthi    VARNA:     Kshathriya     RAJJU :           Ooru
+BHUTHA:          Vaayo
+
+ALL MAHA AND ATHURU DASAS DURING PARAMAUSHA OF: Moon06
+===============================================
+Sikuru Maha   dasava from 2000- 1- 6 to 2015-11-10  Age   0- 0- 0 to  15-10- 4
+------------------------------------------------------------------------------
+
+Ravi   Athuru dasava from 2000- 1- 6 to 2000- 3-10  Age   0- 0- 0 to   0- 2- 4
+Sandu  Athuru dasava from 2000- 3-10 to 2001-11-10  Age   0- 2- 4 to   1-10- 4
+Kuja   Athuru dasava from 2001-11-10 to 2003- 1-10  Age   1-10- 4 to   3- 0- 4
+Rahu   Athuru dasava from 2003- 1-10 to 2006- 1-10  Age   3- 0- 4 to   6- 0- 4
+Guru   Athuru dasava from 2006- 1-10 to 2008- 9-10  Age   6- 0- 4 to   8- 8- 4
+Shani  Athuru dasava from 2008- 9-10 to 2011-11-10  Age   8- 8- 4 to  11-10- 4
+Budha  Athuru dasava from 2011-11-10 to 2014- 9-10  Age  11-10- 4 to  14- 8- 4
+Ketu   Athuru dasava from 2014- 9-10 to 2015-11-10  Age  14- 8- 4 to  15-10- 4
+
+Ravi   Maha   dasava from  2015-11-10 to 2021-11-10  Age  15-10- 4 to  21-10- 4
+-------------------------------------------------------------------------------
+Ravi   Athuru dasava from  2015-11-10 to 2016- 2-28  Age  15-10- 4 to  16- 1-22
+Sandu  Athuru dasava from  2016- 2-28 to 2016- 8-28  Age  16- 1-22 to  16- 7-22
+Kuja   Athuru dasava from  2016- 8-28 to 2017- 1- 4  Age  16- 7-22 to  16-11-28
+Rahu   Athuru dasava from  2017- 1- 4 to 2017-11-28  Age  16-11-28 to  17-10-22
+Guru   Athuru dasava from  2017-11-28 to 2018- 9-16  Age  17-10-22 to  18- 8-10
+Shani  Athuru dasava from  2018- 9-16 to 2019- 8-28  Age  18- 8-10 to  19- 7-22
+Budha  Athuru dasava from  2019- 8-28 to 2020- 7- 4  Age  19- 7-22 to  20- 5-28
+Ketu   Athuru dasava from  2020- 7- 4 to 2020-11-10  Age  20- 5-28 to  20-10- 4
+Sikuru Athuru dasava from  2020-11-10 to 2021-11-10  Age  20-10- 4 to  21-10- 4
+
+Sandu  Maha   dasava from  2021-11-10 to 2031-11-10  Age  21-10- 4 to  31-10- 4
+-------------------------------------------------------------------------------
+Sandu  Athuru dasava from  2021-11-10 to 2022- 9-10  Age  21-10- 4 to  22- 8- 4
+Kuja   Athuru dasava from  2022- 9-10 to 2023- 4-10  Age  22- 8- 4 to  23- 3- 4
+Rahu   Athuru dasava from  2023- 4-10 to 2024-10-10  Age  23- 3- 4 to  24- 9- 4
+Guru   Athuru dasava from  2024-10-10 to 2026- 2-10  Age  24- 9- 4 to  26- 1- 4
+Shani  Athuru dasava from  2026- 2-10 to 2027- 9-10  Age  26- 1- 4 to  27- 8- 4
+Budha  Athuru dasava from  2027- 9-10 to 2029- 2-10  Age  27- 8- 4 to  29- 1- 4
+Ketu   Athuru dasava from  2029- 2-10 to 2029- 9-10  Age  29- 1- 4 to  29- 8- 4
+Sikuru Athuru dasava from  2029- 9-10 to 2031- 5-10  Age  29- 8- 4 to  31- 4- 4
+Ravi   Athuru dasava from  2031- 5-10 to 2031-11-10  Age  31- 4- 4 to  31-10- 4
+
+Kuja   Maha   dasava from  2031-11-10 to 2038-11-10  Age  31-10- 4 to  38-10- 4
+-------------------------------------------------------------------------------
+Kuja   Athuru dasava from  2031-11-10 to 2032- 4- 7  Age  31-10- 4 to  32- 3- 1
+Rahu   Athuru dasava from  2032- 4- 7 to 2033- 4-25  Age  32- 3- 1 to  33- 3-19
+Guru   Athuru dasava from  2033- 4-25 to 2034- 4- 1  Age  33- 3-19 to  34- 2-25
+Shani  Athuru dasava from  2034- 4- 1 to 2035- 5-10  Age  34- 2-25 to  35- 4- 4
+Budha  Athuru dasava from  2035- 5-10 to 2036- 5- 7  Age  35- 4- 4 to  36- 4- 1
+Ketu   Athuru dasava from  2036- 5- 7 to 2036-10- 4  Age  36- 4- 1 to  36- 8-28
+Sikuru Athuru dasava from  2036-10- 4 to 2037-12- 4  Age  36- 8-28 to  37-10-28
+Ravi   Athuru dasava from  2037-12- 4 to 2038- 4-10  Age  37-10-28 to  38- 3- 4
+Sandu  Athuru dasava from  2038- 4-10 to 2038-11-10  Age  38- 3- 4 to  38-10- 4
+
+Rahu   Maha   dasava from  2038-11-10 to 2056-11-10  Age  38-10- 4 to  56-10- 4
+-------------------------------------------------------------------------------
+Rahu   Athuru dasava from  2038-11-10 to 2041- 7-22  Age  38-10- 4 to  41- 6-16
+Guru   Athuru dasava from  2041- 7-22 to 2043-12-16  Age  41- 6-16 to  43-11-10
+Shani  Athuru dasava from  2043-12-16 to 2046-10-22  Age  43-11-10 to  46- 9-16
+Budha  Athuru dasava from  2046-10-22 to 2049- 5-10  Age  46- 9-16 to  49- 4- 4
+Ketu   Athuru dasava from  2049- 5-10 to 2050- 5-28  Age  49- 4- 4 to  50- 4-22
+Sikuru Athuru dasava from  2050- 5-28 to 2053- 5-28  Age  50- 4-22 to  53- 4-22
+Ravi   Athuru dasava from  2053- 5-28 to 2054- 4-22  Age  53- 4-22 to  54- 3-16
+Sandu  Athuru dasava from  2054- 4-22 to 2055-10-22  Age  54- 3-16 to  55- 9-16
+Kuja   Athuru dasava from  2055-10-22 to 2056-11-10  Age  55- 9-16 to  56-10- 4
+
+Guru   Maha   dasava from  2056-11-10 to 2072-11-10  Age  56-10- 4 to  72-10- 4
+-------------------------------------------------------------------------------
+Guru   Athuru dasava from  2056-11-10 to 2058-12-28  Age  56-10- 4 to  58-11-22
+Shani  Athuru dasava from  2058-12-28 to 2061- 7-10  Age  58-11-22 to  61- 6- 4
+Budha  Athuru dasava from  2061- 7-10 to 2063-10-16  Age  61- 6- 4 to  63- 9-10
+Ketu   Athuru dasava from  2063-10-16 to 2064- 9-22  Age  63- 9-10 to  64- 8-16
+Sikuru Athuru dasava from  2064- 9-22 to 2067- 5-22  Age  64- 8-16 to  67- 4-16
+Ravi   Athuru dasava from  2067- 5-22 to 2068- 3-10  Age  67- 4-16 to  68- 2- 4
+Sandu  Athuru dasava from  2068- 3-10 to 2069- 7-10  Age  68- 2- 4 to  69- 6- 4
+Kuja   Athuru dasava from  2069- 7-10 to 2070- 6-16  Age  69- 6- 4 to  70- 5-10
+Rahu   Athuru dasava from  2070- 6-16 to 2072-11-10  Age  70- 5-10 to  72-10- 4
+
+Shani  Maha   dasava from  2072-11-10 to 2091-11-10  Age  72-10- 4 to  91-10- 4
+-------------------------------------------------------------------------------
+Shani  Athuru dasava from  2072-11-10 to 2075-11-13  Age  72-10- 4 to  75-10- 7
+Budha  Athuru dasava from  2075-11-13 to 2078- 7-22  Age  75-10- 7 to  78- 6-16
+Ketu   Athuru dasava from  2078- 7-22 to 2079- 9- 1  Age  78- 6-16 to  79- 7-25
+Sikuru Athuru dasava from  2079- 9- 1 to 2082-11- 1  Age  79- 7-25 to  82- 9-25
+Ravi   Athuru dasava from  2082-11- 1 to 2083-10-13  Age  82- 9-25 to  83- 9- 7
+Sandu  Athuru dasava from  2083-10-13 to 2085- 5-13  Age  83- 9- 7 to  85- 4- 7
+Kuja   Athuru dasava from  2085- 5-13 to 2086- 6-22  Age  85- 4- 7 to  86- 5-16
+Rahu   Athuru dasava from  2086- 6-22 to 2089- 4-28  Age  86- 5-16 to  89- 3-22
+Guru   Athuru dasava from  2089- 4-28 to 2091-11-10  Age  89- 3-22 to  91-10- 4
+
+Budha  Maha   dasava from  2091-11-10 to 2108-11-10  Age  91-10- 4 to 108-10- 4
+-------------------------------------------------------------------------------
+Budha  Athuru dasava from  2091-11-10 to 2094- 4- 7  Age  91-10- 4 to  94- 3- 1
+Ketu   Athuru dasava from  2094- 4- 7 to 2095- 4- 4  Age  94- 3- 1 to  95- 2-28
+Sikuru Athuru dasava from  2095- 4- 4 to 2098- 2- 4  Age  95- 2-28 to  98- 0-28
+Ravi   Athuru dasava from  2098- 2- 4 to 2098-12-10  Age  98- 0-28 to  98-11- 4
+Sandu  Athuru dasava from  2098-12-10 to 2100- 5-10  Age  98-11- 4 to 100- 4- 4
+Kuja   Athuru dasava from  2100- 5-10 to 2101- 5- 7  Age 100- 4- 4 to 101- 4- 1
+Rahu   Athuru dasava from  2101- 5- 7 to 2103-11-25  Age 101- 4- 1 to 103-10-19
+Guru   Athuru dasava from  2103-11-25 to 2106- 3- 1  Age 103-10-19 to 106- 1-25
+Shani  Athuru dasava from  2106- 3- 1 to 2108-11-10  Age 106- 1-25 to 108-10- 4
+
+Ketu   Maha   dasava from  2108-11-10 to 2115-11-10  Age 108-10- 4 to 115-10- 4
+-------------------------------------------------------------------------------
+Ketu   Athuru dasava from  2108-11-10 to 2109- 4- 7  Age 108-10- 4 to 109- 3- 1
+Sikuru Athuru dasava from  2109- 4- 7 to 2110- 6- 7  Age 109- 3- 1 to 110- 5- 1
+Ravi   Athuru dasava from  2110- 6- 7 to 2110-10-13  Age 110- 5- 1 to 110- 9- 7
+Sandu  Athuru dasava from  2110-10-13 to 2111- 5-13  Age 110- 9- 7 to 111- 4- 7
+Kuja   Athuru dasava from  2111- 5-13 to 2111-10-10  Age 111- 4- 7 to 111- 9- 4
+Rahu   Athuru dasava from  2111-10-10 to 2112-10-28  Age 111- 9- 4 to 112- 9-22
+Guru   Athuru dasava from  2112-10-28 to 2113-10- 4  Age 112- 9-22 to 113- 8-28
+Shani  Athuru dasava from  2113-10- 4 to 2114-11-13  Age 113- 8-28 to 114-10- 7
+Budha  Athuru dasava from  2114-11-13 to 2115-11-10  Age 114-10- 7 to 115-10- 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                             Good Luck With Your Stars!
+
+
+
+
+
+
+
+
+
+Press  Enter
+
+
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+C:\>
+

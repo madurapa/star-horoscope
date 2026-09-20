@@ -1,0 +1,89 @@
+slug          elong  k    w          dos         pred
+Lagna00      156.09 26    4       Garaja      Kavlava  <-- BREAK
+Lagna01      156.55 26    4       Garaja      Kavlava  <-- BREAK
+Lagna02      157.02 26    4       Garaja      Kavlava  <-- BREAK
+Lagna03      157.48 26    4       Garaja      Kavlava  <-- BREAK
+Lagna04      157.95 26    4       Garaja      Kavlava  <-- BREAK
+Lagna05      158.41 26    4       Garaja      Kavlava  <-- BREAK
+Lagna06      158.88 26    4       Garaja      Kavlava  <-- BREAK
+Lagna07      159.34 26    4       Garaja      Kavlava  <-- BREAK
+Lagna08      159.80 26    4       Garaja      Kavlava  <-- BREAK
+Lagna09      160.27 26    4       Garaja      Kavlava  <-- BREAK
+Lagna10      160.73 26    4       Garaja      Kavlava  <-- BREAK
+Lagna11      161.19 26    4       Garaja      Kavlava  <-- BREAK
+Lagna12      161.66 26    4       Garaja      Kavlava  <-- BREAK
+Lagna13      162.12 27    4       Vanija         Bava  <-- BREAK
+Lagna14      162.58 27    4       Vanija         Bava  <-- BREAK
+Lagna15      163.05 27    4       Vanija         Bava  <-- BREAK
+Lagna16      163.51 27    4       Vanija         Bava  <-- BREAK
+Lagna17      163.97 27    4       Vanija         Bava  <-- BREAK
+Lagna18      164.43 27    4       Vanija         Bava  <-- BREAK
+Lagna19      164.89 27    4       Vanija         Bava  <-- BREAK
+Lagna20      165.35 27    4       Vanija         Bava  <-- BREAK
+Lagna21      165.81 27    4       Vanija         Bava  <-- BREAK
+Lagna22      166.28 27    4       Vanija         Bava  <-- BREAK
+Lagna23      166.74 27    4       Vanija         Bava  <-- BREAK
+Moon01       300.38 50    6       Vanija       Garaja  <-- BREAK
+Moon02       311.35 51    0         Bava      Kavlava  <-- BREAK
+Moon03       322.22 53    1       Garaja      Taitila  <-- BREAK
+Moon04       333.04 55    2      Baalava      Baalava
+Moon05       343.85 57    3       Vanija       Vanija
+Moon06       354.69 59    4        Naaga       Garaja  <-- BREAK
+Moon07         5.57  0    5  Kinsthugana      Taitila  <-- BREAK
+Moon08        16.55  2    6      Baalava      Baalava
+Moon09        27.64  4    0     Thithila       Vanija  <-- BREAK
+Moon10        38.88  6    1       Vanija       Garaja  <-- BREAK
+Moon11        50.32  8    2         Bava         Bava
+Moon12        61.99 10    3      Kavlava       Vanija  <-- BREAK
+Moon13        73.96 12    4       Garaja      Kavlava  <-- BREAK
+Moon14        86.25 14    5       Vishti      Taitila  <-- BREAK
+Moon15        98.91 16    6      Baalava      Baalava
+Moon16       111.96 18    0     Thithila       Vanija  <-- BREAK
+Moon17       125.37 20    1       Vanija       Garaja  <-- BREAK
+Moon18       139.10 23    2      Baalava       Vanija  <-- BREAK
+Moon19       153.03 25    3     Thithila       Garaja  <-- BREAK
+Moon20       167.06 27    4       Vanija         Bava  <-- BREAK
+Moon21       181.04 30    5      Baalava       Garaja  <-- BREAK
+Moon22       194.82 32    6       Vanija         Bava  <-- BREAK
+Moon23       208.29 34    0      Kavlava       Vanija  <-- BREAK
+Moon24       221.35 36    1       Vishti      Kavlava  <-- BREAK
+Moon25       233.96 38    2     Thithila      Taitila  <-- BREAK
+Moon26       246.13 41    3      Kavlava      Kavlava
+Moon27       257.90 42    4       Garaja       Vanija  <-- BREAK
+Moon28       269.31 44    5  Chathuppada       Garaja  <-- BREAK
+Rnd01        343.36 57    0       Vanija      Baalava  <-- BREAK
+Rnd02         72.03 12    1       Garaja       Vanija  <-- BREAK
+Rnd03         35.17  5    2       Garaja       Garaja
+Rnd04        266.73 44    0  Chathuppada      Kavlava  <-- BREAK
+Rnd05        213.08 35    5       Garaja      Taitila  <-- BREAK
+Rnd06        142.41 23    3      Baalava      Taitila  <-- BREAK
+Rnd07        253.94 42    1       Garaja      Baalava  <-- BREAK
+Rnd08        330.00 54    5       Vishti         Bava  <-- BREAK
+Rnd09         52.98  8    2         Bava         Bava
+Rnd10         85.70 14    5       Vishti      Taitila  <-- BREAK
+Rnd11        104.29 17    1      Kavlava       Vanija  <-- BREAK
+Rnd12         13.89  2    4      Baalava       Vanija  <-- BREAK
+Rnd13        249.74 41    3      Kavlava      Kavlava
+Rnd14        146.71 24    6      Kavlava      Kavlava
+Rnd15         58.43  9    5      Baalava       Garaja  <-- BREAK
+Rnd16        337.08 56    2     Thithila      Kavlava  <-- BREAK
+Rnd17        111.75 18    3     Thithila       Garaja  <-- BREAK
+Rnd18        146.53 24    4      Kavlava       Garaja  <-- BREAK
+Rnd19        284.24 47    0       Vishti      Taitila  <-- BREAK
+Rnd20        164.38 27    6       Vanija      Taitila  <-- BREAK
+Rnd21        235.54 39    5       Vanija      Kavlava  <-- BREAK
+Rnd22        199.33 33    5         Bava         Bava
+Rnd23        332.73 55    0      Baalava       Vanija  <-- BREAK
+Rnd24        236.17 39   -1            ?            ?
+Seas01        98.91 16    6      Baalava      Baalava
+Seas02       120.28 20    2       Vanija      Baalava  <-- BREAK
+Seas03       115.97 19    3       Garaja      Baalava  <-- BREAK
+Seas04       137.50 22    6         Bava       Garaja  <-- BREAK
+Seas05       144.71 24    1      Kavlava       Vanija  <-- BREAK
+Seas06       161.66 26    4       Garaja      Kavlava  <-- BREAK
+Seas07       165.78 27    6       Vanija      Taitila  <-- BREAK
+Seas08       180.57 30    2      Baalava       Vanija  <-- BREAK
+Seas09       197.22 32    5       Vanija      Kavlava  <-- BREAK
+Seas10       204.00 34    0      Kavlava       Vanija  <-- BREAK
+Seas11       225.33 37    3      Baalava      Taitila  <-- BREAK
+Seas12       233.78 38    5     Thithila      Baalava  <-- BREAK

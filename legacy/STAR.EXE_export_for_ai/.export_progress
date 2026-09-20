@@ -1,0 +1,332 @@
+# Export Progress
+# Format: address | status (done/fallback/failed/skipped)
+26A00|done
+25C03|done
+25E05|done
+26A06|done
+27608|done
+27809|done
+25C0A|done
+25E0C|done
+26A0C|done
+26011|done
+26A12|done
+25E13|done
+26A18|done
+2741A|done
+25C1C|done
+1C620|done
+26621|done
+26A22|done
+26424|done
+26A26|done
+1AE29|done
+26A2A|done
+26A32|done
+26633|done
+27639|done
+2723C|done
+2643D|done
+25C3E|done
+10A46|done
+26A4C|done
+2564E|done
+2664E|done
+26E4F|done
+25A55|done
+26A56|done
+26E55|done
+23A58|done
+2645C|done
+26A60|done
+21061|done
+27662|done
+27863|done
+26A6A|done
+26E6E|done
+26A74|done
+26C7D|done
+27681|done
+1B689|done
+25A92|done
+266A2|done
+276A7|done
+274AD|done
+25EB0|done
+220B3|done
+262B8|done
+270BB|done
+26EBD|done
+268C4|done
+26AC5|done
+276C5|done
+270C7|done
+272C8|done
+278C4|done
+264CA|done
+21ECB|done
+25AD2|done
+264D6|done
+26AD9|done
+21EE1|done
+264E2|done
+25AEC|done
+260ED|done
+264F1|done
+276F2|done
+266F8|done
+266FC|done
+25B00|done
+25909|done
+2650B|done
+25910|done
+27316|done
+25F18|done
+26D20|done
+25B25|done
+2772A|done
+2652F|done
+25F30|done
+26B36|done
+26F37|done
+1633A|done
+2693B|done
+17F3C|done
+2653D|done
+25940|done
+26B49|done
+1874B|done
+25B51|done
+26952|done
+27152|done
+1C556|done
+1B357|done
+2735B|done
+25B5D|done
+18760|done
+1C560|done
+26965|done
+27768|done
+25B69|done
+1956D|done
+26374|done
+21576|done
+25F7D|done
+2657E|done
+1C582|done
+25B83|done
+25D84|done
+26382|done
+271FE|done
+27386|done
+1D989|done
+25D8B|done
+2738B|done
+2638E|done
+27595|done
+1C596|done
+25B9B|done
+2639C|done
+25BA1|done
+263A3|done
+269A4|done
+25BA7|done
+259A9|done
+265AA|done
+25BAE|done
+263AE|done
+1CBB2|done
+263B6|done
+275B9|done
+1C5BB|done
+267BF|done
+277C0|done
+25FC7|done
+261CE|done
+1ADCE|done
+25BCE|done
+26FCF|done
+1C5D2|done
+195D3|done
+26BD4|done
+275D5|done
+25BD6|done
+273DB|done
+273DF|done
+261E0|done
+25DE4|done
+257E7|done
+263E7|done
+1C5EB|done
+263EE|done
+265F6|done
+259F7|done
+15FF8|done
+275F9|done
+263FC|done
+17FFE|done
+10A46|fallback|PROGRAM|function too large (21925 bytes, limit 16384 bytes)|disassembly/10A46.asm
+15FF8|fallback|sub_15FF8|decompile returned None|disassembly/15FF8.asm
+1633A|fallback|sub_1633A|decompile returned None|disassembly/1633A.asm
+17F3C|fallback|sub_17F3C|decompile returned None|disassembly/17F3C.asm
+17FFE|fallback|sub_17FFE|decompile returned None|disassembly/17FFE.asm
+1874B|fallback|sub_1874B|decompile returned None|disassembly/1874B.asm
+18760|fallback|sub_18760|decompile returned None|disassembly/18760.asm
+1956D|fallback|sub_1956D|decompile returned None|disassembly/1956D.asm
+195D3|fallback|sub_195D3|decompile returned None|disassembly/195D3.asm
+1ADCE|fallback|sub_1ADCE|decompile returned None|disassembly/1ADCE.asm
+1AE29|fallback|sub_1AE29|decompile returned None|disassembly/1AE29.asm
+1B357|fallback|sub_1B357|decompile returned None|disassembly/1B357.asm
+1B689|fallback|sub_1B689|decompile returned None|disassembly/1B689.asm
+1C556|fallback|sub_1C556|decompile returned None|disassembly/1C556.asm
+1C620|fallback|sub_1C620|decompile returned None|disassembly/1C620.asm
+1CBB2|fallback|sub_1CBB2|decompile returned None|disassembly/1CBB2.asm
+1D989|fallback|sub_1D989|too many instructions (>3000, limit 3000)|disassembly/1D989.asm
+21061|fallback|sub_21061|decompile returned None|disassembly/21061.asm
+21576|fallback|sub_21576|decompile returned None|disassembly/21576.asm
+21ECB|fallback|sub_21ECB|decompile returned None|disassembly/21ECB.asm
+21EE1|fallback|sub_21EE1|decompile returned None|disassembly/21EE1.asm
+220B3|fallback|sub_220B3|decompile returned None|disassembly/220B3.asm
+23A58|fallback|sub_23A58|decompile returned None|disassembly/23A58.asm
+2564E|fallback|sub_2564E|decompile returned None|disassembly/2564E.asm
+257E7|fallback|sub_257E7|decompile returned None|disassembly/257E7.asm
+25909|fallback|sub_25909|decompile returned None|disassembly/25909.asm
+25E13|fallback|sub_25E13|decompile returned None|disassembly/25E13.asm
+25EB0|fallback|sub_25EB0|decompile returned None|disassembly/25EB0.asm
+25F30|fallback|sub_25F30|decompile returned None|disassembly/25F30.asm
+25F7D|fallback|sub_25F7D|decompile returned None|disassembly/25F7D.asm
+25FC7|fallback|sub_25FC7|decompile returned None|disassembly/25FC7.asm
+26011|fallback|sub_26011|decompile returned None|disassembly/26011.asm
+260ED|fallback|sub_260ED|decompile returned None|disassembly/260ED.asm
+261CE|fallback|sub_261CE|decompile returned None|disassembly/261CE.asm
+26374|fallback|sub_26374|decompile returned None|disassembly/26374.asm
+26382|fallback|sub_26382|decompile returned None|disassembly/26382.asm
+2638E|fallback|sub_2638E|decompile returned None|disassembly/2638E.asm
+2639C|fallback|sub_2639C|decompile returned None|disassembly/2639C.asm
+263A3|fallback|sub_263A3|decompile returned None|disassembly/263A3.asm
+263AE|fallback|sub_263AE|decompile returned None|disassembly/263AE.asm
+263B6|fallback|sub_263B6|decompile returned None|disassembly/263B6.asm
+274AD|fallback|sub_274AD|decompile returned None|disassembly/274AD.asm
+1C560|skipped|@GetDate$qm4Wordt1t1t1|library function
+1C582|skipped|@SetDate$q4Wordt1t1|library function
+1C596|skipped|@GetTime$qm4Wordt1t1t1|library function
+1C5BB|skipped|@SetTime$q4Wordt1t1t1|library function
+1C5D2|skipped|@DiskFree$q4Byte|library function
+1C5EB|skipped|@DiskSize$q4Byte|library function
+25910|skipped|@__CRTInit$qv|library function
+25940|skipped|unknown_libname_1|library function
+259A9|skipped|sub_259A9|library function
+259F7|skipped|sub_259F7|library function
+25A55|skipped|sub_25A55|library function
+25A92|skipped|@WINDOW$q4BYTEt1t1t1|library function
+25AD2|skipped|@CLRSCR$qv|library function
+25AEC|skipped|@CLREOL$qv|library function
+25B00|skipped|@INSLINE$qv|library function
+25B25|skipped|@GOTOXY$q4BYTEt1|library function
+25B51|skipped|@WHEREX$qv|library function
+25B5D|skipped|@WHEREY$qv|library function
+25B69|skipped|@TEXTCOLOR$q4BYTE|library function
+25B83|skipped|@TEXTBACKGROUND$q4BYTE|library function
+25B9B|skipped|@LOWVIDEO$qv|library function
+25BA1|skipped|@HIGHVIDEO$qv|library function
+25BA7|skipped|@NORMVIDEO$qv|library function
+25BAE|skipped|@DELAY$q4WORD|library function
+25BCE|skipped|sub_25BCE|library function
+25BD6|skipped|@SOUND$q4WORD|library function
+25C03|skipped|@NOSOUND$qv|library function
+25C0A|skipped|@KEYPRESSED$qv|library function
+25C1C|skipped|@READKEY$qv|library function
+25C3E|skipped|@ASSIGNCRT$qm4TEXT|library function
+25D84|skipped|sub_25D84|library function
+25D8B|skipped|sub_25D8B|library function
+25DE4|skipped|sub_25DE4|library function
+25E05|skipped|sub_25E05|library function
+25E0C|skipped|sub_25E0C|library function
+25F18|skipped|sub_25F18|library function
+261E0|skipped|@__SystemInit$qv|library function
+262B8|skipped|@Halt$q4Word|library function
+263E7|skipped|@IOResult$qv|library function
+263EE|skipped|@__IOCheck$qv|library function
+263FC|skipped|@__RangeCheck$q7Longintpa2$7Longint|library function
+26424|skipped|@__StackCheck$q4Word|library function
+2643D|skipped|@Sqr$q7Longint|library function
+2645C|skipped|@$brdiv$q7Longintt1|library function
+264CA|skipped|@$brrsh$q7Longint7Integer|library function
+264D6|skipped|@$brlsh$q7Longint7Integer|library function
+264E2|skipped|@Abs$q7Longint|library function
+264F1|skipped|@$basg$qm6Stringt1|library function
+2650B|skipped|@$basg$qm6Stringt14Byte|library function
+2652F|skipped|@Length$qm6String|library function
+2653D|skipped|@Copy$qm6Stringt17Integert3|library function
+2657E|skipped|@Concat$qm6Stringt1|library function
+265AA|skipped|@Pos$qm6Stringt1|library function
+265F6|skipped|@$bsub$qm6Stringt1|library function
+26621|skipped|@$basg$qm6String4Char|library function
+26633|skipped|@$basg$qm6Stringn4Char4Byte|library function
+2664E|skipped|@Insert$qm6Stringt14Word7Integer|library function
+266A2|skipped|@Delete$qm6String7Integert2|library function
+266F8|skipped|__RealSub|library function
+266FC|skipped|__RealAdd|library function
+267BF|skipped|__RealMul|library function
+268C4|skipped|__RealDiv|library function
+2693B|skipped|__RealCmp|library function
+26952|skipped|sub_26952|library function
+26965|skipped|__RealFloat|library function
+269A4|skipped|__RealTrunc|library function
+26A00|skipped|@$brplu$q4Realt1|library function
+26A06|skipped|@$brmin$q4Realt1|library function
+26A0C|skipped|@Sqr$q4Real|library function
+26A12|skipped|@$brmul$q4Realt1|library function
+26A18|skipped|@$brdiv$q4Realt1|library function
+26A22|skipped|@__Cmp$q4Realt1|library function
+26A26|skipped|@Real$q7Longint|library function
+26A2A|skipped|@Trunc$q4Real|library function
+26A32|skipped|@Round$q4Real|library function
+26A4C|skipped|sub_26A4C|library function
+26A56|skipped|sub_26A56|library function
+26A60|skipped|sub_26A60|library function
+26A6A|skipped|sub_26A6A|library function
+26A74|skipped|@Int$q4Real|library function
+26AC5|skipped|@Frac$q4Real|library function
+26AD9|skipped|@Sqrt$q4Real|library function
+26B36|skipped|@Sin$q4Real|library function
+26B49|skipped|@Cos$q4Real|library function
+26BD4|skipped|@Ln$q4Real|library function
+26C7D|skipped|@Exp$q4Real|library function
+26D20|skipped|@ArcTan$q4Real|library function
+26E4F|skipped|sub_26E4F|library function
+26E55|skipped|sub_26E55|library function
+26E6E|skipped|sub_26E6E|library function
+26EBD|skipped|__Int2Str|library function
+26F37|skipped|__Str2Int|library function
+26FCF|skipped|__Real2Str|library function
+270BB|skipped|sub_270BB|library function
+270C7|skipped|sub_270C7|library function
+27152|skipped|__Str2Real|library function
+271FE|skipped|sub_271FE|library function
+2723C|skipped|sub_2723C|library function
+272C8|skipped|sub_272C8|library function
+27316|skipped|@Assign$qm4Textm6String|library function
+2735B|skipped|@SetTextBuf$qm4Textm3Any4Word|library function
+27386|skipped|@Reset$qm4Text|library function
+2738B|skipped|@Rewrite$qm4Text|library function
+273DB|skipped|@Flush$qm4Text|library function
+273DF|skipped|@Close$qm4Text|library function
+2741A|skipped|sub_2741A|library function
+27595|skipped|__GetEntry|library function
+275B9|skipped|__GetChar|library function
+275D5|skipped|__PutEntry|library function
+275F9|skipped|__PutChar|library function
+27608|skipped|sub_27608|library function
+27639|skipped|@ReadLn$qm4Text|library function
+27662|skipped|@WriteLn$qm4Text|library function
+27681|skipped|@Write$qm4Text|library function
+276A7|skipped|@Read$qm4Text4Char|library function
+276C5|skipped|@Write$qm4Text4Char4Word|library function
+276F2|skipped|@Read$qm4Textm6String4Word|library function
+2772A|skipped|@Write$qm4Textm6String4Word|library function
+27768|skipped|@Read$qm4Text7Longint|library function
+277C0|skipped|@Write$qm4Text7Longint4Word|library function
+27809|skipped|@Read$qm4Text4Real|library function
+27863|skipped|@Write$qm4Text4Real4Wordt3|library function
+278C4|skipped|@UpCase$q4Char|library function

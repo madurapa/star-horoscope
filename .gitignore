@@ -1,0 +1,28 @@
+# Build outputs (rebuild with: cmake -S . -B build && cmake --build build)
+modern_star
+build/
+*.o
+*.a
+
+# Python caches
+__pycache__/
+*.pyc
+
+# Local run artifacts (regenerable, never commit)
+modern_star_output.txt
+*.log
+
+# Agent environment & generated graphs (user-local, reinstallable)
+/.opencode/
+.agents/
+graphify-out/
+skills-lock.json
+
+# Editor / OS noise
+*~
+*.swp
+.DS_Store
+
+# Pre-publish review hold: docs/
+# needing review before publish. Ignored until that pass completes.
+docs/

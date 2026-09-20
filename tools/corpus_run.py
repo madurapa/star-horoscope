@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+"""Data-driven corpus runner: tests/corpus/<name>/input.ini + expect.txt.
+
+Adding a capture = dropping a folder. Each expect.txt line is a literal
+substring that must appear in `modern_star <flags> --screen <n>` output.
+Loop: build once, run every case, diff. Exit non-zero on any miss.
+"""
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+BIN = ROOT / "modern_star"
+if not (BIN.exists() or (ROOT / "/tmp/modern_star").exists()):
+    pass  # built by CMake/CTest or the g++ loop; resolved per-case below
+
+
+def find_binary():
+    for c in [ROOT / "modern_star", Path("/tmp/modern_star"),
+              ROOT / "build" / "modern_star", Path("/tmp/build/modern_star")]:
+        if c.exists():
+            return str(c)
+    # fall back to building
+    r = subprocess.run(["g++", "-std=c++20", "-O2", "-Wall", "-Wextra", "-Isrc",
+                        "src/main.cpp", "src/CLI.cpp", "src/VargaEngine.cpp",
+                        "-o", "/tmp/modern_star"],
+                       cwd=ROOT, capture_output=True, text=True)
+    if r.returncode != 0:
+        print(r.stderr[-3000:])
+        sys.exit("corpus: build failed");
+    return "/tmp/modern_star"
+
+
+def main():
+    binary = find_binary()
+    corpus = ROOT / "tests" / "corpus"
+    cases = sorted(p for p in corpus.iterdir() if p.is_dir())
+    if not cases:
+        sys.exit("corpus: no cases (tests/corpus/<name>/)")
+    fails = 0
+    for case in cases:
+        ini = case / "input.ini"
+        exp = case / "expect.txt"
+        scr = (case / "screen").read_text().strip() if (case / "screen").exists() else "12"
+        flags = []
+        keymap = {"name": "--name", "birth_year": "--year", "birth_month": "--month",
+                  "birth_day": "--day", "birth_hour": "--hour",
+                  "birth_minute": "--minute", "city_index": "--city"}
+        for line in ini.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith(("#", ";")) or "=" not in line:
+                continue
+            k, v = [t.strip() for t in line.split("=", 1)]
+            if k in keymap:
+                flags += [keymap[k], v]
+            elif k == "nirayana":
+                flags += ["--nirayana"] if v in ("true", "1", "yes") else ["--sayana"]
+            elif k == "thathkala" and v in ("true", "1", "yes"):
+                flags += ["--thathkala"]
+        # Fidelity corpus runs the byte-exact legacy layer.
+        cmd = [binary] + flags + ["--screen", scr, "--display", "legacy"]
+        r = subprocess.run(cmd, capture_output=True, text=True)
+        out = r.stdout + r.stderr
+        cur_fail = 0
+        for want in exp.read_text().splitlines():
+            want = want.rstrip("\n")
+            if not want or want.startswith("#"):
+                continue
+            if want not in out:
+                cur_fail += 1
+                print(f"FAIL {case.name}: missing {want!r}")
+        if cur_fail == 0:
+            print(f"ok   {case.name}")
+        fails += cur_fail
+    print(f"corpus: {len(cases)} cases, {fails} misses")
+    return 1 if fails else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

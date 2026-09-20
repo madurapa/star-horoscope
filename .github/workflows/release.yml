@@ -1,0 +1,92 @@
+# Tagged builds (v*) compile modern_star on Linux/macOS/Windows, run the
+# full gate (ctest + --verify), and publish the three binaries as a
+# GitHub Release. Windows uses MinGW (MSYS2 UCRT64) — the sources carry
+# _WIN32 guards for localtime_s/ioctl but rely on unistd.h/isatty, so
+# MSVC is not supported. See docs/plans.md Appendix A (release tags).
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            binary: modern_star-linux
+            exe: modern_star
+          - os: macos-latest
+            binary: modern_star-macos
+            exe: modern_star
+          - os: windows-latest
+            binary: modern_star-windows.exe
+            exe: modern_star.exe
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install MinGW + Python (Windows)
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          install: mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-python
+
+      - name: Configure and build (POSIX)
+        if: runner.os != 'Windows'
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+
+      - name: Gate — ctest + --verify (POSIX)
+        if: runner.os != 'Windows'
+        run: |
+          ctest --test-dir build
+          ./build/modern_star --verify
+
+      - name: Build and gate (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: |
+          cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+          ctest --test-dir build
+          ./build/modern_star --verify
+
+      - name: Stage binary (POSIX)
+        if: runner.os != 'Windows'
+        run: cp "build/${{ matrix.exe }}" "${{ matrix.binary }}"
+
+      - name: Stage binary (Windows)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: cp "build/${{ matrix.exe }}" "${{ matrix.binary }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.binary }}
+          path: ${{ matrix.binary }}
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" dist/* \
+            --title "${{ github.ref_name }}" \
+            --notes "Automated build of ${{ github.ref_name }} (see CHANGELOG.md). Linux, macOS, and Windows (MinGW) binaries."

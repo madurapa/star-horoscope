@@ -1,0 +1,24 @@
+          LIST  OF  CITIES
+          ----------------
+
+
+ 1. CLOMBO     2. GALLE     3. MATHARA    4. KANDY     5. HAMBANTOTA
+
+
+ 6. KALUTHARA  7. RATNAPURA 8. PUTTLAM    9. A"PURA   10. POLONARU
+
+
+11. JAFFNA    12. TRINCO   13. MATHARA   14.BADULLA   15. K"GALA
+
+
+
+              7
+Closest city ?
+
+|------------------------------------------|
+| ENTER A NUMBER > 15 FOR CITIES NOT GIVEN |
+|------------------------------------------|
+
+
+
+

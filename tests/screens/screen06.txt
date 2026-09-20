@@ -1,0 +1,24 @@
+SHAD VARGA OF Test User
+
+GRHAYA    RASHI    NAVAMSAKA    HORA    DESHKANA   DVADASANSAKA TRISHANSAKA
+---------------------------------------------------------------------------
+Lagna   | Meena      Sinha      Kataka     Meena      Mesha      Kanya
+Chandra | Mesha      Mituna     Sinha      Mesha      Kataka     Dhanu
+Rav1    | Wrschika   Makara     Sinha      Kataka     Sinha      Makara
+Budha   | Wrschika   Makara     Sinha      Kataka     Kataka     Makara
+Sikuru  | Makara     Kumba      Kataka     Makara     Meena      Kanya
+Kuja    | Kanya      Makara     Kataka     Kanya      Thula      Wrushaba
+Guru    | Thula      Dhanu      Sinha      Thula      Makara     Kumba
+Shani   | Kanya      Sinha      Sinha      Wrushaba   Kataka     Wrushaba
+Raahu   | Kataka     Kataka     Kataka     Kataka     Kataka     Wrushaba
+Kethu   | Makara     Makara     Kataka     Makara     Makara     Wrushaba
+Urenes  | Wrschika   Kanya      Kataka     Wrschika   Kumba      Kanya
+Neptune | Dhanu      Mesha      Sinha      Dhanu      Dhanu      Mesha
+Pluuto  | Thula      Thula      Sinha      Thula      Thula      Mesha
+
+
+
+
+
+
+

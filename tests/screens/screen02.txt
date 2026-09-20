@@ -1,0 +1,24 @@
+ HOROSCOPE  OWNER"S   DEATALS
+ ****************************
+
+Name ? Test User
+
+Birth date - Year Month Day  ? 1981 12 08
+
+Birth time - Hr Min [24Hrs]  ? 12 55
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

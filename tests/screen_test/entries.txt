@@ -1,0 +1,13 @@
+# name|birthdate|birthtime|city_code
+Test User|1981 12 08|12 55|7
+Test User A|1979 12 01|15 33|7
+Test User B|1990 05 15|10 30|2
+Test User C|1975 03 22|08 45|12
+#to check how the programme responses
+#Leap Year|1980 02 29|23 59|1
+#Invalid Leap|1989 02 29|23 59|1
+#Invalid Time|1975 03 02|45 80|1
+#Invalid City|1985 04 10|12 30|0
+Test User D|2022 8 1|12 25|2
+Test User E|2025 9 22|10 44|2
+Max|2024 10 1|23 59|9
