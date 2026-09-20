@@ -9,6 +9,7 @@
 
 namespace star {
 
+// PROVENANCE: DECODED (sub_18760 + inlined procs 25FC7/25F7D/25F30/26011/260ED; hex patterns on Kobl/Krad/Edge).
 inline constexpr double kLagPi = 3.1415926535883045;
 inline constexpr double kLagObl = 23.45000000001164;
 inline constexpr double kLagKobl = 23.45000000001164;   // (9A85,9999,3B99), degrees

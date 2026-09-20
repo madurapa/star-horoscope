@@ -28,6 +28,7 @@ namespace star {
 // Maanusha x1, blank x2 (both Keti-pada-1 Colombo; stale-empty).
 // Port returns Raxha (majority).
 // "Maanusha" is the binary spelling.
+// PROVENANCE: DECODED (sub_1B689 Gana select, STAR.EXE.asm ~17721-17800; Session 19 verified sets).
 inline const char* ganaFor(int nak0) {
     const int n = nak0 + 1;  // 1-based
     switch (n) {
@@ -36,6 +37,7 @@ inline const char* ganaFor(int nak0) {
         case 2: case 4: case 6: case 11: case 12: case 20: case 21: case 25: case 26:
             return "Maanusha";
         default:
+            // PROVENANCE: NONDETERMINISTIC (Keti matches no set; stale var_4F2, city-dependent; port default = observed majority, Session 19b).
             return "Raxha";  // {3,9,10,14,16,18,19,23,24} + fallthrough
     }
 }
@@ -47,6 +49,7 @@ inline const char* ganaFor(int nak0) {
 // + 7 trailing spaces (binary 12-char field quirk).
 // Index 15 "Vyagradena*": asterisk restored per owner ruling 2026-09-19
 // (docs/plans.md §4.2, ex refactor_plans/FINAL_PLAN.md) — binary-literal kept as-is.
+// PROVENANCE: DECODED (binary-literal 27-entry table, STAR.EXE.asm:16624 db 12,'Mushikadena*').
 inline const char* yoniFor(int nak0) {
     static const char* kYoni[27] = {
         "Ashva", "Eth", "Eludena*", "Sarpa", "Sepini*", "Sunakha", "Balal",
@@ -59,6 +62,7 @@ inline const char* yoniFor(int nak0) {
 }
 
 // RUXHA tree (27-entry direct table; '#' literal).
+// PROVENANCE: DECODED (sub_1B689 per-nakshatra dispatch).
 inline const char* ruxhaFor(int nak0) {
     static const char* kRuxha[27] = {
         "Godaka", "Nelli", "Athikka", "Madan", "Kaluvara", "Kihira", "Una",
@@ -79,6 +83,7 @@ inline const char* ruxhaFor(int nak0) {
 // -> Purusha (identical nak/pada/tithi/weekday/mode) — no deterministic
 // rule can fit; content is runtime stack history. DOS: Sthree x6,
 // Purusha x2 (Rnd08, TriOCB). Port returns Sthree (majority).
+// PROVENANCE: DECODED (cmp-chains, STAR.EXE.asm 17830-17930; Session 19 verified sets).
 [[nodiscard]] inline const char* lingaFor(int nak0) {
     const int n = nak0 + 1;
     switch (n) {
@@ -89,6 +94,7 @@ inline const char* ruxhaFor(int nak0) {
         case 21: case 23: case 27:
             return "Sthree";
         case 24:
+            // PROVENANCE: NONDETERMINISTIC (no binary set covers 24; stale var_7F2, city-dependent; port default = observed majority, Session 19b).
             return "Sthree";  // HOLE: no binary set covers 24 (see above)
         case 5: case 19:
             return "Napunsaka";
@@ -98,6 +104,7 @@ inline const char* ruxhaFor(int nak0) {
 }
 
 // NAADI by 1-based nakshatra (decoded cmp-chains; 9/9/9 complete).
+// PROVENANCE: DECODED (decoded cmp-chains; 9/9/9 complete).
 inline const char* naadiFor(int nak0) {
     const int n = nak0 + 1;
     switch (n) {
@@ -116,6 +123,7 @@ inline const char* naadiFor(int nak0) {
 }
 
 // PAXHI bird by 1-based nak RANGE (threshold chain on var_DF4).
+// PROVENANCE: DECODED (threshold chain on var_DF4, sub_1B689).
 inline const char* paxhiFor(int nak0) {
     const int n = nak0 + 1;
     if (n >= 1 && n <= 5) return "Bheruda";
@@ -127,6 +135,7 @@ inline const char* paxhiFor(int nak0) {
 }
 
 // GOTHRA rishi by 1-based nak RANGE.
+// PROVENANCE: DECODED (range-group dispatch, sub_1B689).
 inline const char* gothraFor(int nak0) {
     const int n = nak0 + 1;
     if (n >= 1 && n <= 4) return "Marivi";
@@ -140,6 +149,7 @@ inline const char* gothraFor(int nak0) {
 }
 
 // VARNA by 1-based nakshatra (decoded cmp-chains; complete).
+// PROVENANCE: DECODED (decoded cmp-chains; complete).
 inline const char* varnaFor(int nak0) {
     const int n = nak0 + 1;
     switch (n) {
@@ -161,6 +171,7 @@ inline const char* varnaFor(int nak0) {
 }
 
 // RAJJU by 1-based nakshatra (decoded cmp-chains; complete).
+// PROVENANCE: DECODED (decoded cmp-chains; complete).
 inline const char* rajjuFor(int nak0) {
     const int n = nak0 + 1;
     switch (n) {
@@ -180,6 +191,7 @@ inline const char* rajjuFor(int nak0) {
 }
 
 // BHUTHA element by 1-based nak RANGE ('Aakasha' double-a literal).
+// PROVENANCE: DECODED (range groups, sub_1B689; 'Aakasha' binary-literal).
 inline const char* bhuthaFor(int nak0) {
     const int n = nak0 + 1;
     if (n >= 1 && n <= 5) return "Patavi";

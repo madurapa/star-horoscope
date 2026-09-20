@@ -24,6 +24,7 @@
 namespace star {
 
 // Field width constants matching original STAR.EXE layouts.
+// PROVENANCE: FITTED (widths measured from original screen layouts).
 struct LayoutConstants {
     static constexpr int SCREEN_WIDTH = 80;
     static constexpr int LABEL_WIDTH = 18;
@@ -66,6 +67,7 @@ inline std::string formatDMS(const AngularDegrees& ad) {
 // X.1875->.187 fuzz proofs; glibc uses half-even and flips all three).
 // Identical to %.3f except on exact ties (near-ties within 1e-7 snapped,
 // covering double dust; genuine content never sits that close to a tie).
+// PROVENANCE: FITTED (Lagna10/13/22 exact-tie fuzz proofs; Borland %.3f emulation, no asm address).
 inline std::string formatJulianDate(double jd) {
     const double scaled = jd * 1000.0;
     double ipart = 0.0;
@@ -84,6 +86,7 @@ inline std::string formatJulianDate(double jd) {
 // Rasi name from index (1=Mesha ... 12=Meena). Out-of-range renders as
 // "**" (Pascal field-width overflow, observed in screen_test Invalid_Time
 // Lagna Hora/Deshkana/Dvadasansa cells).
+// PROVENANCE: FITTED (capture spellings + Invalid_Time ** overflow proof).
 inline const char* rasiName(int idx) {
     static const char* names[12] = {
         "Mesha", "Wrushaba", "Mituna", "Kataka", "Sinha", "Kanya",
@@ -180,6 +183,7 @@ inline std::string renderScreen06() {
 }
 
 // Screen order for the Nirayana house table (screen05 spellings).
+// PROVENANCE: FITTED (screen05 planet order/spellings).
 inline const std::vector<std::string>& houseTableOrder() {
     static const std::vector<std::string> kOrder = {
         "Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
@@ -188,6 +192,7 @@ inline const std::vector<std::string>& houseTableOrder() {
 }
 
 // Screen display spelling: Moon prints as "Sandu", Neptune as "Neptun".
+// PROVENANCE: FITTED (screen05 spelling rule).
 inline std::string displayPlanetName(const std::string& key) {
     if (key == "Chandra") return "Sandu";
     if (key == "Neptune") return "Neptun";
@@ -222,6 +227,7 @@ inline const PlanetLongitude* findLongitude(const AstroEngineOutput& output,
 // observed cells via Avastha.hpp (blank where unobserved, as Lagna/outers).
 // House-table RASI column spells Gemini "Mithuna" (6/6 machine captures);
 // Shadvarga/kendra keep "Mituna" (see spellings doc).
+// PROVENANCE: FITTED (6/6 machine captures: house-table Gemini is "Mithuna").
 inline std::string displayRasiHouse(int idx) {
     if (idx == 3) return "Mithuna";
     return rasiName(idx);
@@ -281,6 +287,7 @@ inline std::string renderScreen07(const AstroEngineOutput& output, bool /*niraya
 // (digit one), "Urenes", "Neptun"->"Neptune" (screen06 spells it WITH the e,
 // unlike screen05's "Neptun"), "Pluuto", and "Chandra" (screen06 does NOT use
 // screen05's "Sandu"). See AGENTS.md zero-variance mandate.
+// PROVENANCE: FITTED (screen06 planet cells reproduced literally, quirks included).
 inline std::string displayShadvargaName(const std::string& key) {
     if (key == "Chandra" || key == "Sandu") return "Chandra";
     if (key == "Ravi") return "Rav1";
@@ -307,6 +314,7 @@ inline std::string renderScreen08(const AstroEngineOutput& output) {
         // Dvadasansa cells ("**") occupy widths 10/9/14 (not 11/11/11), so
         // subsequent columns start at 42/51 with Trishansa realigned at 65.
         // Total stays 33 (10+9+14); mechanism undisclosed, reproduced literally.
+        // PROVENANCE: UNOBSERVED (only observed ** case is Invalid_Time Lagna-591; widths 10/9/14 reproduced literally).
         auto cell = [](int idx, int wValid, int wStar) -> std::string {
             const char* s = rasiName(idx);
             char b[32];
@@ -328,6 +336,7 @@ inline std::string renderScreen08(const AstroEngineOutput& output) {
 // Screen 9 (screen07.txt content): house numbers from Lagna's varga seats.
 inline std::string renderScreen0914(const AstroEngineOutput& output) {
     const PlanetLongitude* lagna = findLongitude(output, "Lagna");
+    // PROVENANCE: FITTED (fallback: screen06 Lagna row).
     std::array<int, 6> lagSv = {12, 5, 4, 12, 1, 6};  // fallback: screen06 Lagna row
     if (lagna != nullptr) lagSv = VargaEngine::GetShadvarga(lagna->ecliptic.toDecimal());
 
@@ -434,6 +443,7 @@ struct KendraChart {
     std::array<std::vector<std::string>, 13> houses;
 };
 
+// PROVENANCE: FITTED (glyph spellings as in original screens; outers omitted).
 inline std::string kendraGlyph(Planet p) {
     switch (p) {
         case Planet::Chandra: return "Ch";
@@ -518,6 +528,7 @@ struct KendraHome {
     int row;
     int col;
 };
+// PROVENANCE: DECODED (binary GOTOXY cursor table behind sub_1D989; screens 08-11 exemplars).
 inline const std::array<KendraHome, 55>& kendraHomes() {
     static const std::array<KendraHome, 55> k{{
         {1, 2, 4, 21},  // H1 Budha
@@ -579,6 +590,7 @@ inline const std::array<KendraHome, 55>& kendraHomes() {
     return k;
 }
 // Empty-house number cells (row, display col).
+// PROVENANCE: UNOBSERVED (measured exemplars only; uncovered houses fall back to house 1).
 inline std::pair<int, int> kendraNumberCell(int house) {
     switch (house) {
         case 1: return {4, 19};
@@ -599,6 +611,7 @@ inline std::pair<int, int> kendraNumberCell(int house) {
 
 // Fallback: region rows + default display col for (house,planet) combos never
 // observed in screens 08-11 (other Lagnas/scenarios).
+// PROVENANCE: UNOBSERVED (unseen combos; region/fill policy reproduced literally).
 inline std::pair<std::vector<int>, int> kendraFallback(int house) {
     switch (house) {
         case 1: return {{1, 2, 3, 4, 5, 6}, 15};
@@ -739,6 +752,7 @@ inline std::vector<std::string> renderKendraSingle(const KendraChart& k,
 // DASA BALANCE lord spellings use the DISPLAYED planet spellings (16/16
 // machine cells): screen12 "Kethu", T3 "Chandra", machine "Rav1" (Ravi
 // balance). Dasa tables instead use dasa names ("Ketu", "Sandu", "Rahu").
+// PROVENANCE: FITTED (16/16 machine cells: balance lord uses displayed spellings).
 inline std::string balanceLordDisplay(const std::string& dasaLord) {
     if (dasaLord == "Sandu") return "Chandra";
     if (dasaLord == "Ketu") return "Kethu";
@@ -829,6 +843,7 @@ inline std::string renderScreen12(const HoroscopeOwner& owner, const GeoCoord& g
 // yoniFor() keeps the binary-literal table; truncation lives here on the
 // display path (same policy as the 213:52:60 non-carry: store truthfully,
 // render literally).
+// PROVENANCE: FITTED (Test User D + 2 fuzz rows; storage itself is DECODED binary-literal).
 inline std::string displayYoni(const char* stored) {
     std::string s(stored ? stored : "");
     if (s.size() > 10) s.resize(10);

@@ -35,6 +35,7 @@
 namespace star {
 
 // Exact Real48 decodes (PROGRAM dseg immediates).
+// PROVENANCE: DECODED (PROGRAM 0x122D8-0x12586 dseg immediates with hex patterns).
 inline constexpr double kSunTwoPi = 6.2831853071766091;      // (2183,DAA2,490F)
 inline constexpr double kSunYearDays = 365.0;                 // (89,0,3680)
 inline constexpr double kEotScale = 229.17999999993481;       // (E188,147A,652E)

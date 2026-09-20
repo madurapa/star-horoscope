@@ -21,6 +21,7 @@
 
 namespace star {
 
+// PROVENANCE: DECODED (Real48 40/3, inherits AstroTime::kNakshatraSpan).
 inline constexpr double kNakSpanPanch = 13.333333333328483;   // real48 40/3 (AstroTime::kNakshatraSpan)
 inline constexpr double kPadaSpanPanch = 10.0 / 3.0;  // 3.333... deg
 
@@ -33,6 +34,7 @@ inline constexpr double kPadaSpanPanch = 10.0 / 3.0;  // 3.333... deg
 // Puvapal, Puvasala, Hata, Denata, Revathee (see prior notes).
 // (A prior "screen12 Siyavasa" claim was unfounded — machines show Siyavsa
 // in the table and no NEKATHA evidence exists; corrected 2026-09-16.)
+// PROVENANCE: FITTED (assembled from four scenario transcripts + 8 machine captures; no binary tables per header).
 inline const char* nakshatraDisplayName(int idx0) {
     static const char* kNames[27] = {
         "Asvida", "Berana", "Keti", "Rehena", "Muvasirasa", "Ada",
@@ -101,6 +103,7 @@ inline const char* weekdayName(int w) {
 // (STAR.EXE.asm inline Pascal literals, star_asm_findings.md section 2):
 // all 15 recovered literally, settling the 5 former guesses (#3 Thiyawaka,
 // #8 Atawaka, #10 Dasawaka, #11 Ekoloswaka, #15 Pasaloswaka).
+// PROVENANCE: DECODED (STAR.EXE.asm inline Pascal literals, all 15 recovered literally).
 inline const char* tithiLimbName(int limb1to15) {
     static const char* kLimbs[15] = {
         "Pelaviya", "Diyawaka", "Thiyawaka", "Jalawaka", "Visheniya", "Shatawaka",
@@ -118,6 +121,7 @@ inline const char* tithiLimbName(int limb1to15) {
 // New moon (tithi 30) is special: "Amaawaka-15" with NO paksha prefix
 // (Moon06 fuzz proof; limb number still 15). Both forms are 19 chars and
 // feed the renderer's %-19s slot.
+// PROVENANCE: FITTED (Moon06 fuzz proof + measured %-11s/%2d columns; no asm address).
 inline std::string tithiDisplay(int tithi1to30) {
     char buf[64];
     if (tithi1to30 == 30) {
@@ -148,6 +152,8 @@ inline std::string tithiDisplay(int tithi1to30) {
 // Brahma), #26 Mahendra (Seas07 fuzz, not Indra), #27 Vydruthi (T4, not
 // Vaidhriti), plus Shobhana, Shubha, Harshana, Vajra (machines).
 // Remainder unobserved (disclosed).
+// PROVENANCE: FITTED (attested entries per fuzz/machine proofs in comment above).
+// PROVENANCE: UNOBSERVED (remainder of the 27, disclosed above).
 inline const char* yogaName(int idx0) {
     static const char* kYogas[27] = {
         "Vishkamba", "Preethi", "Aaushmaan", "Savbhagya", "Shobhana",
@@ -190,8 +196,10 @@ inline const char* yogaName(int idx0) {
 // NO weekday term (same k on different weekdays always agrees in 88 rows).
 // Validated 87/87 on tests/screen_test/karana_data.txt (1 unknown-weekday row
 // skipped) incl. baseline k=22 Bava, Test User D k=6 Vanija, Test User E k=0 Kinsthugana.
+// PROVENANCE: DECODED (sub_17FFE karana dispatch, STAR.EXE.asm 12485-12769; Session 18 re-decode; 87/87 rows).
 inline const char* karanaName(double elongDeg, int /*weekday*/) {
     static const char* kTab[61] = {
+        // PROVENANCE: UNOBSERVED (k >= 0 so ax >= 1; entry unreachable).
         "?",  // 0 (unreachable: k >= 0 so ax >= 1)
         "Kinsthugana", "Bava", "Baalava", "Kavlava", "Thithila", "Garaja",
         "Vanija", "Vishti", "Bava", "Baalava", "Kavlava", "Thithila",

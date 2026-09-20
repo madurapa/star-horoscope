@@ -55,6 +55,7 @@ public:
     }
 
     // Rasi (D1): rule1 on the RAW quotient (see header note).
+    // PROVENANCE: DECODED (Meena jbe-360 bound + 5 Invalid_Time probes, 591->Thula).
     [[nodiscard]] static int GetRashiIndex(double absolute_lon) noexcept {
         const double v = normUp(absolute_lon);
         const long q = static_cast<long>(std::floor(v / 30.0));
@@ -67,6 +68,7 @@ public:
     // Hora (D2 - 15 deg arcs). Returns -1 when out of range (renders "**").
     // Odd signs: 0-15 deg = Sinha (5), 15-30 deg = Kataka (4).
     // Even signs: 0-15 deg = Kataka (4), 15-30 deg = Sinha (5).
+    // PROVENANCE: FITTED (classical odd/even rule; 72 screen06/07 cells + Invalid_Time **).
     [[nodiscard]] static int GetHoraIndex(double absolute_lon) noexcept {
         const double v = normUp(absolute_lon);
         const long q = static_cast<long>(std::floor(v / 30.0));
@@ -82,6 +84,7 @@ public:
     // Drekkana (D3 - 10 deg arcs), single conditional subtract (NOT a loop):
     // out-of-range stays out (renders "**"). 0-10 deg: same sign (+0),
     // 10-20 deg: +4 (5th from), 20-30 deg: +8 (9th from).
+    // PROVENANCE: FITTED (classical rule; 72 screen06/07 cells + Invalid_Time **).
     [[nodiscard]] static int GetDrekkanaIndex(double absolute_lon) noexcept {
         const double v = normUp(absolute_lon);
         const long q = static_cast<long>(std::floor(v / 30.0));
@@ -100,6 +103,7 @@ public:
     // -> 1 Mesha, as observed (proper-mod Wrschika base would give Makara).
     // Start sign by element: Fiery (1,5,9)->Mesha(1); Earthy (2,6,10)->Makara(10);
     // Airy (3,7,11)->Thula(7); Watery (4,8,12)->Kataka(4); then count forward.
+    // PROVENANCE: FITTED (classical tribes; Lagna-591 rule1-tribe proof in comment).
     [[nodiscard]] static int GetNavamshaIndex(double absolute_lon) noexcept {
         const double v = normUp(absolute_lon);
         const long q = static_cast<long>(std::floor(v / 30.0));
@@ -123,6 +127,7 @@ public:
     }
 
     // Dvadasamsa (D12) - 2 deg 30' = 2.5 deg per part, single subtract.
+    // PROVENANCE: FITTED (classical rule; 72 screen06/07 cells + Invalid_Time **).
     [[nodiscard]] static int GetDvadasamsaIndex(double absolute_lon) noexcept {
         const double v = normUp(absolute_lon);
         const long q = static_cast<long>(std::floor(v / 30.0));

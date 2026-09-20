@@ -33,6 +33,7 @@ int VargaEngine::GetTrishansaIndex(double absolute_lon) noexcept {
         else if (inSign < 24.0) arc = 3;
         else arc = 4;
         // Mars, Saturn, Jupiter, Mercury, Venus.
+        // PROVENANCE: FITTED (Session 13 refit + Session 19b DOSBox campaign; bounds (4,9,17,24) per named probes above).
         constexpr int kOdd[5] = {1, 11, 9, 3, 7};
         return kOdd[arc];
     }
@@ -43,6 +44,7 @@ int VargaEngine::GetTrishansaIndex(double absolute_lon) noexcept {
     else arc = 4;
     // Venus, Mercury, Jupiter, Saturn, Venus (arc4 reads Wrushaba, NOT
     // Wrschika — 6/6 high-even samples across both epochs).
+    // PROVENANCE: FITTED (TriB0A/B1A/B3A campaign; bounds (4,11,19,24) per named probes above).
     constexpr int kEven[5] = {2, 6, 12, 10, 2};
     return kEven[arc];
 }

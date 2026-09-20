@@ -11,6 +11,7 @@
 namespace star {
 
 // Exact real48 values from the binary (%.17g of the decoded 39-bit mantissa).
+// PROVENANCE: DECODED (Borland real48 bit patterns per trailing comments; cf. docs/math_engine_proofs.md).
 inline constexpr double kJ2000Epoch      = 2451545.0;             // 96 6400 15A1
 inline constexpr double kJulianCentury   = 36525.0;              // 90 0000 0EAD
 inline constexpr double kGmstC3          = 6.199999999997874e-06;// 366F 982F 5009
@@ -36,6 +37,7 @@ struct HMS { int h = 0, m = 0, s = 0; };
 
 // Meeus Gregorian JD for integer civil day (sub_2564E, day WITHOUT fraction:
 // caller adds the UT fraction afterwards). Matches binary Int() semantics via floor.
+// PROVENANCE: DECODED (sub_2564E Meeus JD path, integer-exact .50000000 on live dumps).
 [[nodiscard]] inline double meeusJdNoon(int y, int m, int d) {
     const int yp = (m > 2) ? y : y - 1;
     const int mp = (m > 2) ? m : m + 12;
@@ -114,6 +116,7 @@ struct HMS { int h = 0, m = 0, s = 0; };
 }
 
 // sub_21EE1 second-carry threshold: real48(5C86 C28F 6FF5) ~= 59.99.
+// PROVENANCE: DECODED (sub_21EE1 threshold immediate).
 inline constexpr double kSecCarry = 59.98999999999069;
 
 // sub_21EE1 replica: time-table display splitter with second carry.

@@ -56,6 +56,7 @@ struct HoroscopeResult {
     r.jdn0 = meeusJdNoon(owner.birth_year, owner.birth_month, owner.birth_day);
     r.jd = julianDateR48(r.jdn0, r.birthDecHours);
     // Planetary-element century (1900-based, NOT J2000).
+    // PROVENANCE: DECODED (elements epoch 2415020.0, dseg 27BEC family; cf. docs/math_engine_proofs.md).
     const double t1900 = (r.jd - 2415020.0) / 36525.0;
 
     r.ayanamsaDeg = AyanamsaExact(r.jd);

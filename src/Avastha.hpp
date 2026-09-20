@@ -26,6 +26,7 @@
 // 4 Prakasha, 5 Gamana, 6 Agamana, 7 Saba, 8 AAgama, 9 Bhojana,
 // 10 Nuthyalipsa, 11 Kavthuka (cmp chain loc_254B5..loc_2561A).
 // Blank gate (word_27E04): Lagna + outer planets (Urenus/Neptune/Pluto).
+// PROVENANCE: DECODED (word_27E04).
 // Call order for carry: Lagna, Sandu, Ravi, Budha, Sikuru, Kuja, Guru,
 // Shani, Raahu, Kethu (sub_23A58 call sites in PROGRAM).
 
@@ -38,6 +39,7 @@
 namespace star {
 
 // Planet codes (word_27DF6).
+// PROVENANCE: DECODED (nine mov stores before the planet calls, word_27DF6).
 [[nodiscard]] inline int avasthaPlanetCode(const std::string& planet) noexcept {
     if (planet == "Ravi") return 1;
     if (planet == "Chandra" || planet == "Sandu") return 2;
@@ -51,6 +53,7 @@ namespace star {
     return 0;
 }
 
+// PROVENANCE: DECODED (remainder-name cmp chain loc_254B5..loc_2561A).
 inline const char* avasthaName(int idx) noexcept {
     switch (idx) {
         case 0: return "Nidra";
@@ -70,6 +73,7 @@ inline const char* avasthaName(int idx) noexcept {
 }
 
 // Pascal Banker's Round (half to even), for E02.
+// PROVENANCE: DECODED (E02 sinhala-ghati term, sub_23A58).
 [[nodiscard]] inline long bankersRound(double x) noexcept {
     double ipart = 0.0;
     const double fpart = std::modf(x, &ipart);
@@ -83,10 +87,12 @@ inline const char* avasthaName(int idx) noexcept {
 }
 
 // E02 = Round(2.5 * (birth - sunrise)), banker's.
+// PROVENANCE: DECODED (native-mechanism sunrise PROGRAM 0x122D8-0x12586).
 [[nodiscard]] inline long avasthaE02(double birthDecHours, double sunriseH) noexcept {
     return bankersRound(2.5 * (birthDecHours - sunriseH));
 }
 
+// PROVENANCE: DECODED (Real48 40/3, inherits AstroTime::kNakshatraSpan).
 inline constexpr double kNakSpanAv = 13.333333333328483;  // real48 40/3 (AstroTime::kNakshatraSpan)
 
 // Full per-run avastha table. modeLon: planet -> MODE longitude in degrees
@@ -95,10 +101,12 @@ inline constexpr double kNakSpanAv = 13.333333333328483;  // real48 40/3 (AstroT
 // e02: precomputed avasthaE02(birth, sunriseTable).
 [[nodiscard]] inline std::map<std::string, std::string> avasthaTable(
     const std::map<std::string, double>& modeLon, long e02) {
+    // PROVENANCE: DECODED (sub_23A58 call sites in PROGRAM).
     static const char* const kOrder[10] = {
         "Lagna", "Chandra", "Ravi", "Budha", "Sikuru",
         "Kuja", "Guru", "Shani", "Raahu", "Kethu"};
     std::map<std::string, std::string> out;
+    // PROVENANCE: UNOBSERVED (DF8/DFA stale-carry mechanism undisclosed; inferred from Invalid_Time 9/9).
     long df4 = 0;   // word_27DF4 (nak+1), stale-carry, init 0
     long dfc = 0;   // word_27DFC (rasi), stale-carry, init 0
     long df8 = 0;   // word_27DF8 (set from Sandu's DF4 via flag)

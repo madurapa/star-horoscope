@@ -93,6 +93,7 @@ inline constexpr std::array<const char*, 13> kPlanetNames{
     "Shani", "Raahu", "Kethu", "Urenus", "Neptune", "Pluto"};
 
 // Rasi indices pinned by screen07 numeric matrix (Mesha=1 .. Meena=12).
+// PROVENANCE: FITTED (screen07 numeric matrix).
 enum class Rasi : std::uint8_t {
     Mesha = 1, Wrushaba, Mituna, Kataka, Sinha, Kanya,
     Thula, Wrschika, Dhanu, Makara, Kumba, Meena
@@ -101,6 +102,7 @@ enum class Rasi : std::uint8_t {
 enum class Varga : std::uint8_t { Rashi, Navamsaka, Hora, Deshkana, Dvadasansa, Trishansa };
 
 // Vimshottari maha-dasa year lengths; order starts at Ketu (docs/time_and_dasa_logic.md).
+// PROVENANCE: FITTED (classical order/periods, validated against screen14-16 timelines; no binary address in comment).
 struct DasaLord {
     const char* name = "";
     int years = 0;

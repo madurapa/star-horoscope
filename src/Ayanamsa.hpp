@@ -26,6 +26,7 @@ namespace star {
 //   ayan = Ca + (A*Cb + Cc)*t/Cd   (Real48 immediates, exact decodes)
 // Rate at 1900: Cc/Cd per day = 50.2564"/yr; Ca = 22.4276 deg at 1900.
 // At baseline JD: 23.57249 deg (display still rounds to 23:34:21).
+// PROVENANCE: DECODED (PROGRAM ayanamsa block, STAR.EXE.asm ~1680-1722; Real48 immediates with hex patterns; epoch 2415020.5 half-day later than elements epoch).
 inline constexpr double kAyanCa = 22.427627139986726;    // (2985,C7C7,336B)
 inline constexpr double kAyanCb = 0.00011125000000000718;  // (E273,E392,694E)
 inline constexpr double kAyanCc = 50.256400000012945;      // (BB86,8DB8,4906)

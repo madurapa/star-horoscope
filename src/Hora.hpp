@@ -52,6 +52,7 @@ struct HoraTriple {
 };
 
 // Lord tables (binary orderings; see header note).
+// PROVENANCE: DECODED (display table DS:7AF9, Moon "Chandra").
 inline const char* horaAName(int idx1to7) {
     static const char* kA[8] = {"?", "Ravi", "Sikuru", "Budha", "Chandra",
                                 "Shani", "Guru", "Kuja"};
@@ -59,6 +60,7 @@ inline const char* horaAName(int idx1to7) {
     return kA[idx1to7];
 }
 
+// PROVENANCE: DECODED (display table DS:7B47, Moon "Chadra" slot, load-bearing).
 inline const char* horaBName(int idx1to7) {
     static const char* kB[8] = {"?", "Ravi", "Chadra", "Kuja", "Budha",
                                 "Guru", "Sikuru", "Shani"};
@@ -67,6 +69,7 @@ inline const char* horaBName(int idx1to7) {
 }
 
 // Weekday (0=Sunday) -> A-number (asm 15930-16011).
+// PROVENANCE: DECODED (asm 15930-16011; +3 mod 7 classical hora shift).
 [[nodiscard]] inline int horaWeekdayA(int weekday) noexcept {
     static const int kMap[7] = {1, 4, 7, 3, 6, 2, 5};
     if (weekday < 0 || weekday > 6) return 1;
@@ -74,12 +77,14 @@ inline const char* horaBName(int idx1to7) {
 }
 
 // A-number -> B-number (asm 16115-16205) and inverse (asm 16342-16420).
+// PROVENANCE: DECODED (asm 16115-16205).
 [[nodiscard]] inline int horaAtoB(int a) noexcept {
     static const int kMap[8] = {0, 1, 6, 4, 2, 7, 5, 3};
     if (a < 1 || a > 7) return 1;
     return kMap[a];
 }
 
+// PROVENANCE: DECODED (asm 16342-16420, exact inverse of remap 1).
 [[nodiscard]] inline int horaBtoA(int b) noexcept {
     static const int kMap[8] = {0, 1, 4, 7, 3, 6, 2, 5};
     if (b < 1 || b > 7) return 1;
@@ -92,6 +97,7 @@ inline const char* horaBName(int idx1to7) {
 // binary reads past the 7-entry name table into unknown bytes).
 // weekday: 0=Sunday..6=Saturday (civil-date JD).
 // ghatiX: WRAPPED sinhala ghati in [0, 60) (sinhalaGhati() output).
+// PROVENANCE: DECODED (sub_1AE29 chained-loop mechanism; validated 108/108 DOS triples).
 [[nodiscard]] inline HoraTriple horaChain(int weekday, double ghatiX) {
     HoraTriple out;
     // Loop 1 (KALA, max 24 iters, step 2.5 on X).
@@ -101,6 +107,7 @@ inline const char* horaBName(int idx1to7) {
         if ((n - 1) * 2.5 < ghatiX && ghatiX <= n * 2.5) break;
         ++v;
     }
+    // PROVENANCE: UNOBSERVED (ghati > 60 unreachable on valid input; emulated as blank Kala).
     const int kalaA = v;  // 1..7, or 8 (ghati > 60, garbage input only)
     out.kala = (kalaA >= 1 && kalaA <= 7) ? horaAName(kalaA) : "";
     // Remap 1 (A-name -> B-number); no match (index 8) keeps the value,
@@ -121,6 +128,7 @@ inline const char* horaBName(int idx1to7) {
         ++v;
     }
     const int eff2 = (n2 < 0) ? 5 : n2;
+    // PROVENANCE: UNOBSERVED (var_1A <= 0, i.e. birth exactly at sunrise; emulated as blank Pancha).
     const int panB = v;  // 1..7, or 8 (var_1A <= 0, i.e. birth at sunrise)
     out.pancha = (panB >= 1 && panB <= 7) ? horaBName(panB) : "";
     const double rem = v1a - (eff2 - 1) * 12.0;
@@ -132,6 +140,7 @@ inline const char* horaBName(int idx1to7) {
         if ((n - 1) * 4.0 < rem && rem <= n * 4.0) break;
         ++v;
     }
+    // PROVENANCE: UNOBSERVED (rem <= 0; emulated as blank Sukshama).
     const int sukA = v;  // 1..7, or 8 (rem <= 0)
     out.sukshama = (sukA >= 1 && sukA <= 7) ? horaAName(sukA) : "";
     return out;

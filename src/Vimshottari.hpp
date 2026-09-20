@@ -17,6 +17,7 @@ namespace star {
 // Nakshatra lord cycle, Ashwini-first (baseline: Ashwini -> Ketu).
 // Names use the dasa-table spellings from segment 05FF (Ravi/Sandu/Kuja/...).
 struct DasaLordYear { const char* name; int years; };
+// PROVENANCE: DECODED (lord dispatch + balance seed/YMD blocks, PROGRAM 0x12e3e/0x157fc-0x15bd4; dasa-table spellings from segment 05FF).
 inline constexpr std::array<DasaLordYear, 9> kDasaCycle{{
     {"Ketu", 7}, {"Sikuru", 20}, {"Ravi", 6}, {"Sandu", 10}, {"Kuja", 7},
     {"Rahu", 18}, {"Guru", 16}, {"Shani", 19}, {"Budha", 17},
@@ -37,6 +38,7 @@ struct DasaSpan {
 };
 
 // 1-based nakshatra number (sub_23A58 loop: first i with i*SPAN >= moon).
+// PROVENANCE: DECODED (sub_23A58 nakshatra/pada finder).
 [[nodiscard]] inline int nakshatraNumber(double moonDeg) {
     int n = static_cast<int>(moonDeg / kNakshatraSpan) + 1;
     if (n < 1) n = 1;
@@ -45,6 +47,7 @@ struct DasaSpan {
 }
 
 // 1-based pada within the nakshatra: Trunc(remainder / PADA_SPAN) + 1.
+// PROVENANCE: DECODED (sub_23A58 nakshatra/pada finder).
 [[nodiscard]] inline int nakshatraPada(double moonDeg) {
     const double rem = moonDeg - (nakshatraNumber(moonDeg) - 1) * kNakshatraSpan;
     int p = static_cast<int>(rem / kPadaSpan) + 1;
@@ -55,11 +58,13 @@ struct DasaSpan {
 
 // Balance seed (PROGRAM 0x12e3e): elapsed degrees within the nakshatra,
 // i.e. moon - (nak-1)*SPAN. For nak 1 this is the full Moon longitude.
+// PROVENANCE: DECODED (PROGRAM 0x12e3e balance seed).
 [[nodiscard]] inline double balanceElapsedDeg(double moonDeg) {
     return moonDeg - (nakshatraNumber(moonDeg) - 1) * kNakshatraSpan;
 }
 
 // Balance in years (PROGRAM 0x15ad9): (SPAN - elapsed)/SPAN * lordYears.
+// PROVENANCE: DECODED (PROGRAM 0x15ad9 + Trunc-split display 0x15b38-0x15bd4).
 [[nodiscard]] inline DasaBalance dasaBalance(double moonDeg) {
     const int nak = nakshatraNumber(moonDeg);
     const int lord = (nak - 1) % 9;
@@ -79,6 +84,7 @@ struct DasaSpan {
 // Civil date difference with fixed 30-day month borrowing (screen14-16 "Age"
 // columns, e.g. 1984-01-02 minus 1981-12-08 = 2-0-24; 2020-05-29 minus
 // 1981-12-08 = 38-5-21). Verified against six screen rows.
+// PROVENANCE: FITTED (six screen rows; no binary address).
 [[nodiscard]] inline YMD dateDiffYmd(YMD from, YMD to) {
     YMD out;
     out.d = to.d - from.d;
@@ -97,6 +103,7 @@ struct DasaSpan {
 }
 
 // Full 120-year maha timeline from the birth fractional epoch.
+// PROVENANCE: DECODED (sub_1633A pattern + baseline tail proof).
 [[nodiscard]] inline std::vector<DasaSpan> mahaTimeline(const YMD& birth, double birthFrac,
                                                         const DasaBalance& bal) {
     std::vector<DasaSpan> out;
@@ -125,6 +132,7 @@ struct DasaSpan {
 // maha start (birth) to the first backward boundary. Baseline proof:
 // Ketu balance B=2.0666y, Mercury = 17/120*7 = 0.991667y, so Shani runs
 // birth -> (end - 0.991667) = 1983-01-05, Budha -> 1984-01-02 (screen14).
+// PROVENANCE: DECODED (sub_1633A pattern + screen14 baseline proof).
 [[nodiscard]] inline std::vector<DasaSpan> bhuktiTimeline(const YMD& birth, double mahaStartFrac,
                                                           int mahaLordIdx, double mahaYears,
                                                           double elapsedUnits = 0.0,
@@ -184,6 +192,7 @@ struct DasaSpan {
 // bhuktiYears * Yi / 120. No screen ground truth pins L3 dates (screens
 // 14-18 stop at Athuru level), so this is a structural extension tested for
 // contiguity, lord order and span-sum conservation.
+// PROVENANCE: UNOBSERVED (no screen ground truth pins L3 dates; structural extension).
 [[nodiscard]] inline std::vector<DasaSpan> antardasaTimeline(const YMD& birth, double bhuktiStartFrac,
                                                              int bhuktiLordIdx, double bhuktiYears) {
     std::vector<DasaSpan> out;

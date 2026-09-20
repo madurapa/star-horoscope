@@ -10,6 +10,8 @@
 // via kR2D = 57.29577951307874 (dseg 27C52).
 // GENERATED FROM ASM — DO NOT HAND-EDIT the t1..t276 bodies below: machine
 // translation of sub_220B3/sunResult/moonSayana where rounding order is load-bearing.
+// PROVENANCE: DECODED (PROGRAM 0x11d57-0x12100 Sun block, sub_195D3 elements/nodes,
+// sub_220B3 solver; exact real48 immediates throughout, Sin/Cos swap per header).
 
 #include <cmath>
 #include <map>
@@ -17,6 +19,7 @@
 #include "Ayanamsa.hpp"
 
 namespace star {
+// PROVENANCE: DECODED (dseg 27C52).
 inline constexpr double kR2D = 57.29577951307874;
 inline double intr(double x) { return std::trunc(x); }  // Pascal Int() truncates toward zero
 
@@ -25,6 +28,7 @@ struct PlanetElements {
          O0,O1,O2,O3,M0,M1,M2,M3,a,type;
 };
 // Planet elements database - single inline instance + accessor.
+// PROVENANCE: DECODED (exact real48 element decodes, sub_195D3 blocks).
 inline const std::map<std::string, PlanetElements> kPlanetElements = {
     {"Budha", {178.17907799989916, 149474.07078003883, 0.0003011000000001651, 0.0, 0.20561421000002156, 2.0462999999998344e-05, -2.9999999999984466e-08, 0.0, 7.002881000000343, 0.0018607999999993297, -1.8299999999984466e-05, 0.0, 47.14594399998896, 1.185208299999431, 0.00017390000000006012, 0.0, 102.27937999996357, 149472.5152900219, 7.000000000000062e-06, 0.0, 0.38709860000017215, 1.0}},
     {"Sikuru", {342.7670530001633, 58519.211910009384, 0.0003096999999998573, 0.0, 0.006820689999997853, -4.7699999999983866e-05, 9.099998999999304e-08, 0.0, 3.3936309999990044, 0.0010057999999997236, -9.999999999992654e-07, 0.0, 75.77964700001758, 0.8998498999999356, 0.00041000000000002146, 0.0, 212.60321999993175, 58517.8038700223, 0.0012860000000003424, 0.0, 0.723331600000165, 2.0}},
