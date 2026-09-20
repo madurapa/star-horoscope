@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.4
+
+- Patch: renamed third_party/swisseph/VERSION to VERSION.txt — the
+  bare name shadowed C++20 <version> via libc++ <iostream> and broke
+  the macOS build (plus a no-extensionless-files rule for that dir).
+
 ## 2.8.3
 
 - Patch: CI diagnostics (split configure/build steps, Windows
