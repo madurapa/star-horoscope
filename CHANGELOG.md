@@ -4,6 +4,10 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.12
+
+- Patch: release job checks out the repo (gh needs git context).
+
 ## 2.8.11
 
 - Patch: portable temp dirs in test tools (tempfile, not /tmp —
