@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.6
+
+- Patch: Windows probe no longer requires plain `make`
+  (mingw32-make is the standardized generator tool).
+
 ## 2.8.5
 
 - Patch: Windows CI uses MSYS2-native cmake (the runner's cmake
