@@ -82,6 +82,8 @@ re-approach. Zero warnings (`-Wall -Wextra`) is required, not aspirational.
   README Requirements in the same change and bump the version.
   Releases are cut by manual tag push (`git push origin vX.Y.Z`);
   every GitHub Release ships notes (CHANGELOG entry + highlights).
+  Release notes live in docs/releases/vX.Y.Z.md — written before
+  tagging so the body is copy-paste ready.
 - **Docs**: maintain `docs/status_and_plans.md` (append sessions),
   `docs/glossary.md` (regenerate coded tables via
   `tools/dump_glossary.cpp` when tables change), `docs/modern_display.md`

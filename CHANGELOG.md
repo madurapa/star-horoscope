@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.14
+
+- Patch: release notes now maintained per-release under
+  docs/releases/ (v2.8.12 backfilled); convention recorded.
+
 ## 2.8.13
 
 - Patch: release workflow hardening from review — dropped the
