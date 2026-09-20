@@ -5,6 +5,7 @@
 // C++20, header-only, no dependencies.
 
 #include <array>
+#include <climits>
 #include <cmath>
 #include <cstdint>
 #include <map>
@@ -177,7 +178,11 @@ struct AngularDegrees {
         int d = static_cast<int>(v);
         double f = (v - d) * 60.0;
         int m = static_cast<int>(f);
-        int s = static_cast<int>(std::lround((f - m) * 60.0));
+        // Overflow clamp (Phase-1 safe item): lround() on unobserved
+        // magnitudes would overflow int (UB); clamp to int range.
+        // Observed values (incl. non-carry 60s) pass through untouched.
+        const long sl = std::lround((f - m) * 60.0);
+        const int s = (sl > INT_MAX) ? INT_MAX : ((sl < INT_MIN) ? INT_MIN : static_cast<int>(sl));
         return {d, m, s};
     }
 };

@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.6.11
+
+- Patch: Phase-1 safe item — fromDecimal seconds overflow clamp
+  (unobserved magnitudes only; all observed values unaffected).
+
 ## 2.6.10
 
 - Patch: Phase-1 array-indexed storage (Planet-indexed longitude /
