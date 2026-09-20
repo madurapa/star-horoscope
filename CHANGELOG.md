@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.6.10
+
+- Patch: Phase-1 array-indexed storage (Planet-indexed longitude /
+  avastha arrays, per-slot display resolver). Internal refactoring;
+  all program output byte-identical.
+
 ## 2.6.9
 
 - Patch: README Requirements completed (CMake >= 3.16, Python 3 for
