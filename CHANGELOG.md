@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.8
+
+- Patch: CI diagnostics — Windows configure/build/gate as separate
+  steps to localize the red leg precisely.
+
 ## 2.8.7
 
 - Patch: Windows CI fixes — enforced LF checkouts (.gitattributes,
