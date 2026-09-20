@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.0
+
+- Minor: Swiss engine is now the default (--engine dos selects the
+  frozen reconstruction; --verify/corpus stay DOS-pinned). L3 Swiss
+  goldens frozen (tests/swiss_goldens, modern display x 3 profiles).
+
 ## 2.7.1
 
 - Patch: L1 differential harness (tools/diff_engines.py, frozen

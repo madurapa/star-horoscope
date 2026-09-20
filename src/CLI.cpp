@@ -548,8 +548,9 @@ int CLI::runBaselineModern() const {
     const bool nirayana = config_.nirayana.value_or(true);
     const GeoCoord geo = config_.thathkala ? kColomboFallback : resolveGeo(config_);
     const HoroscopeOwner owner = ownerFromConfig(config_);
-    // Explicit engine kind (pre-flip fallback: dos; see docs/phase2_design.md §4.5).
-    const EngineKind kind = config_.engine.value_or(EngineKind::Dos);
+    // Explicit engine kind (Swiss default per §4.5 flip; --engine dos
+    // selects the frozen reconstruction; see docs/phase2_design.md).
+    const EngineKind kind = config_.engine.value_or(EngineKind::Swiss);
     const HoroscopeResult h = computeHoroscope(owner, geo, nirayana, kind);
     if (!h.engineOk) {
         return cliFail(std::string("Error: swiss engine failed: ") + h.engineError);
@@ -655,8 +656,9 @@ int CLI::runBaselineLegacy() const {
     const bool nirayana = config_.nirayana.value_or(true);
     const GeoCoord geo = config_.thathkala ? kColomboFallback : resolveGeo(config_);
     const HoroscopeOwner owner = ownerFromConfig(config_);
-    // Explicit engine kind (pre-flip fallback: dos; see docs/phase2_design.md §4.5).
-    const EngineKind kind = config_.engine.value_or(EngineKind::Dos);
+    // Explicit engine kind (Swiss default per §4.5 flip; --engine dos
+    // selects the frozen reconstruction; see docs/phase2_design.md).
+    const EngineKind kind = config_.engine.value_or(EngineKind::Swiss);
     const HoroscopeResult h = computeHoroscope(owner, geo, nirayana, kind);
     if (!h.engineOk) {
         return cliFail(std::string("Error: swiss engine failed: ") + h.engineError);

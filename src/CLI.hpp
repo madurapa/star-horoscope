@@ -50,7 +50,7 @@ struct CLIConfig {
     int birth_minute = -1;         // -1 = unset
     int city_index = -1;           // -1 = unset; 1-15 table, >15 manual entry
     std::optional<bool> nirayana;  // nullopt = unset (true=NRAYANA, false=SAYANA)
-    std::optional<EngineKind> engine;  // nullopt = unset (dos pre-flip; see phase2_design.md)
+    std::optional<EngineKind> engine;  // nullopt = unset (swisseph post-flip; see phase2_design.md)
     bool thathkala = false;
     // Manual geo for city > 15 (cities not in the list).
     GeoCoord manual_geo{};
