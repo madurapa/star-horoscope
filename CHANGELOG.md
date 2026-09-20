@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.3
+
+- Patch: CI diagnostics (split configure/build steps, Windows
+  toolchain probe) while chasing the macOS/Windows red legs.
+
 ## 2.8.2
 
 - Patch: CI builds on main pushes (releases still tag-only);
