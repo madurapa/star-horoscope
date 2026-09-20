@@ -36,7 +36,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
-          install: mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-python mingw-w64-ucrt-x86_64-make
+          install: mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-python mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-cmake
 
       - name: Configure (POSIX)
         if: runner.os != 'Windows'

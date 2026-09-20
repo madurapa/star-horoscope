@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.5
+
+- Patch: Windows CI uses MSYS2-native cmake (the runner's cmake
+  is absent from the msys2 PATH; probe proved it).
+
 ## 2.8.4
 
 - Patch: renamed third_party/swisseph/VERSION to VERSION.txt — the
