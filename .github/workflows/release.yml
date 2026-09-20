@@ -1,8 +1,9 @@
 # Tagged builds (v*) compile modern_star on Linux/macOS/Windows, run the
 # full gate (ctest + --verify), and publish the three binaries as a
-# GitHub Release. Windows uses MinGW (MSYS2 UCRT64) — the sources carry
-# _WIN32 guards for localtime_s/ioctl but rely on unistd.h/isatty, so
-# MSVC is not supported. See docs/plans.md Appendix A (release tags).
+# GitHub Release. Windows uses MSVC (VS2022 x64); POSIX bits are
+# _WIN32-guarded with MSVC shims in src/Compat.hpp (always _MSC_VER).
+# All builds are 64-bit (enforced in CMakeLists). See docs/plans.md
+# Appendix A (release tags).
 name: release
 
 on:
@@ -31,12 +32,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install MinGW + Python (Windows)
+      - name: Set up MSVC (Windows)
         if: runner.os == 'Windows'
-        uses: msys2/setup-msys2@v2
+        uses: ilammy/msvc-dev-cmd@v1
         with:
-          msystem: UCRT64
-          install: mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-python mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-cmake
+          arch: amd64
 
       - name: Configure (POSIX)
         if: runner.os != 'Windows'
@@ -52,27 +52,19 @@ jobs:
           ctest --test-dir build --output-on-failure
           ./build/modern_star --verify
 
-      - name: Probe toolchain (Windows)
-        if: runner.os == 'Windows'
-        shell: msys2 {0}
-        run: uname -a; which cmake gcc mingw32-make python3; cmake --version | head -1
-
       - name: Configure (Windows)
         if: runner.os == 'Windows'
-        shell: msys2 {0}
-        run: cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B build
 
       - name: Build (Windows)
         if: runner.os == 'Windows'
-        shell: msys2 {0}
-        run: cmake --build build
+        run: cmake --build build --config Release
 
       - name: Gate (Windows)
         if: runner.os == 'Windows'
-        shell: msys2 {0}
         run: |
-          ctest --test-dir build --output-on-failure
-          ./build/modern_star --verify
+          ctest --test-dir build -C Release --output-on-failure
+          .\build\Release\modern_star.exe --verify
 
       - name: Stage binary (POSIX)
         if: runner.os != 'Windows'
@@ -80,8 +72,7 @@ jobs:
 
       - name: Stage binary (Windows)
         if: runner.os == 'Windows'
-        shell: msys2 {0}
-        run: cp "build/${{ matrix.exe }}" "${{ matrix.binary }}"
+        run: cmake -E copy "build/Release/${{ matrix.exe }}" "${{ matrix.binary }}"
 
       - uses: actions/upload-artifact@v4
         with:

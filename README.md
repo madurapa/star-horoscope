@@ -12,14 +12,9 @@ deliberately reproduced behaviors of the original program.
 
 ## The original program
 
-This port reproduces the DOS program screen for screen. Its opening
-input screen looked like this:
+The 16-bit DOS program this port replaces:
 
 ![Original STAR.EXE opening screen](docs/images/original-star-screen.png)
-
-*The original "YOUR STARS" input screen: disk-space check, date line,
-and the Thathkala Kendra prompt — every behavior preserved, quirks
-included (see `docs/quirks.md`).*
 
 ### Running the original
 
@@ -33,7 +28,8 @@ dosbox-x legacy/STAR.EXE
 
 ## Requirements
 
-- C++20 compiler (GCC or Clang) plus a C compiler, CMake >= 3.16
+- C++20 compiler (GCC, Clang, or MSVC 2022+) plus a C compiler,
+  CMake >= 3.16; all builds are 64-bit (enforced by the build)
 - Python 3 (test-gate harness only: `extraction_check`, `corpus`)
 - Swiss Ephemeris v2.10.3final sources, vendored under
   `third_party/` (Moshier fallback; no downloads, no data files)
@@ -67,8 +63,7 @@ that reduces passing tests is a bug in that step — revert and re-approach.
 
 Tagged versions (`v*`) build `star_linux`, `star_macos`, and
 `star.exe` via `.github/workflows/release.yml`, published as GitHub
-Releases. Windows builds use MinGW (MSVC is not supported — the
-sources rely on unistd.h/isatty).
+Releases. Windows builds use MSVC (VS2022 x64).
 
 ## Usage
 

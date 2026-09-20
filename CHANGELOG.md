@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.17
+
+- Patch: MSVC-only Windows leg — _MSC_VER compat shims
+  (src/Compat.hpp), compiler-conditional flags, 64-bit enforcement
+  on all platforms; MinGW retired from CI.
+
 ## 2.8.16
 
 - Patch: README refresh — cross-platform intro, original-program

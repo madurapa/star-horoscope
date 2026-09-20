@@ -1,11 +1,20 @@
 cmake_minimum_required(VERSION 3.16)
 project(modern_star C CXX)
 
+# All binaries are 64-bit, on every platform (owner requirement).
+if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+  message(FATAL_ERROR "64-bit build required (got ${CMAKE_SIZEOF_VOID_P}-byte pointers)")
+endif()
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_compile_options(-Wall -Wextra -O2)
+if(MSVC)
+  add_compile_options(/W4 /O2)
+else()
+  add_compile_options(-Wall -Wextra -O2)
+endif()
 
 add_executable(modern_star src/main.cpp src/CLI.cpp src/VargaEngine.cpp src/SwissFeed.cpp)
 target_include_directories(modern_star PRIVATE src third_party/swisseph)
@@ -25,10 +34,14 @@ add_library(swisseph STATIC
   third_party/swisseph/sweph.c
   third_party/swisseph/swephlib.c)
 target_include_directories(swisseph PUBLIC third_party/swisseph)
-target_compile_options(swisseph PRIVATE -w)
-target_link_libraries(swisseph PUBLIC m)
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  target_link_libraries(swisseph PUBLIC dl)  # sweph.c dladdr (cf. upstream LIBS)
+if(MSVC)
+  target_compile_options(swisseph PRIVATE /w)
+else()
+  target_compile_options(swisseph PRIVATE -w)
+  target_link_libraries(swisseph PUBLIC m)
+  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_link_libraries(swisseph PUBLIC dl)  # sweph.c dladdr (cf. upstream LIBS)
+  endif()
 endif()
 
 function(add_star_test name)
