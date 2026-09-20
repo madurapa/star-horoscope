@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.1
+
+- Patch: release-notes convention recorded (every GitHub Release
+  ships notes; cut by manual tag push).
+
 ## 2.8.0
 
 - Minor: Swiss engine is now the default (--engine dos selects the

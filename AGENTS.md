@@ -80,6 +80,8 @@ re-approach. Zero warnings (`-Wall -Wextra`) is required, not aspirational.
   `ModernRenderer.hpp` is authoritative; tests pin the constant, never
   the literal). When the codebase gains a build/run dependency, update
   README Requirements in the same change and bump the version.
+  Releases are cut by manual tag push (`git push origin vX.Y.Z`);
+  every GitHub Release ships notes (CHANGELOG entry + highlights).
 - **Docs**: maintain `docs/status_and_plans.md` (append sessions),
   `docs/glossary.md` (regenerate coded tables via
   `tools/dump_glossary.cpp` when tables change), `docs/modern_display.md`
