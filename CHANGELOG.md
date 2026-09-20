@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.7
+
+- Patch: Windows CI fixes — enforced LF checkouts (.gitattributes,
+  autocrlf broke byte goldens), portable temp dir in cli_config,
+  .exe-aware binary discovery + current g++ fallback in corpus_run.
+
 ## 2.8.6
 
 - Patch: Windows probe no longer requires plain `make`

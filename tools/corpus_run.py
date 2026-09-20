@@ -8,6 +8,7 @@ Loop: build once, run every case, diff. Exit non-zero on any miss.
 import subprocess
 import sys
 from pathlib import Path
+import os
 
 ROOT = Path(__file__).resolve().parent.parent
 BIN = ROOT / "modern_star"
@@ -16,19 +17,31 @@ if not (BIN.exists() or (ROOT / "/tmp/modern_star").exists()):
 
 
 def find_binary():
-    for c in [ROOT / "modern_star", Path("/tmp/modern_star"),
-              ROOT / "build" / "modern_star", Path("/tmp/build/modern_star")]:
+    names = (["modern_star", "modern_star.exe"] if os.name == "nt"
+             else ["modern_star"])
+    cands = ([ROOT / n for n in names] +
+             [ROOT / "build" / n for n in names] +
+             [Path("/tmp/modern_star"), Path("/tmp/modern_star.exe"),
+              Path("/tmp/build/modern_star"),
+              Path("/tmp/build/modern_star.exe")])
+    for c in cands:
         if c.exists():
             return str(c)
-    # fall back to building
-    r = subprocess.run(["g++", "-std=c++20", "-O2", "-Wall", "-Wextra", "-Isrc",
-                        "src/main.cpp", "src/CLI.cpp", "src/VargaEngine.cpp",
-                        "-o", "/tmp/modern_star"],
-                       cwd=ROOT, capture_output=True, text=True)
+    # fall back to building (keep in sync with the CMake modern_star target)
+    out = "/tmp/modern_star.exe" if os.name == "nt" else "/tmp/modern_star"
+    cmd = ["g++", "-std=c++20", "-O2", "-Wall", "-Wextra", "-Isrc",
+           "-Ithird_party/swisseph",
+           "src/main.cpp", "src/CLI.cpp", "src/VargaEngine.cpp",
+           "src/SwissFeed.cpp"] + \
+        sorted(str(p) for p in
+               (ROOT / "third_party" / "swisseph").glob("swe*.c")) + \
+        ["-o", out, "-lm"] + (["-ldl"] if sys.platform.startswith("linux")
+                              else [])
+    r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     if r.returncode != 0:
         print(r.stderr[-3000:])
-        sys.exit("corpus: build failed");
-    return "/tmp/modern_star"
+        sys.exit("corpus: build failed")
+    return out
 
 
 def main():

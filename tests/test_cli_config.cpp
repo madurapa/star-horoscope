@@ -2,6 +2,7 @@
 // No defaults: only keys present in the file are set; the rest stay unset.
 // Build: g++ -std=c++20 -Wall -Wextra -O2 -Isrc tests/test_cli_config.cpp src/CLI.cpp src/VargaEngine.cpp -o /tmp/test_cli_config
 #include <cstdio>
+#include <filesystem>
 #include <fstream>
 #include <string>
 
@@ -46,8 +47,10 @@ int main() {
     STAR_CHECK(c3.verify_mode, "verify mode");
     STAR_CHECK(c3.display == "legacy", "display legacy");
     STAR_CHECK(c3.color == "never", "color never");
-    // loadConfigFile round-trip via a temp file.
-    const char* tmp = "/tmp/test_cli_config.ini";
+    // loadConfigFile round-trip via a temp file (portable temp dir:
+    // native Windows processes have no /tmp).
+    const std::string tmp =
+        (std::filesystem::temp_directory_path() / "test_cli_config.ini").string();
     { std::ofstream f(tmp); f << content; }
     STAR_CHECK(CLI::loadConfigFilePublic(tmp) == content, "load round-trip");
     STAR_CHECK(CLI::loadConfigFilePublic("/tmp/does-not-exist-xyz.ini").empty(), "missing empty");
