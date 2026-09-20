@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.9
+
+- Patch: LF enforcement extended to asm/idc/TXT/json (same
+  autocrlf class as the golden fix); extraction_check still under
+  diagnosis, log requested.
+
 ## 2.8.8
 
 - Patch: CI diagnostics — Windows configure/build/gate as separate

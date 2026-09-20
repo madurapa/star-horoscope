@@ -12,6 +12,10 @@
 *.md text eol=lf
 *.yml text eol=lf
 *.cmake text eol=lf
+*.asm text eol=lf
+*.idc text eol=lf
+*.TXT text eol=lf
+*.json text eol=lf
 CMakeLists.txt text eol=lf
 .gitattributes text eol=lf
 .gitignore text eol=lf
