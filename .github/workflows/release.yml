@@ -62,11 +62,6 @@ jobs:
         shell: msys2 {0}
         run: cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
 
-      - name: Configure (Windows)
-        if: runner.os == 'Windows'
-        shell: msys2 {0}
-        run: cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
-
       - name: Build (Windows)
         if: runner.os == 'Windows'
         shell: msys2 {0}
@@ -109,6 +104,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ github.ref_name }}" dist/* \
-            --title "${{ github.ref_name }}" \
-            --notes "Automated build of ${{ github.ref_name }} (see CHANGELOG.md). Linux, macOS, and Windows (MinGW) binaries."
+          test -n "$(ls -A dist)" || { echo "No assets in dist/"; exit 1; }
+          if gh release view "${{ github.ref_name }}" >/dev/null 2>&1; then
+            gh release upload "${{ github.ref_name }}" dist/* --clobber
+          else
+            gh release create "${{ github.ref_name }}" dist/* \
+              --title "${{ github.ref_name }}" \
+              --notes "Automated build of ${{ github.ref_name }} (see CHANGELOG.md). Linux, macOS, and Windows (MinGW) binaries."
+          fi

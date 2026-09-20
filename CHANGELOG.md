@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.13
+
+- Patch: release workflow hardening from review — dropped the
+  duplicated Windows configure step, dist/ guard, idempotent
+  publish (upload --clobber when the release exists).
+
 ## 2.8.12
 
 - Patch: release job checks out the repo (gh needs git context).
