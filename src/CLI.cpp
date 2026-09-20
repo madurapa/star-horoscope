@@ -124,11 +124,11 @@ int CLI::daysInMonth(int year, int month) noexcept {
     return kDays[month - 1];
 }
 
-std::string CLI::trim(const std::string& s) {
+std::string CLI::trim(std::string_view s) {
     const size_t a = s.find_first_not_of(" \t\r\n");
     if (a == std::string::npos) return "";
     const size_t b = s.find_last_not_of(" \t\r\n");
-    return s.substr(a, b - a + 1);
+    return std::string(s.substr(a, b - a + 1));
 }
 
 std::string CLI::validateName(const std::string& name) {

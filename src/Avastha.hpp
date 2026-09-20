@@ -33,6 +33,7 @@
 #include <cmath>
 #include <map>
 #include <string>
+#include <string_view>
 
 #include "AstroStructures.hpp"
 
@@ -40,7 +41,7 @@ namespace star {
 
 // Planet codes (word_27DF6).
 // PROVENANCE: DECODED (nine mov stores before the planet calls, word_27DF6).
-[[nodiscard]] inline int avasthaPlanetCode(const std::string& planet) noexcept {
+[[nodiscard]] inline int avasthaPlanetCode(std::string_view planet) noexcept {
     if (planet == "Ravi") return 1;
     if (planet == "Chandra" || planet == "Sandu") return 2;
     if (planet == "Kuja") return 3;

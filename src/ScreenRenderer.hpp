@@ -8,6 +8,7 @@
 // and dasa dates per AGENTS.md checkpoints 1-4).
 
 #include <string>
+#include <string_view>
 #include <vector>
 #include <map>
 #include <cstdio>
@@ -187,10 +188,10 @@ inline std::string renderScreen06() {
 
 // Screen display spelling: Moon prints as "Sandu", Neptune as "Neptun".
 // PROVENANCE: FITTED (screen05 spelling rule).
-inline std::string displayPlanetName(const std::string& key) {
+inline std::string displayPlanetName(std::string_view key) {
     if (key == "Chandra") return "Sandu";
     if (key == "Neptune") return "Neptun";
-    return key;
+    return std::string(key);
 }
 
 // Canonical-key lookup (harness compat; product paths use lonOf).
@@ -277,13 +278,13 @@ inline std::string renderScreen07(const AstroEngineOutput& output, bool /*niraya
 // unlike screen05's "Neptun"), "Pluuto", and "Chandra" (screen06 does NOT use
 // screen05's "Sandu"). See AGENTS.md zero-variance mandate.
 // PROVENANCE: FITTED (screen06 planet cells reproduced literally, quirks included).
-inline std::string displayShadvargaName(const std::string& key) {
+inline std::string displayShadvargaName(std::string_view key) {
     if (key == "Chandra" || key == "Sandu") return "Chandra";
     if (key == "Ravi") return "Rav1";
     if (key == "Urenus") return "Urenes";
     if (key == "Neptune" || key == "Neptun") return "Neptune";
     if (key == "Pluto") return "Pluuto";
-    return key;
+    return std::string(key);
 }
 
 inline std::string renderScreen08(const AstroEngineOutput& output) {
@@ -744,7 +745,7 @@ inline std::vector<std::string> renderKendraSingle(const KendraChart& k,
 // machine cells): screen12 "Kethu", T3 "Chandra", machine "Rav1" (Ravi
 // balance). Dasa tables instead use dasa names ("Ketu", "Sandu", "Rahu").
 // PROVENANCE: FITTED (16/16 machine cells: balance lord uses displayed spellings).
-inline std::string balanceLordDisplay(const std::string& dasaLord) {
+inline std::string balanceLordDisplay(std::string_view dasaLord) {
     if (dasaLord == "Sandu") return "Chandra";
     if (dasaLord == "Ketu") return "Kethu";
     if (dasaLord == "Rahu") return "Raahu";
@@ -752,7 +753,7 @@ inline std::string balanceLordDisplay(const std::string& dasaLord) {
     if (dasaLord == "Urenus") return "Urenes";
     if (dasaLord == "Neptune") return "Neptune";
     if (dasaLord == "Pluto") return "Pluuto";
-    return dasaLord;
+    return std::string(dasaLord);
 }
 
 // Screen 12 block (screen12.txt content), byte-exact per measured columns:

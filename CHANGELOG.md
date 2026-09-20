@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.6.12
+
+- Patch: Phase-1 safe item — string_view on eight read-only
+  predicate params (spelling resolvers, trim, planet codes).
+
 ## 2.6.11
 
 - Patch: Phase-1 safe item — fromDecimal seconds overflow clamp

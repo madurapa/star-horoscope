@@ -9,6 +9,7 @@
 #include <iostream>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #if !defined(_WIN32)
@@ -85,7 +86,7 @@ public:
     static std::string validateName(const std::string& name);
     static std::string validateCity(int city);
     static std::string validateGeo(int latDeg, int latMin, int lonDeg, int lonMin);
-    static std::string trim(const std::string& s);
+    static std::string trim(std::string_view s);
 
 private:
     CLIConfig config_;

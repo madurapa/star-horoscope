@@ -26,6 +26,7 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -429,14 +430,14 @@ inline const char* planetName(int idx) {
 }
 
 // Legacy engine key -> corrected display name.
-inline std::string displayPlanet(const std::string& key) {
+inline std::string displayPlanet(std::string_view key) {
     if (key == "Chandra" || key == "Sandu") return "Chandra";
     if (key == "Sikuru") return "Shukra";
     if (key == "Raahu" || key == "Rahu") return "Rahu";
     if (key == "Kethu" || key == "Ketu") return "Ketu";
     if (key == "Urenus") return "Uranus";
     if (key == "Neptune" || key == "Neptun") return "Neptune";
-    return key;  // Lagna Ravi Budha Kuja Guru Shani Pluto already correct
+    return std::string(key);  // Lagna Ravi Budha Kuja Guru Shani Pluto already correct
 }
 
 inline const char* rasiName(int idx) {
@@ -488,7 +489,7 @@ inline std::string formatAge(YMD v) {
 
 // ---------------------------------------------------------------- sections
 
-inline constexpr const char* kAppVersion = "2.6.11";
+inline constexpr const char* kAppVersion = "2.6.12";
 
 // Closing art for full modern runs: top/bottom spacing, block-centered,
 // plain (no color — the art is busy enough). Skipped when the terminal is
