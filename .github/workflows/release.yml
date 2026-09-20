@@ -49,7 +49,7 @@ jobs:
       - name: Gate — ctest + --verify (POSIX)
         if: runner.os != 'Windows'
         run: |
-          ctest --test-dir build
+          ctest --test-dir build --output-on-failure
           ./build/modern_star --verify
 
       - name: Probe toolchain (Windows)
@@ -76,7 +76,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: msys2 {0}
         run: |
-          ctest --test-dir build
+          ctest --test-dir build --output-on-failure
           ./build/modern_star --verify
 
       - name: Stage binary (POSIX)

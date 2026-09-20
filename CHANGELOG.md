@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.10
+
+- Patch: CI ctest runs with --output-on-failure so failures
+  self-report (no log archaeology for the last Windows leg).
+
 ## 2.8.9
 
 - Patch: LF enforcement extended to asm/idc/TXT/json (same
