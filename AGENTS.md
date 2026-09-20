@@ -80,6 +80,8 @@ re-approach. Zero warnings (`-Wall -Wextra`) is required, not aspirational.
   `ModernRenderer.hpp` is authoritative; tests pin the constant, never
   the literal). When the codebase gains a build/run dependency, update
   README Requirements in the same change and bump the version.
+  Keep README current with every change: new flags, engines,
+  artifacts, and requirements all land in README in the same change.
   Releases are cut by manual tag push (`git push origin vX.Y.Z`);
   every GitHub Release ships notes (CHANGELOG entry + highlights).
   Release notes live in docs/releases.md (single file, newest on

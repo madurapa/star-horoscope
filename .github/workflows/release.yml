@@ -19,13 +19,13 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            binary: modern_star-linux
+            binary: star_linux
             exe: modern_star
           - os: macos-latest
-            binary: modern_star-macos
+            binary: star_macos
             exe: modern_star
           - os: windows-latest
-            binary: modern_star-windows.exe
+            binary: star.exe
             exe: modern_star.exe
     runs-on: ${{ matrix.os }}
     steps:

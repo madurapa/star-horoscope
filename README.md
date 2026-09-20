@@ -1,13 +1,35 @@
 # Modern STAR — Sri Lankan Vedic Astrology Engine
 
-A native 64-bit Linux C++ console application computing Sri Lankan Vedic
-horoscopes. It began as a reverse-engineering port of a 16-bit MS-DOS
-program (`STAR.EXE`) — that port is complete and frozen. Current work is
-product development on top of a verified core: corrected spellings,
-responsive layout, interactive input, color themes.
+A cross-platform (Linux, macOS, Windows) C++ console application
+computing Sri Lankan Vedic horoscopes. It began as a
+reverse-engineering port of a 16-bit MS-DOS program (`STAR.EXE`) —
+that port is complete and frozen. Current work is product development
+on top of a verified core: corrected spellings, responsive layout,
+interactive input, color themes, and a second Swiss-Ephemeris engine.
 
 See `NOTICE.md` for provenance and `docs/quirks.md` for the
 deliberately reproduced behaviors of the original program.
+
+## The original program
+
+This port reproduces the DOS program screen for screen. Its opening
+input screen looked like this:
+
+![Original STAR.EXE opening screen](docs/images/original-star-screen.png)
+
+*The original "YOUR STARS" input screen: disk-space check, date line,
+and the Thathkala Kendra prompt — every behavior preserved, quirks
+included (see `docs/quirks.md`).*
+
+### Running the original
+
+To run the actual DOS binary (e.g. side-by-side comparison), use
+[DOSBox-X](https://github.com/joncampbell123/dosbox-x) with the
+archived copy at `legacy/STAR.EXE`:
+
+```bash
+dosbox-x legacy/STAR.EXE
+```
 
 ## Requirements
 
@@ -23,10 +45,12 @@ deliberately reproduced behaviors of the original program.
 cmake -S . -B /tmp/star-build && cmake --build /tmp/star-build
 ```
 
-Quick app-only build:
+Quick app-only build (Linux; `-ldl` is Linux-only):
 
 ```bash
-g++ -std=c++20 -O2 -Wall -Wextra -Isrc src/main.cpp src/CLI.cpp src/VargaEngine.cpp -o modern_star
+g++ -std=c++20 -O2 -Wall -Wextra -Isrc -Ithird_party/swisseph \
+  src/main.cpp src/CLI.cpp src/VargaEngine.cpp src/SwissFeed.cpp \
+  third_party/swisseph/swe*.c -lm -ldl -o modern_star
 ```
 
 ## Test gate (run every time)
@@ -41,9 +65,10 @@ that reduces passing tests is a bug in that step — revert and re-approach.
 
 ## Binaries
 
-Tagged versions (`v*`) build Linux, macOS (clang), and Windows (MinGW)
-executables via `.github/workflows/release.yml`, published as GitHub
-Releases. MSVC is not supported (the sources rely on unistd.h/isatty).
+Tagged versions (`v*`) build `star_linux`, `star_macos`, and
+`star.exe` via `.github/workflows/release.yml`, published as GitHub
+Releases. Windows builds use MinGW (MSVC is not supported — the
+sources rely on unistd.h/isatty).
 
 ## Usage
 

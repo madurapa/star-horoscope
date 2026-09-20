@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.16
+
+- Patch: README refresh — cross-platform intro, original-program
+  section (screenshot + DOSBox-X), fixed quick-build line,
+  star_linux/star_macos/star.exe artifact names.
+
 ## 2.8.15
 
 - Patch: release notes consolidated to a single docs/releases.md
