@@ -66,6 +66,9 @@ Key options:
 - `--display modern|legacy` — corrected redesign (default) vs byte-exact
   original (verification runs only). Modern changes words/layout only;
   every number is proven equal to legacy output.
+- `--engine dos|swisseph` — frozen DOS reconstruction (default) vs
+  clean-math Swiss Ephemeris feed (Moshier + Lahiri). `--verify` and
+  the corpus always pin DOS.
 - `--color auto|always|never` — headings color (`NO_COLOR` respected;
   never emitted into pipes/files).
 - `--screen <n[,n...]>` — show only output group N (1–14).

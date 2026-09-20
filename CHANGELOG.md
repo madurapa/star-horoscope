@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.7.0
+
+- Minor: second engine — `--engine dos|swisseph` (Swiss Ephemeris
+  Moshier + Lahiri feed through the same HoroscopeResult; DOS
+  default, DOS-pinned --verify/corpus, `"engine"` JSON provenance).
+
 ## 2.6.13
 
 - Patch: Swiss Ephemeris v2.10.3final vendored (Phase-2 step 1)

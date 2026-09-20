@@ -13,7 +13,7 @@ using namespace star;
 
 static HoroscopeResult baseline() {
     HoroscopeOwner o{"Test User", 1981, 12, 8, 12, 55};
-    return computeHoroscope(o, cityByIndex(7).coord, true);
+    return computeHoroscope(o, cityByIndex(7).coord, true, EngineKind::Dos);
 }
 
 static bool hasLineOver(const std::string& s, size_t w) {

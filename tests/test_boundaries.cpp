@@ -40,7 +40,7 @@ int main() {
     // ---- midnight birth (2000-01-01 00:00 Colombo) ----
     {
         HoroscopeOwner o{"Midnight", 2000, 1, 1, 0, 0};
-        HoroscopeResult h = computeHoroscope(o, cityByIndex(1).coord, true);
+        HoroscopeResult h = computeHoroscope(o, cityByIndex(1).coord, true, EngineKind::Dos);
         // UT = -5.5h -> JD 2451544.5 (midnight) - 0.229167.
         CHECK(std::fabs(h.jd - 2451544.270833) < 1e-4, "midnight jd %.6f", h.jd);
         const HMS ut = displayHms(18.5);  // wrapped clock must show 18:30:00
@@ -71,8 +71,8 @@ int main() {
     {
         HoroscopeOwner o{"Test User", 1981, 12, 8, 12, 55};
         const GeoCoord geo = cityByIndex(7).coord;
-        const HoroscopeResult n = computeHoroscope(o, geo, true);
-        const HoroscopeResult s = computeHoroscope(o, geo, false);
+        const HoroscopeResult n = computeHoroscope(o, geo, true, EngineKind::Dos);
+        const HoroscopeResult s = computeHoroscope(o, geo, false, EngineKind::Dos);
         const char* keys[] = {"Ravi", "Budha", "Sikuru", "Kuja", "Guru",
                               "Shani", "Raahu", "Kethu", "Chandra", "Lagna"};
         for (const char* k : keys) {

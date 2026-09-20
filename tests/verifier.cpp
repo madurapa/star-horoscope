@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
     // Ratnapura (7), Nirayana.
     const HoroscopeOwner owner{"Test User", 1981, 12, 8, 12, 55};
     const GeoCoord geo = cityByIndex(7).coord;
-    const HoroscopeResult h = computeHoroscope(owner, geo, true);
+    const HoroscopeResult h = computeHoroscope(owner, geo, true, EngineKind::Dos);
 
     std::printf("=== CHECKPOINT 1: house table longitudes (screen05) ===\n");
     const auto lon = [&](const char* k) {
@@ -218,7 +218,7 @@ int main(int argc, char* argv[]) {
     std::printf("=== TRANSCRI3 Nirayana display-exact ===\n");
     const HoroscopeOwner o3{"Thatkala Kendra", 2026, 9, 12, 16, 54};
     const HoroscopeResult h3 =
-        computeHoroscope(o3, kColomboFallback, true);
+        computeHoroscope(o3, kColomboFallback, true, EngineKind::Dos);
         const struct {
             const char* k;
             int d, m, s;
@@ -273,7 +273,7 @@ int main(int argc, char* argv[]) {
     {
         const HoroscopeOwner o1{"Test User", 1981, 12, 8, 12, 55};
         const HoroscopeResult h1 =
-            computeHoroscope(o1, cityByIndex(7).coord, false);
+            computeHoroscope(o1, cityByIndex(7).coord, false, EngineKind::Dos);
         const struct {
             const char* k;
             int d, m, s;
@@ -310,7 +310,7 @@ int main(int argc, char* argv[]) {
     {
         const HoroscopeOwner o4{"Thatkala Kendra", 2026, 9, 12, 16, 57};
         const HoroscopeResult h4 =
-            computeHoroscope(o4, kColomboFallback, false);
+            computeHoroscope(o4, kColomboFallback, false, EngineKind::Dos);
         const struct {
             const char* k;
             int d, m, s;
@@ -339,7 +339,7 @@ int main(int argc, char* argv[]) {
     {
         const HoroscopeOwner o4b{"Thatkala Kendra", 2026, 9, 12, 16, 57};
         const HoroscopeResult h4b =
-            computeHoroscope(o4b, kColomboFallback, false);
+            computeHoroscope(o4b, kColomboFallback, false, EngineKind::Dos);
         const DasaBalance b4 = dasaBalance(h4b.moonNirayanaDeg);
         checkStr("T4-bal-lord", kDasaCycle[b4.lordCycleIdx].name, "Kuja");
         checkYmd("T4-balance", b4.ymd, 0, 1, 0);
@@ -392,10 +392,10 @@ int main(int argc, char* argv[]) {
         }
         const HoroscopeOwner o3b{"Thatkala Kendra", 2026, 9, 12, 16, 54};
         const HoroscopeResult h3b =
-            computeHoroscope(o3b, kColomboFallback, true);
+            computeHoroscope(o3b, kColomboFallback, true, EngineKind::Dos);
         const HoroscopeOwner o4c{"Thatkala Kendra", 2026, 9, 12, 16, 57};
         const HoroscopeResult h4c =
-            computeHoroscope(o4c, kColomboFallback, false);
+            computeHoroscope(o4c, kColomboFallback, false, EngineKind::Dos);
         checkStr("T3-hora",
                  horaLine(h3b, r3).c_str(),
                  "KALA HORAVA : Ravi      PANCHAMA HORAVA : Guru     SUKSHAMA HORAVA : Kuja");

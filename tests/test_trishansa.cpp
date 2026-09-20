@@ -71,7 +71,7 @@ int main() {
     };
     int total = 0;
     for (const auto& sc : scs) {
-        const HoroscopeResult h = computeHoroscope(sc.owner, sc.geo, sc.nirayana);
+        const HoroscopeResult h = computeHoroscope(sc.owner, sc.geo, sc.nirayana, EngineKind::Dos);
         for (const auto& c : sc.cells) {
             ++total;
             const double dec = findLongitude(h.output, c.key)->ecliptic.toDecimal();

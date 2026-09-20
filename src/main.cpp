@@ -43,6 +43,7 @@ void printHelp() {
               << "  --londeg <0-180> --lonmin <0-59>   manual longitude (city > 15)\n"
               << "  --nirayana / --sayana  Sidereal Nirayana vs tropical.\n"
               << "                         (--nrayana accepted: the binary spells it \"NRAYANA\")\n"
+              << "  --engine <dos|swisseph>  Ephemeris engine (default: dos until Phase-2 flip)\n"
               << "  --thathkala            Thathkala Kendra mode: use current local\n"
               << "                         date/time + Colombo fallback (skip birth/city)\n"
               << "  --screen <n[,n...]>    Show only output group N 1-14:\n"
@@ -130,6 +131,11 @@ int main(int argc, char* argv[]) {
                 config.nirayana = true;
             } else if (arg == "--sayana") {
                 config.nirayana = false;
+            } else if (arg == "--engine" && i + 1 < argc) {
+                const std::string e = argv[++i];
+                if (e == "dos") config.engine = star::EngineKind::Dos;
+                else if (e == "swisseph") config.engine = star::EngineKind::Swiss;
+                else return star::cliFail("Error: --engine wants dos|swisseph");
             } else if (arg == "--thathkala") {
                 config.thathkala = true;
             } else if (arg == "--help" || arg == "-h") {

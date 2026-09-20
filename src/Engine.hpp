@@ -27,8 +27,13 @@
 #include "SunriseSunset.hpp"
 #include "VargaEngine.hpp"
 #include "Panchanga.hpp"
+#include "SwissFeed.hpp"
 
 namespace star {
+
+// Phase-2 engine dispatch (see docs/phase2_design.md). Dos is the frozen
+// reconstruction; Swiss is the clean-math Moshier+Lahiri feed.
+enum class EngineKind { Dos, Swiss };
 
 struct HoroscopeResult {
     AstroEngineOutput output;   // ecliptic DMS per body + JD + ayanamsa DMS
@@ -44,11 +49,13 @@ struct HoroscopeResult {
     double lonDec = 0.0;
     double birthDecHours = 0.0;
     PanchangaInfo panchanga;  // five-limb almanac at birth (screen12 block)
+    bool engineOk = true;     // false iff the Swiss feed failed (DOS never fails)
+    std::string engineError;  // Swiss serr text when !engineOk
 };
 
 [[nodiscard]] inline HoroscopeResult computeHoroscope(const HoroscopeOwner& owner,
                                                       const GeoCoord& geo,
-                                                      bool nirayana) {
+                                                      bool nirayana, EngineKind kind) {
     HoroscopeResult r;
     r.latDec = geo.decimalLat();
     r.lonDec = geo.decimalLon();
@@ -56,57 +63,79 @@ struct HoroscopeResult {
 
     r.jdn0 = meeusJdNoon(owner.birth_year, owner.birth_month, owner.birth_day);
     r.jd = julianDateR48(r.jdn0, r.birthDecHours);
-    // Planetary-element century (1900-based, NOT J2000).
-    // PROVENANCE: DECODED (elements epoch 2415020.0, dseg 27BEC family; cf. docs/math_engine_proofs.md).
-    const double t1900 = (r.jd - 2415020.0) / 36525.0;
-
-    r.ayanamsaDeg = AyanamsaExact(r.jd);
-
-    const SunResult sun = sunResult(t1900);
-    r.sunSayanaDeg = sun.lon;
-    const double rsun = earthRadius(sun.ecc, sun.MplusC);
-
-    auto norm = [](double v) {
-        v = std::fmod(v, 360.0);
-        if (v < 0.0) v += 360.0;
-        return v;
-    };
-
-    const double raviNiray = nirayana ? norm(sun.lon - r.ayanamsaDeg) : norm(sun.lon);
-    r.moonNirayanaDeg = nirayana
-        ? norm(moonSayana(t1900, sun.MplusC) - r.ayanamsaDeg)
-        : norm(moonSayana(t1900, sun.MplusC));
-
+    // LMST is civil math, identical for both engines (display only).
     const double gmst0h = gmstMidnightSec(r.jdn0) / 3600.0;
     r.lmstHours = localMeanSiderealHours(gmst0h, r.birthDecHours, r.lonDec);
-    const double lagnaSay = lagnaSayana(r.lmstHours, r.latDec);
-    // Lagna is NEVER wrapped down (Invalid_Time displays 591:11:18 raw);
-    // negatives wrap up (normUp). Nirayana Lagna = Sayana - ayanamsa raw.
-    auto normUp = [](double v) {
-        while (v < 0.0) v += 360.0;
-        return v;
-    };
-    const double lagnaNiray =
-        nirayana ? normUp(lagnaSay - r.ayanamsaDeg) : normUp(lagnaSay);
 
-    const double rahuNiray = nirayana ? norm(meanNodeSayana(t1900) - r.ayanamsaDeg)
-                                      : norm(meanNodeSayana(t1900));
-    double ketuNiray = rahuNiray + 180.0;
-    if (ketuNiray >= 360.0) ketuNiray -= 360.0;
-
+    double raviNiray = 0.0;
     std::map<std::string, double> dec;
-    dec["Lagna"] = lagnaNiray;
-    dec["Chandra"] = r.moonNirayanaDeg;
-    dec["Ravi"] = raviNiray;
-    for (const auto& kv : kPlanetElements) {
-        // planetSayana applies the ayanamsa itself when nirayana=true.
-        // Canonical key (element table spells it "Neptun"); slice C keeps
-        // exactly the 13 canonical keys, no spelling aliases.
-        const std::string key = (kv.first == "Neptun") ? "Neptune" : kv.first;
-        dec[key] = norm(planetSayana(kv.second, t1900, r.jd, sun.lon, rsun, nirayana));
+    if (kind == EngineKind::Swiss) {
+        // Swiss feed (Moshier + Lahiri); everything downstream is shared.
+        // Swiss longitudes are always [0,360): the DOS never-wrap-down /
+        // normUp display rules below apply to the DOS branch only.
+        const SwissFeed feed = computeSwissFeed(r.jd, r.latDec, r.lonDec, nirayana);
+        if (!feed.ok) {
+            r.engineOk = false;
+            r.engineError = feed.err;
+            return r;
+        }
+        r.ayanamsaDeg = feed.ayanamsaDeg;
+        r.sunSayanaDeg = feed.sunSayanaDeg;
+        r.moonNirayanaDeg = feed.lon[static_cast<std::size_t>(Planet::Chandra)];
+        raviNiray = feed.lon[static_cast<std::size_t>(Planet::Ravi)];
+        for (int i = 0; i < 13; ++i)
+            dec[kPlanetNames[static_cast<std::size_t>(i)]] =
+                feed.lon[static_cast<std::size_t>(i)];
+    } else {
+        // Planetary-element century (1900-based, NOT J2000).
+        // PROVENANCE: DECODED (elements epoch 2415020.0, dseg 27BEC family; cf. docs/math_engine_proofs.md).
+        const double t1900 = (r.jd - 2415020.0) / 36525.0;
+
+        r.ayanamsaDeg = AyanamsaExact(r.jd);
+
+        const SunResult sun = sunResult(t1900);
+        r.sunSayanaDeg = sun.lon;
+        const double rsun = earthRadius(sun.ecc, sun.MplusC);
+
+        auto norm = [](double v) {
+            v = std::fmod(v, 360.0);
+            if (v < 0.0) v += 360.0;
+            return v;
+        };
+
+        raviNiray = nirayana ? norm(sun.lon - r.ayanamsaDeg) : norm(sun.lon);
+        r.moonNirayanaDeg = nirayana
+            ? norm(moonSayana(t1900, sun.MplusC) - r.ayanamsaDeg)
+            : norm(moonSayana(t1900, sun.MplusC));
+
+        const double lagnaSay = lagnaSayana(r.lmstHours, r.latDec);
+        // Lagna is NEVER wrapped down (Invalid_Time displays 591:11:18 raw);
+        // negatives wrap up (normUp). Nirayana Lagna = Sayana - ayanamsa raw.
+        auto normUp = [](double v) {
+            while (v < 0.0) v += 360.0;
+            return v;
+        };
+        const double lagnaNiray =
+            nirayana ? normUp(lagnaSay - r.ayanamsaDeg) : normUp(lagnaSay);
+
+        const double rahuNiray = nirayana ? norm(meanNodeSayana(t1900) - r.ayanamsaDeg)
+                                          : norm(meanNodeSayana(t1900));
+        double ketuNiray = rahuNiray + 180.0;
+        if (ketuNiray >= 360.0) ketuNiray -= 360.0;
+
+        dec["Lagna"] = lagnaNiray;
+        dec["Chandra"] = r.moonNirayanaDeg;
+        dec["Ravi"] = raviNiray;
+        for (const auto& kv : kPlanetElements) {
+            // planetSayana applies the ayanamsa itself when nirayana=true.
+            // Canonical key (element table spells it "Neptun"); slice C keeps
+            // exactly the 13 canonical keys, no spelling aliases.
+            const std::string key = (kv.first == "Neptun") ? "Neptune" : kv.first;
+            dec[key] = norm(planetSayana(kv.second, t1900, r.jd, sun.lon, rsun, nirayana));
+        }
+        dec["Raahu"] = rahuNiray;
+        dec["Kethu"] = ketuNiray;
     }
-    dec["Raahu"] = rahuNiray;
-    dec["Kethu"] = ketuNiray;
 
     for (const auto& kv : dec) {
         // Display keeps raw positives (Lagna 591:11:18) and wraps negatives

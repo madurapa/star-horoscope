@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
     // Baseline scenario (AGENTS.md): Test User, 1981-12-08 12:55,
     // Ratnapura (7), Nirayana.
     const HoroscopeOwner owner{"Test User", 1981, 12, 8, 12, 55};
-    const HoroscopeResult h = computeHoroscope(owner, cityByIndex(7).coord, true);
+    const HoroscopeResult h = computeHoroscope(owner, cityByIndex(7).coord, true, EngineKind::Dos);
 
     // Phase-1 array mirror proof: lonByPlanet must equal the map values.
     for (int i = 0; i < 13; ++i) {

@@ -516,9 +516,11 @@ bool CLI::colorOn() const {
     return ::isatty(STDOUT_FILENO) != 0;
 }
 
-static std::string jsonText(const HoroscopeOwner& owner, const HoroscopeResult& h) {
+static std::string jsonText(const HoroscopeOwner& owner, const HoroscopeResult& h,
+                            EngineKind kind) {
     std::ostringstream js;
     js << "{\n  \"name\": \"" << owner.name << "\",\n";
+    js << "  \"engine\": \"" << (kind == EngineKind::Swiss ? "swisseph" : "dos") << "\",\n";
     js << "  \"julian_date\": " << std::fixed << std::setprecision(6) << h.jd << ",\n";
     js << "  \"ayanamsa_deg\": " << h.ayanamsaDeg << ",\n";
     js << "  \"longitudes\": {\n";
@@ -546,7 +548,12 @@ int CLI::runBaselineModern() const {
     const bool nirayana = config_.nirayana.value_or(true);
     const GeoCoord geo = config_.thathkala ? kColomboFallback : resolveGeo(config_);
     const HoroscopeOwner owner = ownerFromConfig(config_);
-    const HoroscopeResult h = computeHoroscope(owner, geo, nirayana);
+    // Explicit engine kind (pre-flip fallback: dos; see docs/phase2_design.md §4.5).
+    const EngineKind kind = config_.engine.value_or(EngineKind::Dos);
+    const HoroscopeResult h = computeHoroscope(owner, geo, nirayana, kind);
+    if (!h.engineOk) {
+        return cliFail(std::string("Error: swiss engine failed: ") + h.engineError);
+    }
 
     const YMD birth{owner.birth_year, owner.birth_month, owner.birth_day};
     const double birthFrac = fracYear(owner.birth_year, owner.birth_month, owner.birth_day);
@@ -572,7 +579,7 @@ int CLI::runBaselineModern() const {
         : (config_.city_index > 15 ? "Manual entry" : modern::cityLabel(config_.city_index));
 
     if (config_.output_format == "json") {
-        emit(jsonText(owner, h));
+        emit(jsonText(owner, h, kind));
         return 0;
     }
 
@@ -648,7 +655,12 @@ int CLI::runBaselineLegacy() const {
     const bool nirayana = config_.nirayana.value_or(true);
     const GeoCoord geo = config_.thathkala ? kColomboFallback : resolveGeo(config_);
     const HoroscopeOwner owner = ownerFromConfig(config_);
-    const HoroscopeResult h = computeHoroscope(owner, geo, nirayana);
+    // Explicit engine kind (pre-flip fallback: dos; see docs/phase2_design.md §4.5).
+    const EngineKind kind = config_.engine.value_or(EngineKind::Dos);
+    const HoroscopeResult h = computeHoroscope(owner, geo, nirayana, kind);
+    if (!h.engineOk) {
+        return cliFail(std::string("Error: swiss engine failed: ") + h.engineError);
+    }
 
     const YMD birth{owner.birth_year, owner.birth_month, owner.birth_day};
     const double birthFrac = fracYear(owner.birth_year, owner.birth_month, owner.birth_day);
@@ -673,7 +685,7 @@ int CLI::runBaselineLegacy() const {
     };
 
     if (config_.output_format == "json") {
-        emit(jsonText(owner, h));
+        emit(jsonText(owner, h, kind));
         return 0;
     }
 
@@ -779,7 +791,7 @@ int CLI::runVerify() const {
     // Baseline checkpoints (AGENTS.md checkpoints 1-4).
     const GeoCoord geo = cityByIndex(7).coord;  // Ratnapura baseline
     const HoroscopeOwner owner{"Test User", 1981, 12, 8, 12, 55};
-    const HoroscopeResult h = computeHoroscope(owner, geo, true);
+    const HoroscopeResult h = computeHoroscope(owner, geo, true, EngineKind::Dos);
 
     int fail = 0;
     auto checkDms = [&](const char* tag, double gotDec, int d, int m, int s, double tolSec) {
@@ -940,6 +952,10 @@ CLIConfig CLI::parseConfigFile(const std::string& content) {
         else if (key == "birth_minute") config.birth_minute = std::stoi(value);
         else if (key == "city_index") config.city_index = std::stoi(value);
         else if (key == "nirayana") config.nirayana = (value == "true" || value == "1" || value == "yes");
+        else if (key == "engine") {
+            if (value == "dos") config.engine = EngineKind::Dos;
+            else if (value == "swisseph") config.engine = EngineKind::Swiss;
+        }
         else if (key == "thathkala") config.thathkala = (value == "true" || value == "1" || value == "yes");
         else if (key == "latdeg" || key == "lat_deg") { config.manual_geo.lat_deg = std::stoi(value); sawGeo = true; }
         else if (key == "latmin" || key == "lat_min") { config.manual_geo.lat_min = std::stoi(value); sawGeo = true; }
