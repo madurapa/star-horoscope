@@ -11,9 +11,10 @@ deliberately reproduced behaviors of the original program.
 
 ## Requirements
 
-- C++20 compiler (GCC or Clang), CMake >= 3.16
+- C++20 compiler (GCC or Clang) plus a C compiler, CMake >= 3.16
 - Python 3 (test-gate harness only: `extraction_check`, `corpus`)
-- No third-party C++ libraries
+- Swiss Ephemeris v2.10.3final sources, vendored under
+  `third_party/` (Moshier fallback; no downloads, no data files)
 - A UTF-8 terminal for `--display modern` (no ASCII fallback)
 
 ## Build

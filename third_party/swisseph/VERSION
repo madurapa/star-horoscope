@@ -1,0 +1,23 @@
+Swiss Ephemeris pinned version
+=============================
+Upstream: https://github.com/aloistr/swisseph
+  (official repository of co-author Alois Treindl; the astro.com
+  FTP bundle now redirects here)
+Tag: v2.10.3final
+Commit: af9823fe7b06ffefe3d3968fdc5680be8b5eec5f
+Fetched: 2026-09-20 (individual raw files, not the 250MB data tarball)
+
+Vendored subset (library objects per upstream Makefile SWOBJ):
+  swecl.c swedate.c swehel.c swehouse.c swejpl.c swemmoon.c swemplan.c
+  sweph.c swephlib.c
+Headers: swephexp.h sweph.h swephlib.h swedate.h swehouse.h swejpl.h
+  swemptab.h swenut2000a.h
+License notice: LICENSE (upstream dual-license terms; our use is
+  under the AGPL, compatible with this repo's AGPL-3.0 LICENSE)
+
+Anchor sha256 (swephexp.h):
+  53647b650504bbdec65166af1fbdb8580fa26a2ec821d5f50f032f5b0745b3cc
+
+Deliberately NOT vendored: ephemeris data (*.se1, ~250MB), sample
+binaries, contrib wrappers, test harness. v1 runs Moshier fallback
+(no data files); see docs/phase2_design.md §3.

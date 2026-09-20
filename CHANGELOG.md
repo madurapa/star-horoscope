@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.6.13
+
+- Patch: Swiss Ephemeris v2.10.3final vendored (Phase-2 step 1)
+  with wiring smoke test (Moshier fallback proven). No engine
+  behavior change yet; attribution in NOTICE.md.
+
 ## 2.6.12
 
 - Patch: Phase-1 safe item — string_view on eight read-only

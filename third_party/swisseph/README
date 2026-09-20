@@ -1,0 +1,15 @@
+# third_party/swisseph — vendored Swiss Ephemeris (Phase-2 engine)
+
+See VERSION for the upstream pin (tag, commit, anchor hash) and the
+vendored file list. Rationale for vendoring instead of fetching at
+build time: byte-stable source for a fidelity-critical project, zero
+new build tooling (no vcpkg/Conan yet), offline builds keep working.
+
+Rules:
+- NEVER hand-edit the vendored files. Upstream updates arrive as a
+  new VERSION pin + fresh copies (record the new anchor hash).
+- The `swisseph` CMake target compiles with warnings suppressed
+  (`-w`); our `-Wall -Wextra` zero-warning gate applies to our
+  code only.
+- Moshier fallback only (no `*.se1` data). If data files are ever
+  added, document where they come from and how L1 bounds change.

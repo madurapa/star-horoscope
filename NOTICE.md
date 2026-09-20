@@ -16,3 +16,12 @@ authorship over the original program, and is not a commercial product.
 Where this project's output intentionally reproduces a quirk, rounding
 behavior, or apparent bug from the original program, that reproduction
 is documented in docs/quirks.md and is deliberate, not an oversight.
+
+## Third-party software
+
+- Swiss Ephemeris, v2.10.3final (https://github.com/aloistr/swisseph),
+  by Dieter Koch and Alois Treindl (Astrodienst AG). Sources vendored
+  under third_party/swisseph/ (see VERSION there for the pin).
+  Used under the terms of the GNU Affero General Public License;
+  the upstream license notice is preserved in
+  third_party/swisseph/LICENSE.
