@@ -80,6 +80,7 @@ jobs:
         run: |
           mkdir -p dmg-root
           cp "build/${{ matrix.exe }}" dmg-root/star
+          strip -x dmg-root/star || strip dmg-root/star
           ln -s /Applications dmg-root/
           hdiutil create -volname "Modern STAR" -srcfolder dmg-root \
             -ov -format UDZO "${{ matrix.binary }}"
@@ -88,6 +89,13 @@ jobs:
       - name: Stage binary (Windows)
         if: runner.os == 'Windows'
         run: cmake -E copy "build/Release/${{ matrix.exe }}" "${{ matrix.binary }}"
+
+      - name: Strip release binary (Linux)
+        if: runner.os == 'Linux'
+        # The static build bundles glibc+libstdc++; symbols are ~15%
+        # of it with no runtime value. MSVC already separates debug
+        # info (.pdb, not uploaded); macOS is stripped pre-dmg above.
+        run: strip "${{ matrix.binary }}"
 
       - uses: actions/upload-artifact@v4
         with:
