@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.13.2
+
+- macOS asset renamed `star-mac.dmg` → `star.dmg` (dmg is
+  unambiguous on Mac); inner binary named `star`.
+
 ## 2.13.1
 
 - macOS ships as `star-mac.dmg` (drag-to-Applications); README

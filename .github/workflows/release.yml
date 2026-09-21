@@ -23,7 +23,7 @@ jobs:
             binary: star_linux
             exe: modern_star
           - os: macos-latest
-            binary: star-mac.dmg
+            binary: star.dmg
             exe: modern_star
           - os: windows-latest
             binary: star.exe
@@ -79,7 +79,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           mkdir -p dmg-root
-          cp "build/${{ matrix.exe }}" dmg-root/star_macos
+          cp "build/${{ matrix.exe }}" dmg-root/star
           ln -s /Applications dmg-root/
           hdiutil create -volname "Modern STAR" -srcfolder dmg-root \
             -ov -format UDZO "${{ matrix.binary }}"

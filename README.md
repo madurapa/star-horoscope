@@ -86,7 +86,7 @@ Download-and-run, no install — like the original STAR.EXE:
   SmartScreen will flag the unknown publisher once — choose Run anyway.
 - **Linux**: download `star_linux`, `chmod +x star_linux`, run it
   (fully static binary).
-- **macOS**: download `star-mac.dmg`, double-click, drag into
+- **macOS**: download `star.dmg`, double-click, drag into
   Applications. Unsigned, so on first launch right-click the app
   and choose Open (Gatekeeper one-time approval).
 
