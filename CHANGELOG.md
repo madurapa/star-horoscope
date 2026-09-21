@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.13.0
+
+- Portable releases: Linux builds fully static, Windows links
+  the static CRT — release assets run with no install, like the
+  original STAR.EXE. README Binaries rewritten as download/double-click.
+
 ## 2.12.1
 
 - Docs: README covers districts, `--locale`, portable builds,

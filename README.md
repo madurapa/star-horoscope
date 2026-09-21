@@ -80,9 +80,17 @@ that reduces passing tests is a bug in that step — revert and re-approach.
 
 ## Binaries
 
-Tagged versions (`v*`) build `star_linux`, `star_macos`, and
-`star.exe` via `.github/workflows/release.yml`, published as GitHub
-Releases. Windows builds use MSVC (VS2022 x64).
+Download-and-run, no install — like the original STAR.EXE:
+
+- **Windows**: download `star.exe`, double-click (a console opens).
+- **Linux**: download `star_linux`, `chmod +x star_linux`, run it
+  (fully static binary).
+- **macOS**: download `star_macos` and run it (system libraries only).
+
+Tagged versions (`v*`) build all three via
+`.github/workflows/release.yml`, published as GitHub Releases.
+Windows builds use MSVC (VS2022 x64, static CRT — no redistributable
+needed).
 
 ## Usage
 

@@ -22,6 +22,10 @@ option(STAR_PORTABLE "Fully static portable modern_star binary (Linux)" OFF)
 if(STAR_PORTABLE AND NOT MSVC)
   add_link_options(-static)
 endif()
+if(STAR_PORTABLE AND MSVC)
+  # Static CRT so star.exe runs with no Visual C++ redistributable.
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
 
 add_executable(modern_star src/main.cpp src/CLI.cpp src/VargaEngine.cpp src/SwissFeed.cpp)
 target_include_directories(modern_star PRIVATE src third_party/swisseph)

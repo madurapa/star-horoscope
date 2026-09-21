@@ -40,7 +40,12 @@ jobs:
 
       - name: Configure (POSIX)
         if: runner.os != 'Windows'
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+        run: |
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DSTAR_PORTABLE=ON
+          else
+            cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          fi
 
       - name: Build (POSIX)
         if: runner.os != 'Windows'
@@ -54,7 +59,7 @@ jobs:
 
       - name: Configure (Windows)
         if: runner.os == 'Windows'
-        run: cmake -S . -B build
+        run: cmake -S . -B build -DSTAR_PORTABLE=ON
 
       - name: Build (Windows)
         if: runner.os == 'Windows'
@@ -101,5 +106,5 @@ jobs:
           else
             gh release create "${{ github.ref_name }}" dist/* \
               --title "${{ github.ref_name }}" \
-              --notes "Automated build of ${{ github.ref_name }} (see CHANGELOG.md). Linux, macOS, and Windows (MinGW) binaries."
+              --notes "Automated build of ${{ github.ref_name }} (see CHANGELOG.md). Linux (static), macOS, and Windows (MSVC, static CRT) binaries — download and run, no install."
           fi
