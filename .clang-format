@@ -1,16 +1,15 @@
-# Advisory style for this repo (not CI-enforced: no mass reformat, so that
-# diffs stay reviewable against the frozen golden contract in AGENTS.md).
-# New/edited code should already look like this; run
-#   clang-format --dry-run --Werror <files>
-# locally if you have clang-format installed (any recent version).
+# Advisory style for this repo (not CI-enforced: existing sources are
+# grandfathered — their hand-aligned tables predate this file and diverge
+# from canonical output in ~all files, so only NEW code is expected to
+# comply; run clang-format --dry-run --Werror on changed files locally).
+# Keys kept compatible with clang-format 10 (booleans, no ReferenceAlignment).
 BasedOnStyle: LLVM
 IndentWidth: 4
 ContinuationIndentWidth: 4
 ColumnLimit: 100
 PointerAlignment: Right
-ReferenceAlignment: Right
-SortIncludes: Never
-ReflowComments: Never
+SortIncludes: false
+ReflowComments: false
 AllowShortFunctionsOnASingleLine: None
 BreakBeforeBraces: Attach
 SpaceBeforeParens: ControlStatements
