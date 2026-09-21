@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.12.1
+
+- Docs: README covers districts, `--locale`, portable builds,
+  Python bindings, and the JSON schema doc.
+
 ## 2.12.0
 
 - Portable binary: `-DSTAR_PORTABLE=ON` fully static-links

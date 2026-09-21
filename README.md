@@ -46,6 +46,20 @@ dosbox-x legacy/STAR.EXE
 cmake -S . -B /tmp/star-build && cmake --build /tmp/star-build
 ```
 
+Portable standalone binary (fully static, Linux):
+
+```bash
+cmake -S . -B /tmp/star-port -DSTAR_PORTABLE=ON && cmake --build /tmp/star-port
+```
+
+Python bindings (optional, off by default):
+
+```bash
+cmake -S . -B /tmp/star-py -DSTAR_PYTHON=ON -DPython_EXECUTABLE=/usr/bin/python3.13
+cmake --build /tmp/star-py --target pystar
+PYTHONPATH=/tmp/star-py python3.13 bindings/smoke.py
+```
+
 Quick app-only build (Linux; `-ldl` is Linux-only):
 
 ```bash
@@ -88,12 +102,16 @@ Batch/scripting flags (see `./modern_star --help` for the full list):
 
 Key options:
 
+- `--city <1-26>` — closest district (all 25 districts covered;
+  `>26` takes manual coordinates, as in the original).
 - `--display modern|legacy` — corrected redesign (default) vs byte-exact
   original (verification runs only). Modern changes words/layout only;
   every number is proven equal to legacy output.
 - `--engine dos|swisseph` — clean-math Swiss Ephemeris feed (default)
   vs frozen DOS reconstruction. `--verify` and the corpus always
   pin DOS.
+- `--locale en|si|ta` — output locale (default `en`; si/ta fall back
+  to English per string until translated).
 - `--color auto|always|never` — headings color (`NO_COLOR` respected;
   never emitted into pipes/files).
 - `--screen <n[,n...]>` — show only output group N (1–14).
@@ -101,12 +119,28 @@ Key options:
 - `--verify` — checkpoint verification, exit non-zero on failure.
 - `--thathkala` — Thathkala Kendra mode (current time, Colombo fallback).
 
+## Python bindings
+
+`pystar.horoscope(...)` returns a `star-horoscope/1` JSON document
+(see `docs/json_schema.md`), parsed with stdlib `json`:
+
+```python
+import json, pystar
+doc = json.loads(pystar.horoscope("Test User", 2000, 8, 17, 14, 5, 7))
+print(doc["longitudes"]["Lagna"], doc["engine"])
+```
+
+Only the engine is shared — Python is a pure schema consumer.
+Translator files live in `src/locale_si.inc` / `src/locale_ta.inc`.
+
 ## Docs
 
 - `docs/quirks.md` — original-program behaviors reproduced on purpose.
 - `docs/glossary.md` — Old→New spelling table (modern display).
 - `docs/modern_display.md` — palette and layout rules.
-- `docs/plans.md` — phased roadmap (publish → provenance → engines).
+- `docs/plans.md` — phased roadmap (publish → engines →
+  localization → JSON consumers → multi-tradition).
+- `docs/json_schema.md` — frozen `star-horoscope/1` JSON schema.
 - `docs/status_and_plans.md` — session history log (append-only).
 
 ## Contributing
