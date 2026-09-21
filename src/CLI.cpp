@@ -632,7 +632,7 @@ int CLI::runBaselineModern() const {
                 char gb[64];
                 std::snprintf(gb, sizeof(gb), "%d\xC2\xB0%d'N %d\xC2\xB0%d'E", geo.lat_deg,
                               geo.lat_min, geo.lon_deg, geo.lon_min);
-                opts.emplace_back("Manual Geo", gb);
+                opts.emplace_back("Manual Coordinates", gb);
             }
         }
         opts.emplace_back("Method", nirayana ? "Nirayana (Sidereal)" : "Sayana (Tropical)");

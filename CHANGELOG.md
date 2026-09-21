@@ -4,6 +4,15 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.10.2
+
+- Wording: modern options row "Manual Geo" → "Manual
+  Coordinates" (concept + reverse-map follow automatically).
+  Audit note: modern planet names were already correct
+  (displayPlanet); slot variants live only in legacy output.
+  Kendra case, tithi trio, Sinhala Time, Kendra Type stay —
+  no safe target (reviewer calls).
+
 ## 2.10.1
 
 - Correction policy extended (owner ruling): modern display now

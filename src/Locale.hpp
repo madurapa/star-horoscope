@@ -503,7 +503,7 @@ struct TrRow {
         {"Gana"}, {"Yoni"}, {"Linga"}, {"Naadi"}, {"Varna"},
         {"Ruxha"}, {"Paxhi"}, {"Gothra"}, {"Rajju"}, {"Bhutha"},
         {"Name"}, {"Born"}, {"Place"},
-        {"District"}, {"Manual Geo"}, {"Method"},
+        {"District"}, {"Manual Coordinates"}, {"Method"},
         {"Nirayana (Sidereal)"}, {"Sayana (Tropical)"},
         {"Horoscope Profile"}, {"District Selection"}, {"Nirayana Table of Houses"},
         {"Shadvarga Charts"}, {"Shadvarga Positions"}, {"Mahadasa and Antardasa Timeline"},
