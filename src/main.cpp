@@ -45,6 +45,8 @@ void printHelp() {
               << "                         (--nrayana accepted: the binary spells it \"NRAYANA\")\n"
               << "  --engine <dos|swisseph>  Ephemeris engine (default: swisseph;\n"
               << "                         dos = frozen DOS reconstruction)\n"
+              << "  --locale <en|si|ta>    Output locale (default: en; si/ta fall\n"
+              << "                         back to English until translated)\n"
               << "  --thathkala            Thathkala Kendra mode: use current local\n"
               << "                         date/time + Colombo fallback (skip birth/district)\n"
               << "  --screen <n[,n...]>    Show only output group N 1-14:\n"
@@ -137,6 +139,12 @@ int main(int argc, char* argv[]) {
                 if (e == "dos") config.engine = star::EngineKind::Dos;
                 else if (e == "swisseph") config.engine = star::EngineKind::Swiss;
                 else return star::cliFail("Error: --engine wants dos|swisseph");
+            } else if (arg == "--locale" && i + 1 < argc) {
+                const std::string l = argv[++i];
+                star::Locale loc = star::Locale::En;
+                if (!star::parseLocale(l, loc))
+                    return star::cliFail("Error: --locale wants en|si|ta");
+                config.locale = loc;
             } else if (arg == "--thathkala") {
                 config.thathkala = true;
             } else if (arg == "--help" || arg == "-h") {

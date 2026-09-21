@@ -220,14 +220,15 @@ bool CLI::promptModern() {
     const bool col = colorOn();
     std::cout << modern::renderBanner(W, col, true);
     auto divider = [&](const std::string& t) {
-        std::cout << "\n" << modern::sectionDivider(t, W, col) << "\n\n";
+        std::cout << "\n"
+                  << modern::sectionDivider(localizeKey(t, config_.locale), W, col) << "\n\n";
     };
     auto error = [&](const std::string& m) {
         std::cout << "  " << modern::paint(modern::Theme::warn, "! " + m, col) << "\n";
     };
     auto readMethod = [&](bool& nrayana) {
         char ch = 'N';
-        if (!readLetter("  Method (S)ayana / (N)irayana [s/N]: ", ch, "SN", 'N',
+        if (!readLetter(localeText(Concept::UiPromptMethodSN, config_.locale), ch, "SN", 'N',
                         "Please answer S or N.", col))
             return false;
         nrayana = (ch == 'N');
@@ -237,7 +238,7 @@ bool CLI::promptModern() {
     divider("Kendra Type");
     if (!config_.thathkala) {
         char ch = 'N';
-        if (!readLetter("  Use Thathkala Kendra [y/N]: ", ch, "YN", 'N',
+        if (!readLetter(localeText(Concept::UiPromptThathkalaKendraYN, config_.locale), ch, "YN", 'N',
                         "Please answer Y or N.", col))
             return false;
         config_.thathkala = (ch == 'Y');
@@ -255,7 +256,7 @@ bool CLI::promptModern() {
     divider("Horoscope Owner Details");
     if (trim(config_.name).empty()) {
         for (;;) {
-            std::cout << "  Full Name: " << std::flush;
+            std::cout << localeText(Concept::UiPromptFullName, config_.locale) << std::flush;
             if (std::cin.eof()) return false;
             std::string s = readLine();
             if (std::cin.eof()) return false;
@@ -270,8 +271,8 @@ bool CLI::promptModern() {
     if (!validateDate(config_.birth_year, config_.birth_month, config_.birth_day).empty()) {
         for (;;) {
             int v[3] = {config_.birth_year, config_.birth_month, config_.birth_day};
-            if (!readInts("  Birth Date (YYYY MM DD): ", 3, v, true,
-                         "YYYY MM DD, eg: 2000 08 17", col))
+            if (!readInts(localeText(Concept::UiPromptBirthDate, config_.locale), 3, v, true,
+                         localeText(Concept::UiHintDateEg, config_.locale), col))
                 return false;
             const std::string err = validateDate(v[0], v[1], v[2]);
             if (err.empty()) {
@@ -286,8 +287,8 @@ bool CLI::promptModern() {
     if (!validateTime(config_.birth_hour, config_.birth_minute).empty()) {
         for (;;) {
             int v[2] = {config_.birth_hour, config_.birth_minute};
-            if (!readInts("  Birth Time (HH MM, 24h): ", 2, v, true,
-                         "HH MM (24h), eg: 14 05", col))
+            if (!readInts(localeText(Concept::UiPromptBirthTime, config_.locale), 2, v, true,
+                         localeText(Concept::UiHintTimeEg, config_.locale), col))
                 return false;
             const std::string err = validateTime(v[0], v[1]);
             if (err.empty()) {
@@ -304,8 +305,8 @@ bool CLI::promptModern() {
         std::cout << modern::renderCityList(W, false, false) << "\n";
         for (;;) {
             int v[1] = {0};
-            if (!readInts("  Closest District [1-26, >26 Other]: ", 1, v, true,
-                         "district number, eg: 7", col))
+            if (!readInts(localeText(Concept::UiPromptClosestDistrict, config_.locale), 1, v, true,
+                         localeText(Concept::UiHintDistrictEg, config_.locale), col))
                 return false;
             const std::string err = validateCity(v[0]);
             if (err.empty()) {
@@ -318,11 +319,12 @@ bool CLI::promptModern() {
     if (config_.city_index > kCityCount && !config_.manual_geo_set) {
         for (;;) {
             int v[2] = {0, 0};
-            if (!readInts("  Latitude (Deg Min): ", 2, v, true, "Deg Min, eg: 6 37", col))
+            if (!readInts(localeText(Concept::UiPromptLatitude, config_.locale), 2, v, true,
+                         localeText(Concept::UiHintLatEg, config_.locale), col))
                 return false;
             int w[2] = {0, 0};
-            if (!readInts("  Longitude (Deg Min): ", 2, w, true, "Deg Min, eg: 80 24",
-                            col))
+            if (!readInts(localeText(Concept::UiPromptLongitude, config_.locale), 2, w, true,
+                         localeText(Concept::UiHintLonEg, config_.locale), col))
                 return false;
             const std::string err = validateGeo(v[0], v[1], w[0], w[1]);
             if (err.empty()) {
@@ -592,12 +594,17 @@ int CLI::runBaselineModern() const {
     if (show(1)) {
         emit(modern::renderBanner(W, col, nirayana));
         if (!hideEcho)
-            emit(std::string("Thathkala Kendra: ") + (config_.thathkala ? "Yes\n" : "No\n"));
+            emit(localizeKey("Thathkala Kendra: ", config_.locale) +
+                 std::string(config_.thathkala
+                                 ? localeText(Concept::UiMiscYes, config_.locale)
+                                 : localeText(Concept::UiMiscNo, config_.locale)) +
+                 "\n");
     }
     // Grouped subsections, each under its own divider. Group 12 carries
     // the summary subsections, group 13 the Hora/Chakra ones.
     auto sub = [&](const std::string& title, const modern::KeyRows& rows) {
-        emit(modern::sectionTitle(title, W, col) + modern::renderKeyValues(rows, W, col));
+        emit(modern::sectionTitle(title, W, col, config_.locale) +
+             modern::renderKeyValues(rows, W, col, config_.locale));
     };
     if (show(12)) {
         sub("Birth Profile",
@@ -614,8 +621,9 @@ int CLI::runBaselineModern() const {
         sub("Hora", modern::horaRows(ht.kala, ht.pancha, ht.sukshama));
         sub("Chakra", modern::chakraRows(h.panchanga.nakIndex));
     }
-    if (show(2) && !hideEcho) emit(modern::renderProfile(owner, geo, city, W, col));
-    if (show(3) && !hideEcho) emit(modern::renderCityList(W, col));
+    if (show(2) && !hideEcho)
+        emit(modern::renderProfile(owner, geo, city, W, col, config_.locale));
+    if (show(3) && !hideEcho) emit(modern::renderCityList(W, col, true, config_.locale));
     if (show(4) && !hideEcho) {
         std::vector<std::pair<std::string, std::string>> opts;
         if (!config_.thathkala) {
@@ -628,28 +636,32 @@ int CLI::runBaselineModern() const {
             }
         }
         opts.emplace_back("Method", nirayana ? "Nirayana (Sidereal)" : "Sayana (Tropical)");
-        emit(modern::sectionDivider("Selected Options", W, col) + "\n\n" +
-             modern::renderKeyValues(opts, W, col));
+        emit(modern::sectionDivider(localizeKey("Selected Options", config_.locale), W, col) +
+             "\n\n" + modern::renderKeyValues(opts, W, col, config_.locale));
     }
-    if (show(5)) emit(modern::renderHouseTable(h.output, W, col, boxed));
-    if (show(6)) emit(modern::renderShadvargaNames(h.output, W, col, boxed));
-    if (show(7)) emit(modern::renderShadvargaHouses(h.output, W, col, boxed));
+    if (show(5)) emit(modern::renderHouseTable(h.output, W, col, boxed, config_.locale));
+    if (show(6))
+        emit(modern::renderShadvargaNames(h.output, W, col, boxed, config_.locale));
+    if (show(7))
+        emit(modern::renderShadvargaHouses(h.output, W, col, boxed, config_.locale));
     if (show(8) || show(9) || show(10) || show(11)) {
         const modern::ChartSet cs = modern::buildCharts(h.output);
         if (show(8))
             emit(modern::renderChartPair(cs.lagna, "Lagna Chart", cs.navamsa, "Navamsa Chart",
-                                         W, col));
+                                         W, col, config_.locale));
         if (show(9))
             emit(modern::renderChartPair(cs.hora, "Hora Chart", cs.drekkana, "Drekkana Chart",
-                                         W, col));
+                                         W, col, config_.locale));
         if (show(10))
             emit(modern::renderChartPair(cs.dvadasamsa, "Dvadasamsa Chart", cs.trimshamsa,
-                                         "Trimshamsa Chart", W, col));
+                                         "Trimshamsa Chart", W, col, config_.locale));
         if (show(11))
-            emit(modern::renderChartPair(cs.sun, "Sun Chart", cs.moon, "Moon Chart", W, col));
+            emit(modern::renderChartPair(cs.sun, "Sun Chart", cs.moon, "Moon Chart", W, col,
+                                         config_.locale));
     }
     if (show(14))
-        emit(modern::renderDasa(birth, birthFrac, bal, h.moonNirayanaDeg, W, col));
+        emit(modern::renderDasa(birth, birthFrac, bal, h.moonNirayanaDeg, W, col,
+                                config_.locale));
     if (config_.show_all_screens) emit(modern::renderFooter(W));
     return 0;
 }

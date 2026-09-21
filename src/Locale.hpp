@@ -11,6 +11,7 @@
 // PROVENANCE: SCAFFOLD (structure per plans.md; en cells mirror the tested
 // modern tables they will translate — test_locale pins the equality).
 #include <cstdint>
+#include <string>
 #include <string_view>
 
 namespace star {
@@ -369,6 +370,10 @@ enum class Concept : std::uint16_t {
     UiTitleHora,
     UiTitleChakra,
     UiTitleKendraType,
+    UiTitleBirthProfile,
+    UiTitleAstroReference,
+    UiTitleTimeMetrics,
+    UiTitleSelectedOptions,
     UiTitleHoroscopeOwnerDetails,
     UiTitleAyanamsaMethod,
     UiPromptThathkalaKendraYN,
@@ -395,10 +400,17 @@ enum class Concept : std::uint16_t {
     UiKendraSandurasi,
     UiKendraHoraChart,
     UiKendraDrekkanaChart,
+    UiChartLagna,
+    UiChartNavamsa,
+    UiChartDvadasamsa,
+    UiChartTrimshamsa,
+    UiChartSun,
+    UiChartMoon,
     UiMiscYes,
     UiMiscNo,
     Count
 };
+
 
 struct ConceptText {
     const char* en = "";       // current modern-display string (fallback)
@@ -486,7 +498,9 @@ struct ConceptText {
         {"Horoscope Profile"}, {"District Selection"}, {"Nirayana Table of Houses"},
         {"Shadvarga Charts"}, {"Shadvarga Positions"}, {"Mahadasa and Athurudasa Timeline"},
         {"Panchanga"}, {"Dasa Information"}, {"Hora"}, {"Chakra"},
-        {"Kendra Type"}, {"Horoscope Owner Details"}, {"Ayanamsa Method"},
+        {"Kendra Type"}, {"Birth Profile"}, {"Astronomical & Chart Reference"},
+        {"Time & Solar Metrics"}, {"Selected Options"},
+        {"Horoscope Owner Details"}, {"Ayanamsa Method"},
         {"  Use Thathkala Kendra [y/N]: "}, {"  Method (S)ayana / (N)irayana [s/N]: "},
         {"  Full Name: "}, {"  Birth Date (YYYY MM DD): "},
         {"  Birth Time (HH MM, 24h): "}, {"  Closest District [1-26, >26 Other]:"},
@@ -496,6 +510,8 @@ struct ConceptText {
         {"LAGNA"}, {"NAVAMSAKA"}, {"HORA"}, {"DESHKANA"}, {"DVADASANSA"},
         {"TRISANSAKA"}, {"SOORYARASI"}, {"SANDURASI"},
         {"Hora Chart"}, {"Drekkana Chart"},
+        {"Lagna Chart"}, {"Navamsa Chart"},
+        {"Dvadasamsa Chart"}, {"Trimshamsa Chart"}, {"Sun Chart"}, {"Moon Chart"},
         {"Yes"}, {"No"},
     };
     return k[static_cast<std::size_t>(c)];
@@ -507,6 +523,62 @@ struct ConceptText {
     if (loc == Locale::Si && t.si[0] != '\0') return t.si;
     if (loc == Locale::Ta && t.ta[0] != '\0') return t.ta;
     return t.en;
+}
+
+// Reverse map for the string-layer chokepoints (sectionTitle/divider titles
+// and renderKeyValues row keys): exact modern strings that have a concept.
+// Anything absent passes through untranslated (dynamic text, values, table
+// heads) — so the hook can never alter output by itself.
+[[nodiscard]] inline Concept conceptForEn(std::string_view s) noexcept {
+    static const Concept k[] = {
+        Concept::UiProfileFullName, Concept::UiProfileBirthDate,
+        Concept::UiProfileBirthDay, Concept::UiProfileBirthPlace,
+        Concept::UiAstroJulianDate, Concept::UiAstroAyanamsa, Concept::UiAstroLagna,
+        Concept::UiAstroLagnaDegree, Concept::UiAstroLagnaNavamsa,
+        Concept::UiTimeBirthTime, Concept::UiTimeSinhalaTime,
+        Concept::UiTimeTrueLocalMeanTime, Concept::UiTimeUniversalTimeUT,
+        Concept::UiTimeUniversalSidereal, Concept::UiTimeLocalMeanSidereal,
+        Concept::UiTimeSunrise, Concept::UiTimeSunset,
+        Concept::UiPanchangaTithi, Concept::UiPanchangaNakshatra,
+        Concept::UiPanchangaNakshatraPada, Concept::UiPanchangaYoga,
+        Concept::UiPanchangaKarana,
+        Concept::UiDasaStarting, Concept::UiDasaPeriod, Concept::UiDasaReference,
+        Concept::UiHoraKala, Concept::UiHoraPanchama, Concept::UiHoraSukshama,
+        Concept::UiChakraGana, Concept::UiChakraYoni, Concept::UiChakraLinga,
+        Concept::UiChakraNaadi, Concept::UiChakraVarna, Concept::UiChakraRuxha,
+        Concept::UiChakraPaxhi, Concept::UiChakraGothra, Concept::UiChakraRajju,
+        Concept::UiChakraBhutha,
+        Concept::UiHouseName, Concept::UiHouseBorn, Concept::UiHousePlace,
+        Concept::UiOptDistrict, Concept::UiOptManualGeo, Concept::UiOptMethod,
+        Concept::UiTitleHoroscopeProfile, Concept::UiTitleDistrictSelection,
+        Concept::UiTitleNirayanaTableOfHouses, Concept::UiTitleShadvargaCharts,
+        Concept::UiTitleShadvargaPositions, Concept::UiTitleMahadasaTimeline,
+        Concept::UiTitlePanchanga, Concept::UiTitleDasaInformation,
+        Concept::UiTitleHora, Concept::UiTitleChakra,
+        Concept::UiTitleKendraType, Concept::UiTitleBirthProfile,
+        Concept::UiTitleAstroReference, Concept::UiTitleTimeMetrics,
+        Concept::UiTitleSelectedOptions, Concept::UiTitleHoroscopeOwnerDetails,
+        Concept::UiTitleAyanamsaMethod,
+        Concept::UiKendraLagna, Concept::UiKendraNavamsaka, Concept::UiKendraHora,
+        Concept::UiKendraDeshkana, Concept::UiKendraDvadasansa,
+        Concept::UiKendraTrisansaka, Concept::UiKendraSooryarasi,
+        Concept::UiKendraSandurasi, Concept::UiKendraHoraChart,
+        Concept::UiKendraDrekkanaChart,
+        Concept::UiChartLagna, Concept::UiChartNavamsa,
+        Concept::UiChartDvadasamsa, Concept::UiChartTrimshamsa,
+        Concept::UiChartSun, Concept::UiChartMoon,
+    };
+    for (const Concept c : k)
+        if (std::string_view(conceptText(c).en) == s) return c;
+    return Concept::Count;
+}
+
+// Chokepoint translation: mapped strings localize, everything else passes
+// through untouched (returns a std::string since the input may be dynamic).
+[[nodiscard]] inline std::string localizeKey(std::string_view s, Locale loc) {
+    const Concept c = conceptForEn(s);
+    if (c == Concept::Count) return std::string(s);
+    return localeText(c, loc);
 }
 
 }  // namespace star

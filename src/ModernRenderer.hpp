@@ -34,6 +34,7 @@
 #include "AstroTime.hpp"
 #include "Ayanamsa.hpp"
 #include "Hora.hpp"
+#include "Locale.hpp"
 #include "Panchanga.hpp"
 #include "ScreenRenderer.hpp"
 #include "SunriseSunset.hpp"
@@ -230,9 +231,10 @@ inline std::string sectionDivider(const std::string& title, int width, bool colo
     return dash(left) + " " + core + " " + dash(right);
 }
 
-inline std::string sectionTitle(const std::string& text, int width, bool color) {
+inline std::string sectionTitle(const std::string& text, int width, bool color,
+                                Locale loc = Locale::En) {
     // Airy, uniform rhythm: two blank lines before and after every divider.
-    return "\n\n" + sectionDivider(text, width, color) + "\n\n";
+    return "\n\n" + sectionDivider(localizeKey(text, loc), width, color) + "\n\n";
 }
 
 // ------------------------------------------------------------------ tables
@@ -492,7 +494,7 @@ inline std::string formatAge(YMD v) {
 
 // ---------------------------------------------------------------- sections
 
-inline constexpr const char* kAppVersion = "2.9.5";
+inline constexpr const char* kAppVersion = "2.9.6";
 
 // Closing art for full modern runs: top/bottom spacing, block-centered,
 // plain (no color — the art is busy enough). Skipped when the terminal is
@@ -563,11 +565,14 @@ inline std::array<std::string, 6> starLogo() {
 // labels bold when colored, values wrap with a hanging indent, no trailing
 // whitespace, every line within width.
 inline std::string renderKeyValues(const std::vector<std::pair<std::string, std::string>>& rows,
-                                   int width, bool color) {
+                                   int width, bool color, Locale loc = Locale::En) {
+    std::vector<std::pair<std::string, std::string>> lr;
+    lr.reserve(rows.size());
+    for (const auto& r : rows) lr.emplace_back(localizeKey(r.first, loc), r.second);
     size_t lab = 0;
-    for (const auto& r : rows) lab = std::max(lab, dispWidth(r.first));
+    for (const auto& r : lr) lab = std::max(lab, dispWidth(r.first));
     std::string out;
-    for (const auto& r : rows) {
+    for (const auto& r : lr) {
         std::string label = paint(Theme::label, r.first, color);
         const std::string val = r.second.empty() ? "-" : r.second;
         const size_t vw =
@@ -613,20 +618,23 @@ inline std::string renderBanner(int width, bool color, bool nirayana) {
 }
 
 inline std::string renderProfile(const HoroscopeOwner& o, const GeoCoord& geo,
-                                 const std::string& city, int width, bool color) {
-    std::string out = sectionTitle("Horoscope Profile", width, color);
+                                 const std::string& city, int width, bool color,
+                                 Locale loc = Locale::En) {
+    std::string out = sectionTitle("Horoscope Profile", width, color, loc);
     char b[256];
     std::snprintf(b, sizeof(b), "%04d-%02d-%02d at %02d:%02d", o.birth_year, o.birth_month,
                   o.birth_day, o.birth_hour, o.birth_minute);
     const std::string born = b;
     std::snprintf(b, sizeof(b), "%s (%d\xC2\xB0%02d'N %d\xC2\xB0%02d'E)", city.c_str(),
                   geo.lat_deg, geo.lat_min, geo.lon_deg, geo.lon_min);
-    out += renderKeyValues({{"Name", o.name}, {"Born", born}, {"Place", b}}, width, color);
+    out += renderKeyValues({{"Name", o.name}, {"Born", born}, {"Place", b}}, width, color, loc);
     return out;
 }
 
-inline std::string renderCityList(int width, bool color = false, bool withTitle = true) {
-    std::string out = withTitle ? sectionTitle("District Selection", width, color) : "";
+inline std::string renderCityList(int width, bool color = false, bool withTitle = true,
+                                    Locale loc = Locale::En) {
+    std::string out =
+        withTitle ? sectionTitle("District Selection", width, color, loc) : "";
     std::vector<std::string> entries;
     size_t maxLen = 0;
     for (int i = 1; i <= kCityCount; ++i) {
@@ -651,8 +659,9 @@ inline std::string renderCityList(int width, bool color = false, bool withTitle 
 }
 
 inline std::string renderHouseTable(const AstroEngineOutput& output, int width,
-                                    bool color, bool boxed = false) {
-    std::string out = sectionTitle("Nirayana Table of Houses", width, color);
+                                    bool color, bool boxed = false,
+                                    Locale loc = Locale::En) {
+    std::string out = sectionTitle("Nirayana Table of Houses", width, color, loc);
     Table t;
     t.head = {"Planet", "Longitude", "Nakshatra", "Pada", "Rasi", "Rasi Longitude", "Avastha"};
     t.noWrapCols = {1, 3, 5};  // exact DMS/count cells are never shrunk or wrapped
@@ -682,8 +691,9 @@ inline std::string renderHouseTable(const AstroEngineOutput& output, int width,
 }
 
 inline std::string renderShadvargaNames(const AstroEngineOutput& output, int width,
-                                        bool color, bool boxed = false) {
-    std::string out = sectionTitle("Shadvarga Charts", width, color);
+                                        bool color, bool boxed = false,
+                                        Locale loc = Locale::En) {
+    std::string out = sectionTitle("Shadvarga Charts", width, color, loc);
     Table t;
     t.head = {"Graha", "Rashi", "Navamsa", "Hora", "Drekkana", "Dvadasamsa", "Trimshamsa"};
     t.specialCols = {0};  // seats are rasi names: plain descriptors
@@ -701,13 +711,14 @@ inline std::string renderShadvargaNames(const AstroEngineOutput& output, int wid
 }
 
 inline std::string renderShadvargaHouses(const AstroEngineOutput& output, int width,
-                                         bool color, bool boxed = false) {
+                                         bool color, bool boxed = false,
+                                         Locale loc = Locale::En) {
     // Array read; the old null-fallback was dead (Engine always provides
     // Lagna; see renderScreen0914 note).
     std::array<int, 6> lagSv = VargaEngine::GetShadvarga(
         output.lonOf(Planet::Lagna).ecliptic.toDecimal());
     std::string out =
-        sectionTitle("Shadvarga Positions", width, color);
+        sectionTitle("Shadvarga Positions", width, color, loc);
     Table t;
     t.head = {"Graha", "Rashi", "Navamsa", "Hora", "Drekkana", "Dvadasamsa", "Trimshamsa"};
     t.rightCols = {1, 2, 3, 4, 5, 6};
@@ -782,7 +793,7 @@ inline ChartSet buildCharts(const AstroEngineOutput& output) {
 
 inline std::string renderChartPair(const KendraChart& left, const std::string& leftTitle,
                                    const KendraChart& right, const std::string& rightTitle,
-                                   int width, bool color) {
+                                   int width, bool color, Locale loc = Locale::En) {
     std::string out;
     if (width >= 80) {
         // Each chart gets its own title, centered over its 39/40 columns.
@@ -810,7 +821,7 @@ inline std::string renderChartPair(const KendraChart& left, const std::string& l
     }
     // Narrow: stack the two charts (boxflow split strategy).
     for (const KendraChart* k : {&left, &right}) {
-        out += sectionTitle(k == &left ? leftTitle : rightTitle, 40, color);
+        out += sectionTitle(k == &left ? leftTitle : rightTitle, 40, color, loc);
         for (const std::string& ln : renderKendraSingle(*k, true)) out += ln + "\n";
     }
     return out;
@@ -930,9 +941,10 @@ inline KeyRows chakraRows(int nakIndex) {
 // and tree art cannot wrap, while the Summary carries full prose anyway.
 
 inline std::string renderDasa(const YMD& birth, double birthFrac, const DasaBalance& bal,
-                              double moonNirayanaDeg, int width, bool color) {
+                              double moonNirayanaDeg, int width, bool color,
+                              Locale loc = Locale::En) {
     const std::vector<DasaSpan> mahas = mahaTimeline(birth, birthFrac, bal);
-    std::string out = sectionTitle("Mahadasa and Athurudasa Timeline", width, color);
+    std::string out = sectionTitle("Mahadasa and Athurudasa Timeline", width, color, loc);
     // No root label: it would duplicate the section title and confuse.
     // The divider's blank lines keep the spacing.
     // Scoped palette (colorizer skill): Mahadasa lords yellow, Athuru

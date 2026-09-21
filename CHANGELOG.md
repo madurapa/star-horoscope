@@ -4,6 +4,15 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.9.6
+
+- Phase 3 increment 5: `--locale en|si|ta` wired through a
+  reverse-map at the string-layer chokepoints (section titles,
+  row keys, prompts, dividers). si/ta fall back to English cell
+  by cell — si/ta output proven byte-identical to en. 363
+  concepts; reverse-map round-trip tested (it caught a real
+  table/enum misalignment plus a pointer-comparison bug).
+
 ## 2.9.5
 
 - Phase 3 increment 4: locale model 264→353 concepts — all

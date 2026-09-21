@@ -18,6 +18,7 @@
 
 #include "AstroStructures.hpp"
 #include "Engine.hpp"
+#include "Locale.hpp"
 
 namespace star {
 
@@ -66,6 +67,9 @@ struct CLIConfig {
     std::string display = "modern";
     // Color: "auto" (TTY only, NO_COLOR respected), "always", "never".
     std::string color = "auto";
+    // Output locale: "en" (default; "si"/"ta" fall back to English until
+    // the sourcing track lands — see plans.md Phase 3).
+    Locale locale = Locale::En;
 
     // Verification.
     bool verify_mode = false;

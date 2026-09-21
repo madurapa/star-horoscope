@@ -114,7 +114,7 @@ int main() {
         STAR_CHECK(std::string(conceptText(static_cast<Concept>(237 + i)).en) == ruxhaFor(i),
                    "ruxha en %d", i);
     }
-    STAR_CHECK(static_cast<int>(Concept::Count) == 353, "concept count %d",
+    STAR_CHECK(static_cast<int>(Concept::Count) == 363, "concept count %d",
                static_cast<int>(Concept::Count));
     auto keysOf = [](const modern::KeyRows& rows) {
         std::vector<std::string> k;
@@ -178,6 +178,38 @@ int main() {
     STAR_CHECK(!parseLocale("de", loc), "parse de rejected");
     STAR_CHECK(!parseLocale("", loc), "parse empty rejected");
     STAR_CHECK(std::string(localeName(Locale::Si)) == "si", "localeName");
+    // Reverse map: every mapped UI string round-trips; dynamic/unknown
+    // strings pass through (hook can never alter output by itself).
+    auto mapped = [&](Concept c) {
+        return conceptForEn(conceptText(c).en) == c;
+    };
+    for (int i = static_cast<int>(Concept::UiProfileFullName);
+         i <= static_cast<int>(Concept::UiDasaReference); ++i)
+        STAR_CHECK(mapped(static_cast<Concept>(i)), "key mapped %d", i);
+    for (int i = static_cast<int>(Concept::UiHoraKala);
+         i <= static_cast<int>(Concept::UiOptMethod); ++i)
+        STAR_CHECK(mapped(static_cast<Concept>(i)), "key mapped %d", i);
+    for (int i = static_cast<int>(Concept::UiTitleHoroscopeProfile);
+         i <= static_cast<int>(Concept::UiTitleAyanamsaMethod); ++i)
+        STAR_CHECK(mapped(static_cast<Concept>(i)), "title mapped %d", i);
+    for (int i = static_cast<int>(Concept::UiKendraLagna);
+         i <= static_cast<int>(Concept::UiChartMoon); ++i)
+        STAR_CHECK(mapped(static_cast<Concept>(i)), "kendra mapped %d", i);
+    // Unmapped by design: dasa values, option values, prompts, hints, misc.
+    STAR_CHECK(conceptForEn(conceptText(Concept::UiDasaFromBirth).en) == Concept::Count,
+               "dasa value unmapped");
+    STAR_CHECK(conceptForEn(conceptText(Concept::UiOptNirayanaSidereal).en) == Concept::Count,
+               "opt value unmapped");
+    STAR_CHECK(conceptForEn(conceptText(Concept::UiPromptBirthDate).en) == Concept::Count,
+               "prompt unmapped");
+    STAR_CHECK(conceptForEn(conceptText(Concept::UiHintDateEg).en) == Concept::Count,
+               "hint unmapped");
+    STAR_CHECK(conceptForEn(conceptText(Concept::UiMiscYes).en) == Concept::Count,
+               "misc unmapped");
+    STAR_CHECK(conceptForEn("Test User") == Concept::Count, "dynamic passthrough");
+    STAR_CHECK(conceptForEn("") == Concept::Count, "empty passthrough");
+    STAR_CHECK(localizeKey("Test User", Locale::Si) == "Test User", "localize passthrough");
+    STAR_CHECK(localizeKey("Hora", Locale::Ta) == "Hora", "localize fallback");
     if (::startest::g_fail == 0) std::printf("LOCALE_ALL_GREEN\n");
     return ::startest::exitCode();
 }
