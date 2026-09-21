@@ -4,6 +4,15 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.9.2
+
+- Phase 3 scaffolding: `src/Locale.hpp` concept model (en + si/ta
+  script/romanized + per-language review status; 37 pilot concepts:
+  rasis, vargas, weekdays, months) with English fallback, plus
+  `tests/test_locale.cpp` pinning en against the live modern
+  tables. No renderer call-sites yet — output unchanged. Sinhala
+  /Tamil sourcing awaits the named reviewer (plans.md Phase 3).
+
 ## 2.9.1
 
 - Wording: the 26 list entries are districts — modern display,

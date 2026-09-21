@@ -50,7 +50,7 @@ int main() {
         row(vargaName(static_cast<Varga>(i)), modern::vargaName(i));
 
     std::printf("\n### Cities\n| Old | New | Note |\n| --- | --- | --- |\n");
-    for (int i = 1; i <= 15; ++i) row(cityByIndex(i).label, modern::cityLabel(i));
+    for (int i = 1; i <= kCityCount; ++i) row(cityByIndex(i).label, modern::cityLabel(i));
 
     std::printf("\n### Vimshottari dasa lords\n| Old | New | Note |\n| --- | --- | --- |\n");
     for (const auto& d : kVimshottari) row(d.name, modern::dasaName(d.name));
