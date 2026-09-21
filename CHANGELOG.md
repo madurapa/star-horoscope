@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.20
+
+- Tooling: advisory `.clang-format` encoding the observed code
+  style (4-space, K&R braces, 100-col, unsorted includes). Not
+  CI-enforced and no sources reformatted — diffs stay reviewable
+  against the golden contract.
+
 ## 2.8.19
 
 - Patch: stale ground-truth references swept (§4.1a) — AGENTS.md
