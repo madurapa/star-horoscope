@@ -4,11 +4,14 @@ Reads no engine code: takes the parsed JSON dict from pystar.horoscope()
 and renders full-width, terminal-filling tables. Deterministic under a
 fixed-width Console (see test_render.py).
 """
+from datetime import date
+
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+from rich.text import Text
 
-from kendra import houses_from_longitudes, render_diamond
+from kendra import RASIS, houses_from_longitudes, parse_dms, render_diamond
 
 PLANETS = ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja", "Guru",
            "Shani", "Raahu", "Kethu", "Urenus", "Neptune", "Pluto"]
@@ -39,9 +42,103 @@ def render_provenance(doc, console: Console) -> None:
         f"ayanamsa {doc['ayanamsa_deg']}[/dim]")
 
 
+def _kv(title, rows) -> Table:
+    t = Table(title=title, expand=True, show_header=False, box=None)
+    t.add_column("k", style="bold", no_wrap=True)
+    t.add_column("v")
+    for k, v in rows:
+        t.add_row(k, str(v))
+    return t
+
+
+def rasi_of(dms: str) -> str:
+    return RASIS[int(parse_dms(dms) // 30) % 12]
+
+
+def render_reference(doc, console: Console) -> None:
+    lagna = doc["lagna"]
+    left = _kv("Birth Profile", [
+        ("Name", doc["name"]),
+        ("Born", f"{doc['birth_date']} {doc['birth_time']}"),
+        ("Place", f"{doc['place']['city']} ({doc['place']['city_index']})"),
+        ("Method", doc["method"])])
+    right = _kv("Chart Reference", [
+        ("Lagna", lagna["rasi"]),
+        ("Degree", lagna["degree"].strip()),
+        ("Navamsa", lagna["navamsa"])])
+    console.print(left)
+    console.print(right)
+
+
+def render_time_panchanga(doc, console: Console) -> None:
+    tm = doc["times"]
+    left = _kv("Time & Solar Metrics", [
+        ("Birth", tm["birth"]), ("Sinhala", tm["sinhala"]),
+        ("Sunrise", tm["sunrise"]), ("Sunset", tm["sunset"]),
+        ("UT", tm["ut"]), ("LMST", tm["lmst"])])
+    pg = doc["panchanga"]
+    right = _kv("Panchanga", [
+        ("Weekday", pg["weekday"]), ("Nakshatra", pg["nakshatra"]),
+        ("Pada", pg["pada"]), ("Tithi", pg["tithi"]),
+        ("Yoga", pg["yoga"]), ("Karana", pg["karana"])])
+    console.print(left)
+    console.print(right)
+
+
+def render_houses(doc, console: Console) -> None:
+    t = Table(title="Nirayana Table of Houses", expand=True)
+    t.add_column("Graha", style="bold")
+    t.add_column("Longitude", justify="right")
+    t.add_column("Rasi")
+    t.add_column("House", justify="right")
+    for p in PLANETS:
+        lon = doc["longitudes"][p]
+        t.add_row(p, lon, rasi_of(lon), str(doc["houses"][p]))
+    console.print(t)
+
+
+def render_shadvarga(doc, console: Console) -> None:
+    t = Table(title="Shadvarga Seats", expand=True)
+    t.add_column("Graha", style="bold")
+    for h in ["Rashi", "Navamsa", "Hora", "Drekkana", "Dvadasamsa", "Trimshamsa"]:
+        t.add_column(h)
+    for p in PLANETS:
+        t.add_row(p, *doc["shadvarga"][p])
+    console.print(t)
+
+
+def _iso(s: str) -> date:
+    y, m, d = s.split("-")
+    return date(int(y), int(m), int(d))
+
+
+def render_dasa(doc, console: Console) -> None:
+    dasa = doc["dasa"]
+    spans = dasa["mahas"]
+    t0 = _iso(spans[0]["from"])
+    total = max((_iso(spans[-1]["to"]) - t0).days, 1)
+    width = max(console.width - 34, 20)
+    t = Table(title=f"Mahadasa Timeline (balance {dasa['balance_lord']} "
+                    f"{dasa['balance']})", expand=True, show_header=False,
+              box=None)
+    t.add_column("lord", style="bold", no_wrap=True, width=8)
+    t.add_column("bar", ratio=1)
+    t.add_column("span", no_wrap=True)
+    for s in spans:
+        days = (_iso(s["to"]) - _iso(s["from"])).days
+        fill = max(int(days / total * width), 1)
+        bar = Text("▉" * fill + "░" * (width - fill), style="yellow")
+        t.add_row(s["lord"], bar, f"{s['from']} → {s['to']}")
+    console.print(t)
+
+
 def render_all(doc, console: Console) -> None:
     render_profile(doc, console)
-    render_longitudes(doc, console)
+    render_reference(doc, console)
+    render_time_panchanga(doc, console)
+    render_houses(doc, console)
+    render_shadvarga(doc, console)
     houses, lagna_rasi = houses_from_longitudes(doc["longitudes"])
     render_diamond(houses, lagna_rasi, console)
+    render_dasa(doc, console)
     render_provenance(doc, console)

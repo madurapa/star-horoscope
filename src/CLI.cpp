@@ -573,7 +573,8 @@ int CLI::runBaselineModern() const {
         : (config_.city_index > kCityCount ? "Manual entry" : modern::cityLabel(config_.city_index));
 
     if (config_.output_format == "json") {
-        emit(modern::renderJson(owner, h, kind, jsonProv(config_, nirayana, city)));
+        emit(modern::renderJson(owner, h, kind, jsonProv(config_, nirayana, city), birth,
+                                birthFrac, bal));
         return 0;
     }
 
@@ -695,7 +696,8 @@ int CLI::runBaselineLegacy() const {
                               : (config_.city_index > kCityCount
                                      ? "Manual entry"
                                      : modern::cityLabel(config_.city_index));
-        emit(modern::renderJson(owner, h, kind, jsonProv(config_, nirayana, city)));
+        emit(modern::renderJson(owner, h, kind, jsonProv(config_, nirayana, city), birth,
+                                birthFrac, bal));
         return 0;
     }
 

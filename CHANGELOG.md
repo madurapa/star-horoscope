@@ -4,6 +4,15 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.16.0
+
+- Schema P1 blocks (additive): lagna, houses, shadvarga,
+  panchanga, times, dasa — documented in json_schema.md,
+  pinned by test_json_schema.
+- Console full dashboard: two-column profile/chart-ref and
+  time/panchanga groups, houses + shadvarga tables, kendra
+  diamond, proportional dasa bars, provenance line.
+
 ## 2.15.0
 
 - Console: modernized Sri Lankan diamond chart (default) —

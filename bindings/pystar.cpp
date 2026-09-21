@@ -40,13 +40,16 @@ static std::string horoscopeJson(const std::string& name, int year, int month, i
     const HoroscopeOwner owner{name, year, month, day, hour, minute};
     const HoroscopeResult h = computeHoroscope(owner, cityByIndex(city).coord, nirayana, kind);
     if (!h.engineOk) throw std::runtime_error(h.engineError);
+    const YMD birth{year, month, day};
+    const double birthFrac = fracYear(year, month, day);
+    const DasaBalance bal = dasaBalance(h.moonNirayanaDeg);
     modern::JsonProvenance prov;
     prov.display = display.c_str();
     prov.nirayana = nirayana;
     prov.locale = loc;
     prov.cityIndex = city;
     prov.city = modern::cityLabel(city);
-    return modern::renderJson(owner, h, kind, prov);
+    return modern::renderJson(owner, h, kind, prov, birth, birthFrac, bal);
 }
 
 NB_MODULE(pystar, m) {

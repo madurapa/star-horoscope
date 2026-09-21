@@ -24,13 +24,17 @@ int main() {
     const HoroscopeOwner owner{"Test \"User\"", 2000, 8, 17, 14, 5};
     const HoroscopeResult h =
         computeHoroscope(owner, cityByIndex(7).coord, true, EngineKind::Dos);
+    const YMD birth{2000, 8, 17};
+    const double birthFrac = fracYear(2000, 8, 17);
+    const DasaBalance bal = dasaBalance(h.moonNirayanaDeg);
     modern::JsonProvenance prov;
     prov.display = "modern";
     prov.nirayana = true;
     prov.locale = Locale::En;
     prov.cityIndex = 7;
     prov.city = modern::cityLabel(7);
-    const std::string doc = modern::renderJson(owner, h, EngineKind::Dos, prov);
+    const std::string doc = modern::renderJson(owner, h, EngineKind::Dos, prov, birth,
+                                               birthFrac, bal);
     // Frozen shape: every v1 key present exactly as documented.
     for (const char* k :
          {"\"schema\": \"star-horoscope/1\"", "\"version\": \"", "\"name\": ",
@@ -38,8 +42,15 @@ int main() {
           "\"place\": {\"city_index\": 7, \"city\": \"Ratnapura\"}",
           "\"method\": \"nirayana\"", "\"engine\": \"dos\"", "\"display\": \"modern\"",
           "\"locale\": \"en\"", "\"julian_date\": ", "\"ayanamsa_deg\": ",
-          "\"longitudes\": {"})
+          "\"longitudes\": {", "\"lagna\": {", "\"houses\": {", "\"shadvarga\": {",
+          "\"panchanga\": {", "\"times\": {", "\"dasa\": {"})
         STAR_CHECK(doc.find(k) != std::string::npos, "has %s", k);
+    // Spot values (engine-truth lives in verifier; here shape + echo).
+    STAR_CHECK(doc.find("\"rasi\": \"Vrishchika\"") != std::string::npos, "lagna rasi");
+    STAR_CHECK(doc.find("\"Kuja\": 9") != std::string::npos, "kuja house");
+    STAR_CHECK(doc.find("\"balance_lord\": \"Guru\"") != std::string::npos, "dasa lord");
+    STAR_CHECK(doc.find("\"lord\": \"Guru\", \"from\": \"2000-08-17\"") != std::string::npos,
+               "guru maha");
     // Escaping: the quote in the name must not break the document.
     STAR_CHECK(doc.find("\"name\": \"Test \\\"User\\\"\"") != std::string::npos, "escaped");
     // Finite numbers.
@@ -67,7 +78,8 @@ int main() {
     p2.display = "legacy";
     p2.nirayana = false;
     p2.locale = Locale::Ta;
-    const std::string doc2 = modern::renderJson(owner, h, EngineKind::Swiss, p2);
+    const std::string doc2 =
+        modern::renderJson(owner, h, EngineKind::Swiss, p2, birth, birthFrac, bal);
     for (const char* k : {"\"method\": \"sayana\"", "\"engine\": \"swisseph\"",
                           "\"display\": \"legacy\"", "\"locale\": \"ta\""})
         STAR_CHECK(doc2.find(k) != std::string::npos, "prov %s", k);

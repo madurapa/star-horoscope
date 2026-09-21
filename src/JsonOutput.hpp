@@ -10,8 +10,10 @@
 #include <sstream>
 #include <string>
 
+#include "Bhava.hpp"
 #include "Engine.hpp"
 #include "ModernRenderer.hpp"
+#include "Vimshottari.hpp"
 
 namespace star {
 namespace modern {
@@ -46,7 +48,8 @@ struct JsonProvenance {
 };
 
 inline std::string renderJson(const HoroscopeOwner& owner, const HoroscopeResult& h,
-                              EngineKind kind, const JsonProvenance& prov) {
+                              EngineKind kind, const JsonProvenance& prov,
+                              const YMD& birth, double birthFrac, const DasaBalance& bal) {
     char born[16], btime[8];
     std::snprintf(born, sizeof(born), "%04d-%02d-%02d", owner.birth_year, owner.birth_month,
                   owner.birth_day);
@@ -77,7 +80,73 @@ inline std::string renderJson(const HoroscopeOwner& owner, const HoroscopeResult
         first = false;
         js << "    \"" << k << "\": \"" << formatDMS(pl.ecliptic) << "\"";
     }
-    js << "\n  }\n}\n";
+    js << "\n  },\n";
+    // Lagna reference (modern corrected rasi spellings throughout).
+    const double lagnaDec = h.output.lonOf(Planet::Lagna).ecliptic.toDecimal();
+    js << "  \"lagna\": {\"rasi\": \"" << rasiName(VargaEngine::GetRashiIndex(lagnaDec))
+       << "\", \"degree\": \"" << formatDMS(h.output.lonOf(Planet::Lagna).rasiRel)
+       << "\", \"navamsa\": \"" << rasiName(VargaEngine::GetNavamshaIndex(lagnaDec))
+       << "\"},\n";
+    // Equal houses from Lagna (Bhava houseOf; avastha deferred — needs
+    // mode-longitude plumbing, see Avastha.hpp).
+    js << "  \"houses\": {\n";
+    first = true;
+    for (int i = 0; i < 13; ++i) {
+        const double lon = h.output.lonOf(static_cast<Planet>(i)).ecliptic.toDecimal();
+        if (!first) js << ",\n";
+        first = false;
+        js << "    \"" << kPlanetNames[static_cast<std::size_t>(i)]
+           << "\": " << houseOf(lon, lagnaDec);
+    }
+    js << "\n  },\n";
+    // Shadvarga seats (modern rasi spellings).
+    js << "  \"shadvarga\": {\n";
+    first = true;
+    for (int i = 0; i < 13; ++i) {
+        const double lon = h.output.lonOf(static_cast<Planet>(i)).ecliptic.toDecimal();
+        const std::array<int, 6> sv = VargaEngine::GetShadvarga(lon);
+        if (!first) js << ",\n";
+        first = false;
+        js << "    \"" << kPlanetNames[static_cast<std::size_t>(i)] << "\": [";
+        for (int v = 0; v < 6; ++v) js << (v ? ", " : "") << "\"" << rasiName(sv[v]) << "\"";
+        js << "]";
+    }
+    js << "\n  },\n";
+    // Panchanga limbs (engine strings).
+    const PanchangaInfo& pg = h.panchanga;
+    js << "  \"panchanga\": {\"weekday\": \"" << jsonEscape(pg.weekday) << "\", \"nakshatra\": \""
+       << jsonEscape(pg.nakshatra) << "\", \"pada\": " << pg.pada << ", \"tithi\": \""
+       << jsonEscape(pg.tithiText) << "\", \"yoga\": \"" << jsonEscape(pg.yoga)
+       << "\", \"karana\": \"" << jsonEscape(pg.karana) << "\"},\n";
+    // Time metrics (display clock splits, 12h sunset like the screens).
+    auto hms = [](const HMS& t) {
+        char b[40];  // wide: %02d on unbounded int trips -Wformat-truncation
+        std::snprintf(b, sizeof(b), "%02d:%02d:%02d", t.h, t.m, t.s);
+        return std::string(b);
+    };
+    HMS setHms = displayHms(h.setH);
+    setHms.h %= 12;
+    js << "  \"times\": {\"birth\": \"" << hms(displayHms(h.birthDecHours)) << "\", \"sinhala\": \""
+       << hms(displayHms(sinhalaGhati(h.birthDecHours, h.riseH))) << "\", \"sunrise\": \""
+       << hms(displayHms(h.riseH)) << "\", \"sunset\": \"" << hms(setHms)
+       << "\", \"ut\": \"" << hms(displayHms(h.birthDecHours - kTzHours))
+       << "\", \"lmst\": \"" << hms(displayHms(h.lmstHours)) << "\"},\n";
+    // Dasa: opening balance + full maha timeline (ISO dates).
+    const std::vector<DasaSpan> mahas = mahaTimeline(birth, birthFrac, bal);
+    auto ymd = [](const YMD& d) {
+        char b[16];
+        std::snprintf(b, sizeof(b), "%04d-%02d-%02d", d.y, d.m, d.d);
+        return std::string(b);
+    };
+    js << "  \"dasa\": {\"balance_lord\": \"" << kDasaCycle[bal.lordCycleIdx].name
+       << "\", \"balance\": \"" << bal.ymd.y << "y " << bal.ymd.m << "m " << bal.ymd.d
+       << "d\", \"mahas\": [\n";
+    for (size_t i = 0; i < mahas.size(); ++i) {
+        js << "    {\"lord\": \"" << mahas[i].lord << "\", \"from\": \"" << ymd(mahas[i].from)
+           << "\", \"to\": \"" << ymd(mahas[i].to) << "\"}" << (i + 1 < mahas.size() ? "," : "")
+           << "\n";
+    }
+    js << "  ]}\n}\n";
     return js.str();
 }
 

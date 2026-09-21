@@ -15,18 +15,42 @@ DOC = {
                    ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
                     "Guru", "Shani", "Raahu", "Kethu", "Urenus", "Neptune",
                     "Pluto"]},
+    "lagna": {"rasi": "Mesha", "degree": " 0:00:00", "navamsa": "Mesha"},
+    "houses": {p: 1 for p in
+               ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
+                "Guru", "Shani", "Raahu", "Kethu", "Urenus", "Neptune",
+                "Pluto"]},
+    "shadvarga": {p: ["Mesha"] * 6 for p in
+                  ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
+                   "Guru", "Shani", "Raahu", "Kethu", "Urenus", "Neptune",
+                   "Pluto"]},
+    "panchanga": {"weekday": "Thursday", "nakshatra": "Asvida", "pada": 3,
+                  "tithi": "T", "yoga": "Y", "karana": "K"},
+    "times": {"birth": "14:05:00", "sinhala": "1", "sunrise": "2",
+              "sunset": "3", "ut": "4", "lmst": "5"},
+    "dasa": {"balance_lord": "Guru", "balance": "9y 10m 11d",
+             "mahas": [
+                 {"lord": "Guru", "from": "2000-08-17", "to": "2010-06-28"},
+                 {"lord": "Shani", "from": "2010-06-28", "to": "2029-06-28"},
+             ]},
 }
 
 
 def test_renders_all_planets_at_fixed_width():
     buf = io.StringIO()
-    render_all(DOC, Console(file=buf, width=100, color_system=None))
+    render_all(DOC, Console(file=buf, width=140, color_system=None))
     out = buf.getvalue()
     assert "Horoscope Profile" in out
     assert "Test User" in out
     for p in DOC["longitudes"]:
         assert p in out, p
     assert "Ratnapura" in out
+    for section in ["Chart Reference", "Time & Solar Metrics", "Panchanga",
+                    "Nirayana Table of Houses", "Shadvarga Seats",
+                    "Mahadasa Timeline", "Sri Lankan diamond"]:
+        assert section in out, section
+    assert "Guru" in out and "2010-06-28" in out
+    assert "Thursday" in out and "Asvida" in out
 
 
 def test_missing_planet_raises():
@@ -35,7 +59,7 @@ def test_missing_planet_raises():
     del bad["longitudes"]["Kuja"]
     buf = io.StringIO()
     try:
-        render_all(bad, Console(file=buf, width=100, color_system=None))
+        render_all(bad, Console(file=buf, width=140, color_system=None))
     except KeyError:
         return
     raise AssertionError("expected KeyError")
