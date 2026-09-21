@@ -64,12 +64,12 @@ int main() {
     std::printf("\n### Weekdays (unchanged)\n| Old | New | Note |\n| --- | --- | --- |\n");
     for (int i = 0; i < 7; ++i) row(weekdayName(i), weekdayName(i));
 
-    std::printf("\n### Yoga names (unchanged)\n| Old | New | Note |\n| --- | --- | --- |\n");
+    std::printf("\n### Yoga names (modern corrected)\n| Old | New | Note |\n| --- | --- | --- |\n");
     {
         std::set<std::string> seen;
         for (int i = 0; i < 27; ++i) {
             std::string v = yogaName(i);
-            if (seen.insert(v).second) row(v, v);
+            if (seen.insert(v).second) row(v, modern::displayYogaName(v));
         }
     }
 
@@ -79,12 +79,12 @@ int main() {
         row(v, v);
     }
 
-    std::printf("\n### Karana names (unchanged)\n| Old | New | Note |\n| --- | --- | --- |\n");
+    std::printf("\n### Karana names (modern corrected)\n| Old | New | Note |\n| --- | --- | --- |\n");
     {
         std::set<std::string> seen;
         for (double e = 0.0; e < 360.0; e += 0.5) {
             std::string v = trim(karanaName(e, 2));
-            if (seen.insert(v).second) row(v, v);
+            if (seen.insert(v).second) row(v, modern::displayKaranaName(v));
         }
     }
 

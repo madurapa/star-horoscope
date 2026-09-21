@@ -51,7 +51,8 @@ int main() {
     }
     for (int i = 0; i < 27; ++i) {
         const Concept c = static_cast<Concept>(99 + i);
-        STAR_CHECK(std::string(conceptText(c).en) == yogaName(i), "yoga en %d", i);
+        STAR_CHECK(std::string(conceptText(c).en) == modern::displayYogaName(yogaName(i)),
+                   "yoga en %d", i);
     }
     for (int i = 1; i <= 15; ++i) {
         const Concept c = static_cast<Concept>(125 + i);
@@ -61,7 +62,8 @@ int main() {
                                          36.0, 42.0, 264.0, 348.0, 354.0};
     for (int i = 0; i < 11; ++i) {
         const Concept c = static_cast<Concept>(141 + i);
-        STAR_CHECK(std::string(conceptText(c).en) == karanaName(kKarElong[i], 0),
+        STAR_CHECK(std::string(conceptText(c).en) ==
+                       modern::displayKaranaName(karanaName(kKarElong[i], 0)),
                    "karana en %d", i);
     }
     static const Concept kPnameCon[21] = {

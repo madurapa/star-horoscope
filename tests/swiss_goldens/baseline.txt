@@ -87,7 +87,7 @@ Sunset                       : 05:57:15
 Tithi          : Ava -Thiyawaka - 3
 Nakshatra      : Puvaputupa
 Nakshatra Pada : 2
-Yoga           : Sukarna
+Yoga           : Sukarma
 Karana         : Kavlava
 === dasa-info ===
 Starting  : Guru
@@ -96,7 +96,7 @@ Reference : From birth
 === dasa ===
 
 
-─────────────────────── Mahadasa and Athurudasa Timeline ───────────────────────
+─────────────────────── Mahadasa and Antardasa Timeline ────────────────────────
 
 ├─ Guru: 2000-08-17 to 2010-07-13 (0y 0m 0d to 9y 10m 26d)
 │  ├─ Budha: 2000-08-17 to 2001-06-19 (0y 0m 0d to 0y 10m 2d)

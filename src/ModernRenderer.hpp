@@ -449,6 +449,26 @@ inline const char* rasiName(int idx) {
     return (idx >= 1 && idx <= 12) ? k[idx - 1] : "?";
 }
 
+// Modern display corrections for binary transliterations (owner policy
+// ruling 2026-09-21: yoga/karana romanizations + Athurudasa; the engine
+// tables in Panchanga.hpp stay byte-faithful and all legacy output is
+// untouched — this maps engine strings to modern display strings only).
+inline std::string displayYogaName(const std::string& engine) {
+    static constexpr const char* k[][2] = {
+        {"Vishkamba", "Vishkambha"}, {"Aaushmaan", "Ayushman"},
+        {"Savbhagya", "Saubhagya"}, {"Sukarna", "Sukarma"}, {"Drathi", "Dhriti"},
+        {"Drava", "Dhruva"}, {"Shubra", "Shukla"}, {"Mahendra", "Indra"},
+        {"Vydruthi", "Vaidhriti"}, {"Brahhma", "Brahma"}};
+    for (const auto& r : k)
+        if (engine == r[0]) return r[1];
+    return engine;
+}
+
+inline std::string displayKaranaName(const std::string& engine) {
+    if (engine == "Kinsthugana") return "Kimstughna";
+    return engine;
+}
+
 inline const char* vargaName(int idx) {
     static constexpr const char* k[6] = {
         "Rashi", "Navamsa", "Hora", "Drekkana", "Dvadasamsa", "Trimshamsa"};
@@ -494,7 +514,7 @@ inline std::string formatAge(YMD v) {
 
 // ---------------------------------------------------------------- sections
 
-inline constexpr const char* kAppVersion = "2.10.0";
+inline constexpr const char* kAppVersion = "2.10.1";
 
 // Closing art for full modern runs: top/bottom spacing, block-centered,
 // plain (no color — the art is busy enough). Skipped when the terminal is
@@ -903,8 +923,8 @@ inline KeyRows panchangaRows(const PanchangaInfo& pg) {
     return {{"Tithi", normalizeSpaces(pg.tithiText)},
             {"Nakshatra", nak},
             {"Nakshatra Pada", pada},
-            {"Yoga", pg.yoga},
-            {"Karana", pg.karana}};
+            {"Yoga", displayYogaName(pg.yoga)},
+            {"Karana", displayKaranaName(pg.karana)}};
 }
 
 inline KeyRows dasaInfoRows(const DasaBalance& bal) {
@@ -944,7 +964,7 @@ inline std::string renderDasa(const YMD& birth, double birthFrac, const DasaBala
                               double moonNirayanaDeg, int width, bool color,
                               Locale loc = Locale::En) {
     const std::vector<DasaSpan> mahas = mahaTimeline(birth, birthFrac, bal);
-    std::string out = sectionTitle("Mahadasa and Athurudasa Timeline", width, color, loc);
+    std::string out = sectionTitle("Mahadasa and Antardasa Timeline", width, color, loc);
     // No root label: it would duplicate the section title and confuse.
     // The divider's blank lines keep the spacing.
     // Scoped palette (colorizer skill): Mahadasa lords yellow, Athuru

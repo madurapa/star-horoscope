@@ -4,6 +4,14 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.10.1
+
+- Correction policy extended (owner ruling): modern display now
+  uses standard romanizations for 10 yogas + Brahma, Kimstughna
+  for the karana, and Antardasa for the dasa timeline (engine
+  tables + legacy output frozen; Swiss goldens re-recorded,
+  glossary regenerated).
+
 ## 2.10.0
 
 - Phase 3 live: first-draft Sinhala/Tamil rows for all 363
