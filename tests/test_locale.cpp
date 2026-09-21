@@ -123,7 +123,7 @@ int main() {
     };
     {
         const HoroscopeOwner owner{"Test User", 2000, 8, 17, 14, 5};
-        const std::vector<std::string> want = {"Full Name", "Birth Date", "Birth Day",
+        const std::vector<std::string> want = {"Full Name", "Birth Date", "Birth Weekday",
                                                "Birth Place"};
         STAR_CHECK(keysOf(modern::birthProfileRows(owner, "Ratnapura", "Thursday")) == want,
                    "profile keys");
@@ -159,24 +159,43 @@ int main() {
             STAR_CHECK(keys[static_cast<std::size_t>(i)] == conceptText(kProfileCon[i]).en,
                        "profile concept %d", i);
     }
-    // Every concept: non-empty en; si/ta fall back to en; both Unsourced.
+    // Every concept: non-empty en; En passthrough.
     for (int i = 0; i < static_cast<int>(Concept::Count); ++i) {
         const Concept c = static_cast<Concept>(i);
         const ConceptText& t = conceptText(c);
         STAR_CHECK(t.en[0] != '\0', "en nonempty %d", i);
         STAR_CHECK(std::string(localeText(c, Locale::En)) == t.en, "en passthrough %d", i);
-        STAR_CHECK(std::string(localeText(c, Locale::Si)) == t.en, "si fallback %d", i);
-        STAR_CHECK(std::string(localeText(c, Locale::Ta)) == t.en, "ta fallback %d", i);
-        STAR_CHECK(std::string(localeRoman(c, Locale::Si)) == t.en, "roman fallback %d", i);
+        STAR_CHECK(std::string(localeRoman(c, Locale::En)) == t.en, "roman en %d", i);
     }
-    // Translator tables start empty (sourcing track not started).
+    // Translator tables: full coverage (363/363), all Draft, non-empty
+    // script+roman, valid concepts — and localeText serves exactly them.
     {
-        size_t ns = 99, nt = 99;
-        detail::siRows(&ns);
-        detail::taRows(&nt);
-        STAR_CHECK(ns == 0, "si rows %u", (unsigned)ns);
-        STAR_CHECK(nt == 0, "ta rows %u", (unsigned)nt);
+        size_t ns = 0, nt = 0;
+        const TrRow* si = detail::siRows(&ns);
+        const TrRow* ta = detail::taRows(&nt);
+        STAR_CHECK(ns == 363, "si rows %u", (unsigned)ns);
+        STAR_CHECK(nt == 363, "ta rows %u", (unsigned)nt);
+        auto checkTable = [&](const TrRow* rows, size_t n, Locale loc, const char* tag) {
+            for (size_t i = 0; i < n; ++i) {
+                const int ci = static_cast<int>(rows[i].c);
+                STAR_CHECK(ci >= 0 && ci < static_cast<int>(Concept::Count), "%s range %u",
+                           tag, (unsigned)i);
+                STAR_CHECK(rows[i].s[0] != '\0', "%s script %u", tag, (unsigned)i);
+                STAR_CHECK(rows[i].roman[0] != '\0', "%s roman %u", tag, (unsigned)i);
+                STAR_CHECK(rows[i].st == ReviewStatus::Draft, "%s draft %u", tag,
+                           (unsigned)i);
+                STAR_CHECK(std::string(localeText(rows[i].c, loc)) == rows[i].s,
+                           "%s serves %u", tag, (unsigned)i);
+            }
+        };
+        checkTable(si, ns, Locale::Si, "si");
+        checkTable(ta, nt, Locale::Ta, "ta");
     }
+    // Spot-checks (guard against row/concept misalignment).
+    STAR_CHECK(std::string(localeText(Concept::RasiMesha, Locale::Si)) == "මේෂ",
+               "si mesha");
+    STAR_CHECK(std::string(localeText(Concept::RasiMesha, Locale::Ta)) == "மேஷம்",
+               "ta mesha");
     // Lookup mechanism (synthetic rows): first non-empty wins, empties skip.
     {
         static const TrRow rows[] = {
@@ -234,7 +253,7 @@ int main() {
     STAR_CHECK(conceptForEn("Test User") == Concept::Count, "dynamic passthrough");
     STAR_CHECK(conceptForEn("") == Concept::Count, "empty passthrough");
     STAR_CHECK(localizeKey("Test User", Locale::Si) == "Test User", "localize passthrough");
-    STAR_CHECK(localizeKey("Hora", Locale::Ta) == "Hora", "localize fallback");
+    STAR_CHECK(localizeKey("Hora", Locale::En) == "Hora", "localize en");
     if (::startest::g_fail == 0) std::printf("LOCALE_ALL_GREEN\n");
     return ::startest::exitCode();
 }

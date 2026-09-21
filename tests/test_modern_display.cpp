@@ -87,7 +87,7 @@ int main() {
 
     const std::string times = modern::renderKeyValues(
         modern::timeRows(h.birthDecHours, h.lmstHours, geo, h.riseH, h.setH), W, false);
-    STAR_CHECK(times.find("True Local Mean Time") != std::string::npos, "full time label");
+    STAR_CHECK(times.find("Local Mean Time (LMT)") != std::string::npos, "full time label");
     STAR_CHECK(times.find("Universal Time (UT)") != std::string::npos, "UT label");
     STAR_CHECK(times.find("08:35:00") != std::string::npos, "summary UT");
 

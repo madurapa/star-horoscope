@@ -64,10 +64,10 @@ Neptune            6           8      12           2             3            10
 Pluto              4           2      12          12             2            10
 ────────────────────────────────────────────────────────────────────────────────
 === profile ===
-Full Name   : Test User E
-Birth Date  : 2024-09-11
-Birth Day   : Wednesday
-Birth Place : Galle
+Full Name     : Test User E
+Birth Date    : 2024-09-11
+Birth Weekday : Wednesday
+Birth Place   : Galle
 === astro ===
 Julian Date   : 2460564.649
 Ayanamsa      : 24°12'07"
@@ -75,14 +75,14 @@ Lagna         : Tula
 Lagna Degree  : 11°17'44"
 Lagna Navamsa : Makara
 === times ===
-Birth Time           : 09:05:00
-Sinhala Time         : 07:42:04
-True Local Mean Time : 08:55:52
-Universal Time (UT)  : 03:35:00
-Universal Sidereal   : 02:48:29
-Local Mean Sidereal  : 08:18:29
-Sunrise              : 06:00:10
-Sunset               : 05:59:50
+Birth Time                   : 09:05:00
+Sinhala Time                 : 07:42:04
+Local Mean Time (LMT)        : 08:55:52
+Universal Time (UT)          : 03:35:00
+Greenwich Mean Sidereal Time : 02:48:29
+Local Mean Sidereal Time     : 08:18:29
+Sunrise                      : 06:00:10
+Sunset                       : 05:59:50
 === panchanga ===
 Tithi          : Pura-Atawaka - 8
 Nakshatra      : Deta

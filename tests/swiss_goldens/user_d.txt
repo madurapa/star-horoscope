@@ -64,10 +64,10 @@ Neptune            6           9      12           6             5             4
 Pluto              4           4      12           4             4             8
 ────────────────────────────────────────────────────────────────────────────────
 === profile ===
-Full Name   : Test User D
-Birth Date  : 2023-05-19
-Birth Day   : Friday
-Birth Place : Galle
+Full Name     : Test User D
+Birth Date    : 2023-05-19
+Birth Weekday : Friday
+Birth Place   : Galle
 === astro ===
 Julian Date   : 2460083.951
 Ayanamsa      : 24°11'01"
@@ -75,14 +75,14 @@ Lagna         : Tula
 Lagna Degree  : 6°15'56"
 Lagna Navamsa : Vrishchika
 === times ===
-Birth Time           : 16:20:00
-Sinhala Time         : 26:07:07
-True Local Mean Time : 16:10:52
-Universal Time (UT)  : 10:50:00
-Universal Sidereal   : 02:28:17
-Local Mean Sidereal  : 07:58:17
-Sunrise              : 05:53:09
-Sunset               : 06:06:51
+Birth Time                   : 16:20:00
+Sinhala Time                 : 26:07:07
+Local Mean Time (LMT)        : 16:10:52
+Universal Time (UT)          : 10:50:00
+Greenwich Mean Sidereal Time : 02:28:17
+Local Mean Sidereal Time     : 07:58:17
+Sunrise                      : 05:53:09
+Sunset                       : 06:06:51
 === panchanga ===
 Tithi          : Amaawaka-15
 Nakshatra      : Keti

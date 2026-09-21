@@ -5,9 +5,15 @@
 // per-language review status. Sourcing policy (plans.md Phase 3): no row
 // flips to Reviewed without the named reviewer; reviewer identity and
 // notes live in docs/glossary.md, not here. All si/ta cells below are
-// therefore empty/Unsourced until the sourcing track lands — localeText
-// falls back to English for any untranslated cell, so output cannot change
-// by including this header (no renderer call-sites yet).
+// therefore Draft-only (translator-supplied, none Reviewed) until the
+// sourcing track lands — localeText falls back to English for any
+// untranslated cell.
+// WORDING (modern display only, v2.10.0): Birth Weekday, Local Mean Time
+// (LMT), Greenwich Mean Sidereal Time, Local Mean Sidereal Time — fixed in
+// ModernRenderer + concept en + glossary + Swiss goldens together.
+// FROZEN (binary-attested reproductions, never "fixed"): Chadra, Rav1,
+// Urenus/Urenes, Neptun, Pluuto, Brahhma, uppercase kendra titles, prompt
+// padding — see docs/quirks.md. Full rationale in docs/locale_notes.md.
 // PROVENANCE: SCAFFOLD (structure per plans.md; en cells mirror the tested
 // modern tables they will translate — test_locale pins the equality).
 #include <cstdint>
@@ -485,10 +491,10 @@ struct TrRow {
         {"Dimbul"}, {"Beli"}, {"Kumbuk"}, {"Sapu"}, {"Munamal"}, {"Vetake#"},
         {"Imbul#"}, {"Hopalu#"}, {"Kos#"}, {"Vara#"}, {"Samadara"}, {"Kolong"},
         {"Mee Amba#"}, {"Kohomba"}, {"Mee#"},
-        {"Full Name"}, {"Birth Date"}, {"Birth Day"}, {"Birth Place"},
+        {"Full Name"}, {"Birth Date"}, {"Birth Weekday"}, {"Birth Place"},
         {"Julian Date"}, {"Ayanamsa"}, {"Lagna"}, {"Lagna Degree"}, {"Lagna Navamsa"},
-        {"Birth Time"}, {"Sinhala Time"}, {"True Local Mean Time"},
-        {"Universal Time (UT)"}, {"Universal Sidereal"}, {"Local Mean Sidereal"},
+        {"Birth Time"}, {"Sinhala Time"}, {"Local Mean Time (LMT)"},
+        {"Universal Time (UT)"}, {"Greenwich Mean Sidereal Time"}, {"Local Mean Sidereal Time"},
         {"Sunrise"}, {"Sunset"},
         {"Tithi"}, {"Nakshatra"}, {"Nakshatra Pada"}, {"Yoga"}, {"Karana"},
         {"Starting"}, {"Period"}, {"Reference"},

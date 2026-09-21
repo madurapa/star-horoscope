@@ -4,6 +4,20 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.10.0
+
+- Phase 3 live: first-draft Sinhala/Tamil rows for all 363
+  concepts (all Draft, none Reviewed — machine-drafted, see
+  docs/locale_notes.md). `--locale si|ta` now renders translated
+  titles/keys/prompts with English fallback per cell.
+- Modern wording fixes in the same pass: Birth Weekday, Local
+  Mean Time (LMT), Greenwich Mean Sidereal Time, Local Mean
+  Sidereal Time (core + concepts + glossary + Swiss goldens).
+- Deliberately NOT changed: binary-attested spellings (Chadra,
+  Rav1, Urenus/Urenes, Neptun, Pluuto, Brahhma), legacy
+  uppercase titles, prompt padding — fidelity contract
+  (docs/quirks.md); needs an explicit policy ruling to revisit.
+
 ## 2.9.7
 
 - Phase 3: translations split into translator-editable

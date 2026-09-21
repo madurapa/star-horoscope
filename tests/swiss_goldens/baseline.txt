@@ -64,10 +64,10 @@ Neptune            3           2      12          11             8             5
 Pluto              1           9       1           9             8            11
 ────────────────────────────────────────────────────────────────────────────────
 === profile ===
-Full Name   : Test User
-Birth Date  : 2000-08-17
-Birth Day   : Thursday
-Birth Place : Ratnapura
+Full Name     : Test User
+Birth Date    : 2000-08-17
+Birth Weekday : Thursday
+Birth Place   : Ratnapura
 === astro ===
 Julian Date   : 2451773.858
 Ayanamsa      : 23°51'57"
@@ -75,14 +75,14 @@ Lagna         : Vrishchika
 Lagna Degree  : 29°05'18"
 Lagna Navamsa : Meena
 === times ===
-Birth Time           : 14:05:00
-Sinhala Time         : 20:05:37
-True Local Mean Time : 13:56:36
-Universal Time (UT)  : 08:35:00
-Universal Sidereal   : 06:10:44
-Local Mean Sidereal  : 11:40:44
-Sunrise              : 06:02:45
-Sunset               : 05:57:15
+Birth Time                   : 14:05:00
+Sinhala Time                 : 20:05:37
+Local Mean Time (LMT)        : 13:56:36
+Universal Time (UT)          : 08:35:00
+Greenwich Mean Sidereal Time : 06:10:44
+Local Mean Sidereal Time     : 11:40:44
+Sunrise                      : 06:02:45
+Sunset                       : 05:57:15
 === panchanga ===
 Tithi          : Ava -Thiyawaka - 3
 Nakshatra      : Puvaputupa

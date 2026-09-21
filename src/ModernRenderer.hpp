@@ -494,7 +494,7 @@ inline std::string formatAge(YMD v) {
 
 // ---------------------------------------------------------------- sections
 
-inline constexpr const char* kAppVersion = "2.9.7";
+inline constexpr const char* kAppVersion = "2.10.0";
 
 // Closing art for full modern runs: top/bottom spacing, block-centered,
 // plain (no color — the art is busy enough). Skipped when the terminal is
@@ -859,7 +859,7 @@ inline KeyRows birthProfileRows(const HoroscopeOwner& owner, const std::string& 
                   owner.birth_day);
     return {{"Full Name", owner.name},
             {"Birth Date", born},
-            {"Birth Day", weekday},
+            {"Birth Weekday", weekday},
             {"Birth Place", city}};
 }
 
@@ -886,11 +886,11 @@ inline KeyRows timeRows(double birthDecHours, double lmstHours, const GeoCoord& 
     setHms.h %= 12;  // 12-hour clock as printed ("05:51:45")
     return {{"Birth Time", hms(displayHms(birthDecHours))},
             {"Sinhala Time", hms(displayHms(sinhalaGhati(birthDecHours, riseH)))},
-            {"True Local Mean Time",
+            {"Local Mean Time (LMT)",
              hms(displayHms(trueLocalMeanHours(birthDecHours, geo.decimalLon())))},
             {"Universal Time (UT)", hms(displayHms(birthDecHours - kTzHours))},
-            {"Universal Sidereal", hms(displayHms(printedUniversalSiderealHours(lmstHours)))},
-            {"Local Mean Sidereal", hms(displayHms(lmstHours))},
+            {"Greenwich Mean Sidereal Time", hms(displayHms(printedUniversalSiderealHours(lmstHours)))},
+            {"Local Mean Sidereal Time", hms(displayHms(lmstHours))},
             {"Sunrise", hms(displayHms(riseH))},
             {"Sunset", hms(setHms)}};
 }
