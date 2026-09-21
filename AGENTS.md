@@ -109,13 +109,13 @@ India mode (Bhava/quadrant systems live there, not in v1).
 
 ## Baseline checkpoints (what "correct" means)
 
-Profile: Test User, 1981-12-08 12:55, Ratnapura (city 7), Nirayana.
-Lagna 334:50:42 | Chandra 9:23:49 | Ravi 232:33:32 | Budha 231:17:00 |
-Sikuru 276:02:26 | Kuja 152:42:30 | Guru 188:32:33 | Shani 176:32:50 |
-Raahu 90:52:13 | Kethu 270:52:13. JD 2444946.809, UT 07:25:00,
-Ayanamsa 23°34'21". Balance Kethu 2-0-23 (table age 2-0-24: known
-two-convention dust, both reproduced). Kuja Maha 2020-01-02→2027-01-02;
-Kuja-Budha →2024-06-29, Kuja-Kethu →2024-11-26, Kuja-Sikuru →2026-01-26.
+Profile: Test User, 2000-08-17 14:05, Ratnapura (city 7), Nirayana.
+Lagna 239:7:8 | Chandra 325:6:45 | Ravi 120:55:1 | Budha 115:59:17 |
+Sikuru 139:14:48 | Kuja 106:40:47 | Guru 44:29:23 | Shani 36:36:38 |
+Raahu 89:5:27 | Kethu 269:5:27. JD 2451773.858, UT 08:35:00,
+Ayanamsa 23°50'1". Balance Guru 9-10-11 (screen agrees 9-10-11).
+Guru Maha 2000-08-17→2010-06-28;
+Budha →2001-06-04, Kethu →2002-05-10, Sikuru →2005-01-10.
 Full assertions live in `tests/verifier.cpp` — this list is the summary.
 
 ## Skills (load deterministically — auto-loading is unreliable)

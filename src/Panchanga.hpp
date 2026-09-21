@@ -1,9 +1,9 @@
 #pragma once
 // STAR.EXE Panchanga (five-limb almanac) engine.
 // Provenance: tests/screens/screen12.txt PANCHANGAYA block for the baseline
-//   (Test User, 1981-12-08 12:55, Ratnapura, Nirayana):
-//     DAY: Tuesday | NEKATHA: Asvida | PADAYA: 3
-//     THITIYA: Pura-Doloswaka -12 | YOGAYA: Parigha | KARANAYA: Bava
+//   (Test User, 2000-08-17 14:05, Ratnapura, Nirayana):
+//     DAY: Thursday | NEKATHA: Puvaputupa | PADAYA: 2
+//     THITIYA: Ava -Thiyawaka - 3 | YOGAYA: Sukarna | KARANAYA: Kavlava
 // All five limbs derive from the Nirayana Sun/Moon longitudes + JD with
 // closed-form classical rules (no binary tables needed):
 //   Vaara    = weekday from JD (floor(JD+1.5) mod 7, 0=Sunday).

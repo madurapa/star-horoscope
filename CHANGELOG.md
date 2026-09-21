@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.19
+
+- Patch: stale ground-truth references swept (§4.1a) — AGENTS.md
+  checkpoints, CLI date hint, Ayanamsa/Panchanga/Vimshottari
+  comment proofs now cite the dummy baseline (screen12/14 rows).
+  Mechanism unit tests with synthetic inputs untouched.
+
 ## 2.8.18
 
 - Patch: synthetic-data swap (§4.1a) — all birth-data tuples in

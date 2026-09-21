@@ -269,7 +269,7 @@ bool CLI::promptModern() {
         for (;;) {
             int v[3] = {config_.birth_year, config_.birth_month, config_.birth_day};
             if (!readInts("  Birth Date (YYYY MM DD): ", 3, v, true,
-                         "YYYY MM DD, eg: 1981 12 08", col))
+                         "YYYY MM DD, eg: 2000 08 17", col))
                 return false;
             const std::string err = validateDate(v[0], v[1], v[2]);
             if (err.empty()) {

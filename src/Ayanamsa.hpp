@@ -1,6 +1,6 @@
 #pragma once
 // STAR.EXE Ayanamsa Precession Formula
-// Provenance: PROGRAM 0x1159d-0x11601 GMST block; screen12 AYANAMSA 23 34 21.
+// Provenance: PROGRAM 0x1159d-0x11601 GMST block; screen12 AYANAMSA 23 50 1.
 // The binary's GMST constant (24110.54541) differs from Meeus (24110.54841)
 // by 0.003 s — see docs/math_engine_proofs.md section 4. The ayanamsa itself
 // is Lahiri-like, empirically anchored (see constants below).
@@ -25,7 +25,7 @@ namespace star {
 //   A  = t/365 - 1
 //   ayan = Ca + (A*Cb + Cc)*t/Cd   (Real48 immediates, exact decodes)
 // Rate at 1900: Cc/Cd per day = 50.2564"/yr; Ca = 22.4276 deg at 1900.
-// At baseline JD: 23.57249 deg (display still rounds to 23:34:21).
+// At baseline JD: 23.83364 deg (display still rounds to 23:50:01).
 // PROVENANCE: DECODED (PROGRAM ayanamsa block, STAR.EXE.asm ~1680-1722; Real48 immediates with hex patterns; epoch 2415020.5 half-day later than elements epoch).
 inline constexpr double kAyanCa = 22.427627139986726;    // (2985,C7C7,336B)
 inline constexpr double kAyanCb = 0.00011125000000000718;  // (E273,E392,694E)

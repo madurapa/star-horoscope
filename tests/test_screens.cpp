@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
     using namespace star;
     const std::string screens = argc > 1 ? argv[1] : "tests/screens";
 
-    // Baseline scenario (AGENTS.md): Test User, 1981-12-08 12:55,
+    // Baseline scenario (AGENTS.md): Test User, 2000-08-17 14:05,
     // Ratnapura (7), Nirayana.
     const HoroscopeOwner owner{"Test User", 2000, 8, 17, 14, 5};
     const HoroscopeResult h = computeHoroscope(owner, cityByIndex(7).coord, true, EngineKind::Dos);

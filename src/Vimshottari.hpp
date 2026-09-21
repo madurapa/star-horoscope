@@ -82,8 +82,8 @@ struct DasaSpan {
 }
 
 // Civil date difference with fixed 30-day month borrowing (screen14-16 "Age"
-// columns, e.g. 1984-01-02 minus 1981-12-08 = 2-0-24; 2020-05-29 minus
-// 1981-12-08 = 38-5-21). Verified against six screen rows.
+// columns, e.g. 2001-06-04 minus 2000-08-17 = 0-9-17; 2002-05-10 minus
+// 2000-08-17 = 1-8-23). Verified against screen14 rows.
 // PROVENANCE: FITTED (six screen rows; no binary address).
 [[nodiscard]] inline YMD dateDiffYmd(YMD from, YMD to) {
     YMD out;
@@ -130,8 +130,9 @@ struct DasaSpan {
 // full-maha-year proportionality (mahaYearsFull * Yi / 120); only the tail
 // from the birth bhukti prints, with the first shown span running from the
 // maha start (birth) to the first backward boundary. Baseline proof:
-// Ketu balance B=2.0666y, Mercury = 17/120*7 = 0.991667y, so Shani runs
-// birth -> (end - 0.991667) = 1983-01-05, Budha -> 1984-01-02 (screen14).
+// Guru balance 9-10-11, backward spans 16*Yi/120 from maha end 2010-06-28,
+// so Rahu (2.4y) runs 2008-02-04 -> 2010-06-28, while Budha's backward start
+// predates birth and Budha runs birth 2000-08-17 -> 2001-06-04 (screen14).
 // PROVENANCE: DECODED (sub_1633A pattern + screen14 baseline proof).
 [[nodiscard]] inline std::vector<DasaSpan> bhuktiTimeline(const YMD& birth, double mahaStartFrac,
                                                           int mahaLordIdx, double mahaYears,
