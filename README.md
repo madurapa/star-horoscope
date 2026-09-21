@@ -144,6 +144,16 @@ print(doc["longitudes"]["Lagna"], doc["engine"])
 Only the engine is shared — Python is a pure schema consumer.
 Translator files live in `src/locale_si.inc` / `src/locale_ta.inc`.
 
+A rich full-width console pilot lives in `console/` (needs the
+`pystar` build plus `rich`/`typer`/`pytest`):
+
+```bash
+PYTHONPATH=/tmp/star-py:console python3.13 console/app.py \
+  --name "Test User" --year 2000 --month 8 --day 17 \
+  --hour 14 --minute 5 --city 7
+python3.13 -m pytest console/ -q
+```
+
 ## Docs
 
 - `docs/quirks.md` — original-program behaviors reproduced on purpose.

@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.14.0
+
+- Python console pilot (`console/`): rich full-width tables over
+  `pystar` JSON (profile, longitudes, provenance) + typer CLI +
+  pytest consumer tests. Engine untouched; the portable native
+  binary stays the download-and-run product.
+
 ## 2.13.2
 
 - macOS asset renamed `star-mac.dmg` → `star.dmg` (dmg is
