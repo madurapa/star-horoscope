@@ -4,6 +4,14 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.9.0
+
+- Feature: city table 15→26 — Ampara, Batticaloa, Gampaha,
+  Kilinochchi, Kurunegala, Mannar, Matale, Monaragala, Mullaitivu,
+  Nuwara Eliya, Vavuniya appended (decimal table, round-to-nearest
+  minute). Entries 1–15 byte-frozen incl. the city-13 quirk;
+  manual entry now >26; legacy + modern lists extended.
+
 ## 2.8.20
 
 - Tooling: advisory `.clang-format` encoding the observed code

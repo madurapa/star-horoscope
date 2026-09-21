@@ -160,7 +160,9 @@ std::string CLI::validateTime(int hour, int minute) {
 }
 
 std::string CLI::validateCity(int city) {
-    if (city < 1) return "City must be 1 or greater (1-15 list, >15 manual entry).";
+    if (city < 1)
+        return "City must be 1 or greater (1-" + std::to_string(kCityCount) +
+               " list, >" + std::to_string(kCityCount) + " manual entry).";
     return "";
 }
 
@@ -181,7 +183,7 @@ bool CLI::batchComplete() const {
         return false;
     if (!validateTime(config_.birth_hour, config_.birth_minute).empty()) return false;
     if (!validateCity(config_.city_index).empty()) return false;
-    if (config_.city_index > 15 && !config_.manual_geo_set) return false;
+    if (config_.city_index > kCityCount && !config_.manual_geo_set) return false;
     if (!config_.nirayana.has_value()) return false;
     return true;
 }
@@ -302,7 +304,7 @@ bool CLI::promptModern() {
         std::cout << modern::renderCityList(W, false, false) << "\n";
         for (;;) {
             int v[1] = {0};
-            if (!readInts("  Closest City [1-15, >15 Other]: ", 1, v, true,
+            if (!readInts("  Closest City [1-26, >26 Other]: ", 1, v, true,
                          "city number, eg: 7", col))
                 return false;
             const std::string err = validateCity(v[0]);
@@ -313,7 +315,7 @@ bool CLI::promptModern() {
             error(err);
         }
     }
-    if (config_.city_index > 15 && !config_.manual_geo_set) {
+    if (config_.city_index > kCityCount && !config_.manual_geo_set) {
         for (;;) {
             int v[2] = {0, 0};
             if (!readInts("  Latitude (Deg Min): ", 2, v, true, "Deg Min, eg: 6 37", col))
@@ -430,7 +432,7 @@ bool CLI::promptMissing() {
             std::cout << err << "\n";
         }
     }
-    if (config_.city_index > 15 && !config_.manual_geo_set) {
+    if (config_.city_index > kCityCount && !config_.manual_geo_set) {
         for (;;) {
             int v[2] = {0, 0};
             if (!readInts("Geocentric latitude  (Deg  Min) ? ", 2, v)) return false;
@@ -473,9 +475,9 @@ void CLI::runInteractive() {
 }
 
 static GeoCoord resolveGeo(const CLIConfig& c) {
-    if (c.city_index >= 1 && c.city_index <= 15) return cityByIndex(c.city_index).coord;
-    if (c.city_index > 15 && c.manual_geo_set) return c.manual_geo;
-    // Batch mode with city > 15 but no manual geo cannot happen (validated);
+    if (c.city_index >= 1 && c.city_index <= kCityCount) return cityByIndex(c.city_index).coord;
+    if (c.city_index > kCityCount && c.manual_geo_set) return c.manual_geo;
+    // Batch mode with city > kCityCount but no manual geo cannot happen (validated);
     // fall back to Colombo seed rather than crashing.
     return kColomboFallback;
 }
@@ -577,7 +579,7 @@ int CLI::runBaselineModern() const {
     };
     const std::string city = config_.thathkala
         ? "Colombo (Thathkala default)"
-        : (config_.city_index > 15 ? "Manual entry" : modern::cityLabel(config_.city_index));
+        : (config_.city_index > kCityCount ? "Manual entry" : modern::cityLabel(config_.city_index));
 
     if (config_.output_format == "json") {
         emit(jsonText(owner, h, kind));
@@ -618,7 +620,7 @@ int CLI::runBaselineModern() const {
         std::vector<std::pair<std::string, std::string>> opts;
         if (!config_.thathkala) {
             opts.emplace_back("City", std::to_string(config_.city_index) + " (" + city + ")");
-            if (config_.city_index > 15) {
+            if (config_.city_index > kCityCount) {
                 char gb[64];
                 std::snprintf(gb, sizeof(gb), "%d\xC2\xB0%d'N %d\xC2\xB0%d'E", geo.lat_deg,
                               geo.lat_min, geo.lon_deg, geo.lon_min);
@@ -696,7 +698,7 @@ int CLI::runBaselineLegacy() const {
     if (show(3)) emit(renderScreen04() + "\n");
     if (show(4)) {
         if (!config_.thathkala) {
-            if (config_.city_index > 15) {
+            if (config_.city_index > kCityCount) {
                 std::ostringstream os;
                 os << "Closest city ? " << config_.city_index << "\n"
                    << "Geocentric latitude  (Deg  Min) ? " << geo.lat_deg << " "

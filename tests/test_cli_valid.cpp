@@ -26,7 +26,7 @@ int main() {
     STAR_CHECK(CLI::validateName("Test User").empty(), "name ok");
     STAR_CHECK(!CLI::validateName("   ").empty(), "blank name rejected");
     STAR_CHECK(CLI::validateCity(7).empty(), "city7 ok");
-    STAR_CHECK(CLI::validateCity(16).empty(), "city16 manual ok");
+    STAR_CHECK(CLI::validateCity(16).empty(), "city16 list ok");
     STAR_CHECK(!CLI::validateCity(0).empty(), "city0 rejected");
     STAR_CHECK(CLI::validateGeo(6, 37, 80, 24).empty(), "ratnapura geo ok");
     STAR_CHECK(!CLI::validateGeo(91, 0, 80, 0).empty(), "lat91 rejected");

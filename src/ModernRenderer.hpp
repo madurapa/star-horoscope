@@ -454,11 +454,14 @@ inline const char* vargaName(int idx) {
 }
 
 inline const char* cityLabel(int idx) {
-    static constexpr const char* k[16] = {
+    static constexpr const char* k[27] = {
         "?", "Colombo", "Galle", "Matara", "Kandy", "Hambantota",
         "Kalutara", "Ratnapura", "Puttalam", "Anuradhapura", "Polonnaruwa",
-        "Jaffna", "Trincomalee", "Batticaloa", "Badulla", "Kegalle"};
-    return (idx >= 1 && idx <= 15) ? k[idx] : "?";
+        "Jaffna", "Trincomalee", "Batticaloa", "Badulla", "Kegalle",
+        "Ampara", "Batticaloa", "Gampaha", "Kilinochchi", "Kurunegala",
+        "Mannar", "Matale", "Monaragala", "Mullaitivu", "Nuwara Eliya",
+        "Vavuniya"};
+    return (idx >= 1 && idx <= kCityCount) ? k[idx] : "?";
 }
 
 // Vimshottari cycle name -> corrected display name.
@@ -489,7 +492,7 @@ inline std::string formatAge(YMD v) {
 
 // ---------------------------------------------------------------- sections
 
-inline constexpr const char* kAppVersion = "2.8.20";
+inline constexpr const char* kAppVersion = "2.9.0";
 
 // Closing art for full modern runs: top/bottom spacing, block-centered,
 // plain (no color — the art is busy enough). Skipped when the terminal is
@@ -626,7 +629,7 @@ inline std::string renderCityList(int width, bool color = false, bool withTitle 
     std::string out = withTitle ? sectionTitle("City Selection", width, color) : "";
     std::vector<std::string> entries;
     size_t maxLen = 0;
-    for (int i = 1; i <= 15; ++i) {
+    for (int i = 1; i <= kCityCount; ++i) {
         char b[48];
         std::snprintf(b, sizeof(b), "%d. %s", i, cityLabel(i));
         entries.emplace_back(b);

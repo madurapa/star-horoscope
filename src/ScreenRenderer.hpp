@@ -159,16 +159,20 @@ inline std::string renderScreen0203(const HoroscopeOwner& owner) {
     return std::string(buf);
 }
 
-// Screen 3/4: City list.
+// Screen 3/4: City list (rows 1..15 byte-exact DOS; 16..26 appended in the
+// same 5-per-row style for the product city table in AstroStructures.hpp).
 inline std::string renderScreen04() {
     return "          LIST  OF  CITIES    \n"
            "          ----------------    \n\n"
            " 1. CLOMBO     2. GALLE     3. MATHARA    4. KANDY     5. HAMBANTOTA \n\n"
            " 6. KALUTHARA  7. RATNAPURA 8. PUTTLAM    9. A\"PURA   10. POLONARU \n\n"
            "11. JAFFNA    12. TRINCO   13. MATHARA   14.BADULLA   15. K\"GALA     \n\n"
+           "16. AMPARA    17. BATTICALOA 18. GAMPAHA   19. KILINOCHCHI 20. KURUNEGALA \n\n"
+           "21. MANNAR    22. MATALE    23. MONARAGALA 24. MULLAITIVU 25. NUWARA ELIYA \n\n"
+           "26. VAVUNIYA \n\n"
            "Closest city ? \n\n"
            "|------------------------------------------|\n"
-           "| ENTER A NUMBER > 15 FOR CITIES NOT GIVEN |\n"
+           "| ENTER A NUMBER > 26 FOR CITIES NOT GIVEN |\n"
            "|------------------------------------------|\n";
 }
 

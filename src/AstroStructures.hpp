@@ -45,7 +45,8 @@ struct GeoCoord {
 };
 
 struct CityEntry {
-    int index = 0;            // 1..15, as compared via @__Cmp against Real 1.0..15.0
+    int index = 0;            // 1..26 (1..15 binary-exact, 16..26 appended product
+                              // cities; DOS compared @__Cmp against Real 1.0..15.0)
     const char* label = "";   // screen list spelling ("CLOMBO", "A\"PURA", ...)
     GeoCoord coord;
 };
@@ -53,9 +54,16 @@ struct CityEntry {
 // Colombo fallback seeded at 0x10d61 when Thathkala-Kendra path skips entry.
 inline constexpr GeoCoord kColomboFallback{6, 50, 79, 50};
 
+// Number of listed cities (1..15 decoded binary table + 16..26 appended).
+inline constexpr int kCityCount = 26;
+
 // Full dispatcher table (decoded at docs/data_structures.md section 3).
 // Element 0 is unused so that table[i].index == i.
-inline constexpr std::array<CityEntry, 16> kCities{{
+// Entries 1..15 are byte-exact binary decodes (dseg addresses kept); 16..26
+// are product additions from a decimal user table (round-to-nearest minute,
+// 60' carried), so manual geo entry is rarely needed. Never reorder 1..15:
+// goldens pin city 7 (baseline) and the city-13 label/coords quirk.
+inline constexpr std::array<CityEntry, 27> kCities{{
     {0,  "",          {0,  0,  0,  0 }},
     {1,  "CLOMBO",    {6, 53, 79, 51}},   // 0x110bf
     {2,  "GALLE",     {5, 58, 80, 13}},   // 0x110f0
@@ -74,10 +82,21 @@ inline constexpr std::array<CityEntry, 16> kCities{{
                                          // NOT Matara — never "correct" coords to label)
     {14, "BADULLA",   {6, 55, 81,  3}},   // 0x11345
     {15, "K\"GALA",   {7, 25, 80, 23}},   // 0x11377
+    {16, "AMPARA",    {7, 18, 81, 41}},   // user table 7.2975/81.6820
+    {17, "BATTICALOA",{7, 43, 81, 42}},   // user table 7.7170/81.7000
+    {18, "GAMPAHA",   {7,  5, 80,  0}},   // user table 7.0911/79.9999
+    {19, "KILINOCHCHI",{9, 23, 80, 24}},  // user table 9.3803/80.3992
+    {20, "KURUNEGALA",{7, 29, 80, 22}},   // user table 7.4863/80.3623
+    {21, "MANNAR",    {8, 59, 79, 54}},   // user table 8.9810/79.9044
+    {22, "MATALE",    {7, 28, 80, 37}},   // user table 7.4675/80.6234
+    {23, "MONARAGALA",{6, 52, 81, 21}},   // user table 6.8721/81.3508
+    {24, "MULLAITIVU",{9, 16, 80, 49}},   // user table 9.2671/80.8142
+    {25, "NUWARA ELIYA",{6, 57, 80, 47}}, // user table 6.9497/80.7891
+    {26, "VAVUNIYA",  {8, 45, 80, 30}},   // user table 8.7542/80.4982
 }};
 
 [[nodiscard]] inline constexpr const CityEntry& cityByIndex(int idx) noexcept {
-    return kCities[(idx >= 1 && idx <= 15) ? static_cast<std::size_t>(idx) : 0];
+    return kCities[(idx >= 1 && idx <= kCityCount) ? static_cast<std::size_t>(idx) : 0];
 }
 
 // Hardcoded Sri Lanka zone: +5:30, no DST (docs/time_and_dasa_logic.md section 2).
