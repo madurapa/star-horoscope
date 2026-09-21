@@ -34,6 +34,11 @@ dosbox-x legacy/STAR.EXE
 - Swiss Ephemeris v2.10.3final sources, vendored under
   `third_party/` (Moshier fallback; no downloads, no data files)
 - A UTF-8 terminal for `--display modern` (no ASCII fallback)
+- Optional: static libc for a portable binary
+  (`cmake -S . -B build -DSTAR_PORTABLE=ON`, Linux)
+- Optional: Python 3.9+ dev headers plus pip-installed `nanobind`
+  for the `pystar` bindings (`-DSTAR_PYTHON=ON`, e.g.
+  `-DPython_EXECUTABLE=/usr/bin/python3.13`)
 
 ## Build
 

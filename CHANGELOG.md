@@ -4,6 +4,15 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.12.0
+
+- Portable binary: `-DSTAR_PORTABLE=ON` fully static-links
+  `modern_star` (~4MB, `VERIFY_ALL_GREEN`, Swiss engine works).
+- Python bindings (nanobind, optional/off by default):
+  `pystar.horoscope(...)` returns schema-v1 JSON (stdlib-json
+  consumer, `bindings/smoke.py` green as `test_pystar`).
+  Needs Python 3.9+ dev + pip `nanobind`.
+
 ## 2.11.0
 
 - Phase 4 increment 1: frozen JSON schema `star-horoscope/1`

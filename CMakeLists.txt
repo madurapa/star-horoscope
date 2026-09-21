@@ -16,9 +16,19 @@ else()
   add_compile_options(-Wall -Wextra -O2)
 endif()
 
+# Portable standalone binary: fully static link (needs static libc/dl on
+# the build machine). Off by default; the standard build stays dynamic.
+option(STAR_PORTABLE "Fully static portable modern_star binary (Linux)" OFF)
+if(STAR_PORTABLE AND NOT MSVC)
+  add_link_options(-static)
+endif()
+
 add_executable(modern_star src/main.cpp src/CLI.cpp src/VargaEngine.cpp src/SwissFeed.cpp)
 target_include_directories(modern_star PRIVATE src third_party/swisseph)
 target_link_libraries(modern_star PRIVATE swisseph)
+if(STAR_PORTABLE AND NOT MSVC)
+  target_link_libraries(modern_star PRIVATE dl)
+endif()
 
 # Third-party: Swiss Ephemeris C library (Phase-2 engine feed; see
 # third_party/swisseph/README). Vendored sources compile warnings-off;
@@ -93,3 +103,31 @@ add_test(NAME extraction_check COMMAND python3 tools/check_extraction.py
          WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 add_test(NAME corpus COMMAND python3 tools/corpus_run.py
          WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+# Python bindings (nanobind, Phase 4 consumer): strictly optional, off by
+# default so the gate stays dependency-free. Needs Python 3.9+ dev headers
+# and pip-installed nanobind in the selected interpreter.
+option(STAR_PYTHON "Build nanobind pystar module" OFF)
+if(STAR_PYTHON)
+  # nanobind 3.x wants the unversioned FindPython module (not FindPython3).
+  # Point it at 3.9+ via -DPython_EXECUTABLE=/usr/bin/python3.13 if the
+  # default interpreter is older.
+  find_package(Python 3.9 REQUIRED COMPONENTS Interpreter Development)
+  execute_process(
+    COMMAND ${Python_EXECUTABLE} -m nanobind --cmake_dir
+    OUTPUT_VARIABLE nanobind_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE _nb_res)
+  if(NOT _nb_res EQUAL 0)
+    message(FATAL_ERROR "nanobind not importable in ${Python_EXECUTABLE} (pip install nanobind)")
+  endif()
+  find_package(nanobind CONFIG REQUIRED)
+  # Shared modules need PIC objects out of the vendored C library.
+  set_target_properties(swisseph PROPERTIES POSITION_INDEPENDENT_CODE ON)
+  nanobind_add_module(pystar bindings/pystar.cpp src/CLI.cpp src/VargaEngine.cpp
+                      src/SwissFeed.cpp)
+  target_include_directories(pystar PRIVATE src third_party/swisseph)
+  target_link_libraries(pystar PRIVATE swisseph)
+  add_test(NAME test_pystar COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/bindings/smoke.py
+           WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+  set_tests_properties(test_pystar PROPERTIES ENVIRONMENT "PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}")
+endif()
