@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.9.1
+
+- Wording: the 26 list entries are districts — modern display,
+  prompts, `--help`, and validation messages say District.
+  Legacy byte-exact strings (`LIST OF CITIES`, …) untouched;
+  `--city` flag and code identifiers unchanged.
+
 ## 2.9.0
 
 - Feature: city table 15→26 — Ampara, Batticaloa, Gampaha,

@@ -492,7 +492,7 @@ inline std::string formatAge(YMD v) {
 
 // ---------------------------------------------------------------- sections
 
-inline constexpr const char* kAppVersion = "2.9.0";
+inline constexpr const char* kAppVersion = "2.9.1";
 
 // Closing art for full modern runs: top/bottom spacing, block-centered,
 // plain (no color — the art is busy enough). Skipped when the terminal is
@@ -626,7 +626,7 @@ inline std::string renderProfile(const HoroscopeOwner& o, const GeoCoord& geo,
 }
 
 inline std::string renderCityList(int width, bool color = false, bool withTitle = true) {
-    std::string out = withTitle ? sectionTitle("City Selection", width, color) : "";
+    std::string out = withTitle ? sectionTitle("District Selection", width, color) : "";
     std::vector<std::string> entries;
     size_t maxLen = 0;
     for (int i = 1; i <= kCityCount; ++i) {

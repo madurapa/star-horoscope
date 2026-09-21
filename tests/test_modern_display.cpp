@@ -67,7 +67,7 @@ int main() {
     STAR_CHECK(cities.find("CLOMBO") == std::string::npos, "no CLOMBO");
     STAR_CHECK(cities.find("MATHARA") == std::string::npos, "no MATHARA");
     STAR_CHECK(cities.find("\xC2\xB0") == std::string::npos, "no coords in list");
-    STAR_CHECK(cities.find("City Selection") != std::string::npos, "title case section");
+    STAR_CHECK(cities.find("District Selection") != std::string::npos, "title case section");
     STAR_CHECK(houses.find("Nirayana Table of Houses") != std::string::npos,
                "title case houses");
 

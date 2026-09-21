@@ -38,24 +38,24 @@ void printHelp() {
               << "  --day <1-31>           Birth day (checked vs month, leap-year Feb 29 ok)\n"
               << "  --hour <0-23>          Birth hour\n"
               << "  --minute <0-59>        Birth minute\n"
-              << "  --city <n>             1-15 list city, >15 manual entry\n"
-              << "  --latdeg <0-90> --latmin <0-59>    manual latitude (city > 15)\n"
-              << "  --londeg <0-180> --lonmin <0-59>   manual longitude (city > 15)\n"
+              << "  --city <n>             1-26 district in list, >26 manual entry\n"
+              << "  --latdeg <0-90> --latmin <0-59>    manual latitude (district > 26)\n"
+              << "  --londeg <0-180> --lonmin <0-59>   manual longitude (district > 26)\n"
               << "  --nirayana / --sayana  Sidereal Nirayana vs tropical.\n"
               << "                         (--nrayana accepted: the binary spells it \"NRAYANA\")\n"
               << "  --engine <dos|swisseph>  Ephemeris engine (default: swisseph;\n"
               << "                         dos = frozen DOS reconstruction)\n"
               << "  --thathkala            Thathkala Kendra mode: use current local\n"
-              << "                         date/time + Colombo fallback (skip birth/city)\n"
+              << "                         date/time + Colombo fallback (skip birth/district)\n"
               << "  --screen <n[,n...]>    Show only output group N 1-14:\n"
-              << "                         1=header 2=profile 3=cities 4=options\n"
+              << "                         1=header 2=profile 3=districts 4=options\n"
               << "                         5=houses 6=shadvarga 7=positions 8-11=charts\n"
               << "                         12=summary 13=hora+chakra 14=dasa timeline\n"
               << "                         (printed: header, birth profile, astro ref,\n"
               << "                         time metrics, panchanga, dasa info, profile,\n"
-              << "                         cities, options, houses, shadvarga,\n"
+              << "                         districts, options, houses, shadvarga,\n"
               << "                         positions, charts, hora, chakra, dasa;\n"
-              << "                         profile, cities and options hide in\n"
+              << "                         profile, districts and options hide in\n"
               << "                         interactive runs unless requested)\n"
               << "  --output <file>        Append output to file (default: stdout)\n"
               << "  --format <text|json>   Output format (default: text)\n"
@@ -207,7 +207,7 @@ int main(int argc, char* argv[]) {
         if (manualPartial) {
             if (latDeg == -1 || latMin == -1 || lonDeg == -1 || lonMin == -1) {
                 return star::cliFail("Error: --latdeg/--latmin/--londeg/--lonmin must be given "
-                                       "together (city > 15).");
+                                       "together (district > 26).");
             }
             const std::string err = star::CLI::validateGeo(latDeg, latMin, lonDeg, lonMin);
             if (!err.empty()) {

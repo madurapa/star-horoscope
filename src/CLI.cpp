@@ -161,7 +161,7 @@ std::string CLI::validateTime(int hour, int minute) {
 
 std::string CLI::validateCity(int city) {
     if (city < 1)
-        return "City must be 1 or greater (1-" + std::to_string(kCityCount) +
+        return "District must be 1 or greater (1-" + std::to_string(kCityCount) +
                " list, >" + std::to_string(kCityCount) + " manual entry).";
     return "";
 }
@@ -200,7 +200,7 @@ int CLI::run() {
             }
             prompted_ = true;
         } else {
-            return cliFail("Error: missing birth/city/method fields (no defaults)."
+            return cliFail("Error: missing birth/district/method fields (no defaults)."
                            " Run interactively or pass --name/--year/--month/--day/"
                            "--hour/--minute/--city plus --nirayana/--sayana.");
         }
@@ -299,13 +299,13 @@ bool CLI::promptModern() {
         }
     }
 
-    divider("City Selection");
+    divider("District Selection");
     if (!validateCity(config_.city_index).empty()) {
         std::cout << modern::renderCityList(W, false, false) << "\n";
         for (;;) {
             int v[1] = {0};
-            if (!readInts("  Closest City [1-26, >26 Other]: ", 1, v, true,
-                         "city number, eg: 7", col))
+            if (!readInts("  Closest District [1-26, >26 Other]: ", 1, v, true,
+                         "district number, eg: 7", col))
                 return false;
             const std::string err = validateCity(v[0]);
             if (err.empty()) {
@@ -619,7 +619,7 @@ int CLI::runBaselineModern() const {
     if (show(4) && !hideEcho) {
         std::vector<std::pair<std::string, std::string>> opts;
         if (!config_.thathkala) {
-            opts.emplace_back("City", std::to_string(config_.city_index) + " (" + city + ")");
+            opts.emplace_back("District", std::to_string(config_.city_index) + " (" + city + ")");
             if (config_.city_index > kCityCount) {
                 char gb[64];
                 std::snprintf(gb, sizeof(gb), "%d\xC2\xB0%d'N %d\xC2\xB0%d'E", geo.lat_deg,
