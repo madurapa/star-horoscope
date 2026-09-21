@@ -39,9 +39,10 @@ enum class Locale : std::uint8_t { En, Si, Ta };
 // reviewer; everything starts Unsourced).
 enum class ReviewStatus : std::uint8_t { Unsourced, Draft, Reviewed };
 
-// Pilot concept set: rasis + vargas + weekdays + months (37 rows). The full
-// coded vocabulary (planets, districts, dasa lords, nakshatras, ...) follows
-// the same shape in later increments.
+// Pilot concept set: rasis + vargas + weekdays + months (37 rows), then
+// dasa lords + nakshatras + districts (62 rows). The remaining coded
+// vocabulary (planet slot names, yogas, tithis, karanas, attributes) and
+// UI strings follow the same shape in later increments.
 enum class Concept : std::uint16_t {
     RasiMesha = 0,
     RasiVrishabha,
@@ -80,6 +81,68 @@ enum class Concept : std::uint16_t {
     MonthOctober,
     MonthNovember,
     MonthDecember,
+    DasaKetu,
+    DasaShukra,
+    DasaRavi,
+    DasaChandra,
+    DasaKuja,
+    DasaRahu,
+    DasaGuru,
+    DasaShani,
+    DasaBudha,
+    NakAsvida,
+    NakBerana,
+    NakKeti,
+    NakRehena,
+    NakMuvasirasa,
+    NakAda,
+    NakPunavasa,
+    NakPushha,
+    NakAslisa,
+    NakMaa,
+    NakPuvapal,
+    NakUtrapal,
+    NakHata,
+    NakSita,
+    NakSaa,
+    NakVisa,
+    NakAnura,
+    NakDeta,
+    NakMula,
+    NakPuvasala,
+    NakUtrasala,
+    NakSuvana,
+    NakDenata,
+    NakSiyavsa,
+    NakPuvaputupa,
+    NakUtraputupa,
+    NakRevathee,
+    DistrictColombo,
+    DistrictGalle,
+    DistrictMatara,
+    DistrictKandy,
+    DistrictHambantota,
+    DistrictKalutara,
+    DistrictRatnapura,
+    DistrictPuttalam,
+    DistrictAnuradhapura,
+    DistrictPolonnaruwa,
+    DistrictJaffna,
+    DistrictTrincomalee,
+    DistrictBatticaloaA,  // list index 13 (DOS coords)
+    DistrictBadulla,
+    DistrictKegalle,
+    DistrictAmpara,
+    DistrictBatticaloaB,  // list index 17 (user table coords)
+    DistrictGampaha,
+    DistrictKilinochchi,
+    DistrictKurunegala,
+    DistrictMannar,
+    DistrictMatale,
+    DistrictMonaragala,
+    DistrictMullaitivu,
+    DistrictNuwaraEliya,
+    DistrictVavuniya,
     Count
 };
 
@@ -104,6 +167,19 @@ struct ConceptText {
         {"Saturday"},
         {"January"}, {"February"}, {"March"}, {"April"}, {"May"}, {"June"},
         {"July"}, {"August"}, {"September"}, {"October"}, {"November"}, {"December"},
+        {"Ketu"}, {"Shukra"}, {"Ravi"}, {"Chandra"}, {"Kuja"}, {"Rahu"},
+        {"Guru"}, {"Shani"}, {"Budha"},
+        {"Asvida"}, {"Berana"}, {"Keti"}, {"Rehena"}, {"Muvasirasa"}, {"Ada"},
+        {"Punavasa"}, {"Pushha"}, {"Aslisa"}, {"Maa"}, {"Puvapal"}, {"Utrapal"},
+        {"Hata"}, {"Sita"}, {"Saa"}, {"Visa"}, {"Anura"}, {"Deta"},
+        {"Mula"}, {"Puvasala"}, {"Utrasala"}, {"Suvana"}, {"Denata"}, {"Siyavsa"},
+        {"Puvaputupa"}, {"Utraputupa"}, {"Revathee"},
+        {"Colombo"}, {"Galle"}, {"Matara"}, {"Kandy"}, {"Hambantota"},
+        {"Kalutara"}, {"Ratnapura"}, {"Puttalam"}, {"Anuradhapura"}, {"Polonnaruwa"},
+        {"Jaffna"}, {"Trincomalee"}, {"Batticaloa"}, {"Badulla"}, {"Kegalle"},
+        {"Ampara"}, {"Batticaloa"}, {"Gampaha"}, {"Kilinochchi"}, {"Kurunegala"},
+        {"Mannar"}, {"Matale"}, {"Monaragala"}, {"Mullaitivu"}, {"Nuwara Eliya"},
+        {"Vavuniya"},
     };
     return k[static_cast<std::size_t>(c)];
 }

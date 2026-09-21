@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.9.3
+
+- Phase 3 increment 2: 62 more locale concepts (9 dasa lords,
+  27 nakshatras, 26 districts; 99 total), en pinned to the live
+  tables. Still no renderer call-sites — output unchanged.
+
 ## 2.9.2
 
 - Phase 3 scaffolding: `src/Locale.hpp` concept model (en + si/ta

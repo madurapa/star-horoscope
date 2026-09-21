@@ -6,6 +6,8 @@
 
 #include "../src/Locale.hpp"
 #include "../src/ModernRenderer.hpp"
+#include "../src/Panchanga.hpp"
+#include "../src/Vimshottari.hpp"
 #include "check.hpp"
 
 int main() {
@@ -31,6 +33,21 @@ int main() {
     for (int i = 0; i < 12; ++i)
         STAR_CHECK(std::string(conceptText(static_cast<Concept>(25 + i)).en) == months[i],
                    "month en %d", i);
+    for (int i = 0; i < 9; ++i) {
+        const Concept c = static_cast<Concept>(37 + i);
+        STAR_CHECK(std::string(conceptText(c).en) ==
+                       modern::dasaName(kDasaCycle[static_cast<std::size_t>(i)].name),
+                   "dasa en %d", i);
+    }
+    for (int i = 0; i < 27; ++i) {
+        const Concept c = static_cast<Concept>(46 + i);
+        STAR_CHECK(std::string(conceptText(c).en) == nakshatraDisplayName(i), "nak en %d", i);
+    }
+    for (int i = 1; i <= kCityCount; ++i) {
+        const Concept c = static_cast<Concept>(72 + i);
+        STAR_CHECK(std::string(conceptText(c).en) == modern::cityLabel(i), "district en %d",
+                   i);
+    }
     // Every concept: non-empty en; si/ta fall back to en; both Unsourced.
     for (int i = 0; i < static_cast<int>(Concept::Count); ++i) {
         const Concept c = static_cast<Concept>(i);
