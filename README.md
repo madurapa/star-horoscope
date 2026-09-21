@@ -83,9 +83,12 @@ that reduces passing tests is a bug in that step — revert and re-approach.
 Download-and-run, no install — like the original STAR.EXE:
 
 - **Windows**: download `star.exe`, double-click (a console opens).
+  SmartScreen will flag the unknown publisher once — choose Run anyway.
 - **Linux**: download `star_linux`, `chmod +x star_linux`, run it
   (fully static binary).
-- **macOS**: download `star_macos` and run it (system libraries only).
+- **macOS**: download `star-mac.dmg`, double-click, drag into
+  Applications. Unsigned, so on first launch right-click the app
+  and choose Open (Gatekeeper one-time approval).
 
 Tagged versions (`v*`) build all three via
 `.github/workflows/release.yml`, published as GitHub Releases.

@@ -23,7 +23,7 @@ jobs:
             binary: star_linux
             exe: modern_star
           - os: macos-latest
-            binary: star_macos
+            binary: star-mac.dmg
             exe: modern_star
           - os: windows-latest
             binary: star.exe
@@ -71,9 +71,19 @@ jobs:
           ctest --test-dir build -C Release --output-on-failure
           .\build\Release\modern_star.exe --verify
 
-      - name: Stage binary (POSIX)
-        if: runner.os != 'Windows'
+      - name: Stage binary (Linux)
+        if: runner.os == 'Linux'
         run: cp "build/${{ matrix.exe }}" "${{ matrix.binary }}"
+
+      - name: Build macOS disk image
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p dmg-root
+          cp "build/${{ matrix.exe }}" dmg-root/star_macos
+          ln -s /Applications dmg-root/
+          hdiutil create -volname "Modern STAR" -srcfolder dmg-root \
+            -ov -format UDZO "${{ matrix.binary }}"
+          rm -rf dmg-root
 
       - name: Stage binary (Windows)
         if: runner.os == 'Windows'
@@ -106,5 +116,5 @@ jobs:
           else
             gh release create "${{ github.ref_name }}" dist/* \
               --title "${{ github.ref_name }}" \
-              --notes "Automated build of ${{ github.ref_name }} (see CHANGELOG.md). Linux (static), macOS, and Windows (MSVC, static CRT) binaries — download and run, no install."
+              --notes "Automated build of ${{ github.ref_name }} (see CHANGELOG.md). Linux (static binary), macOS (.dmg drag-to-Applications), Windows (MSVC exe, static CRT) — download and run, no install. Unsigned builds: macOS right-click > Open once; Windows SmartScreen > Run anyway."
           fi

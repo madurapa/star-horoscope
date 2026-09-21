@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.13.1
+
+- macOS ships as `star-mac.dmg` (drag-to-Applications); README
+  documents the Gatekeeper/SmartScreen one-time approvals.
+
 ## 2.13.0
 
 - Portable releases: Linux builds fully static, Windows links
