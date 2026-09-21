@@ -4,6 +4,14 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.9.4
+
+- Phase 3 increment 3: locale model 99→264 concepts — yogas,
+  tithi limbs, karanas, 21 planet slot spellings, all attribute
+  values (gana/linga/naadi/paxhi/gothra/varna/rajju/bhutha, 27
+  yoni + 27 ruxha with binary literals intact). en pinned to the
+  live tables; output unchanged.
+
 ## 2.9.3
 
 - Phase 3 increment 2: 62 more locale concepts (9 dasa lords,
