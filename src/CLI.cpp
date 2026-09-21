@@ -14,6 +14,7 @@
 #include "ScreenRenderer.hpp"
 #include "Vimshottari.hpp"
 #include "Hora.hpp"
+#include "JsonOutput.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -520,27 +521,15 @@ bool CLI::colorOn() const {
     return ::isatty(STDOUT_FILENO) != 0;
 }
 
-static std::string jsonText(const HoroscopeOwner& owner, const HoroscopeResult& h,
-                            EngineKind kind) {
-    std::ostringstream js;
-    js << "{\n  \"name\": \"" << owner.name << "\",\n";
-    js << "  \"engine\": \"" << (kind == EngineKind::Swiss ? "swisseph" : "dos") << "\",\n";
-    js << "  \"julian_date\": " << std::fixed << std::setprecision(6) << h.jd << ",\n";
-    js << "  \"ayanamsa_deg\": " << h.ayanamsaDeg << ",\n";
-    js << "  \"longitudes\": {\n";
-    bool first = true;
-    // Phase-1 array read: canonical Planet order == houseTableOrder keys,
-    // so JSON keys stay byte-identical (proven by pre/post diff, Session 54).
-    for (int i = 0; i < 13; ++i) {
-        const char* k = kPlanetNames[static_cast<std::size_t>(i)];
-        const PlanetLongitude& pl =
-            h.output.lonOf(static_cast<Planet>(i));
-        if (!first) js << ",\n";
-        first = false;
-        js << "    \"" << k << "\": \"" << formatDMS(pl.ecliptic) << "\"";
-    }
-    js << "\n  }\n}\n";
-    return js.str();
+static modern::JsonProvenance jsonProv(const CLIConfig& config, bool nirayana,
+                                         const std::string& city) {
+    modern::JsonProvenance prov;
+    prov.display = config.display.c_str();
+    prov.nirayana = nirayana;
+    prov.locale = config.locale;
+    prov.cityIndex = config.thathkala ? 1 : config.city_index;
+    prov.city = city;
+    return prov;
 }
 
 int CLI::runBaseline() const {
@@ -584,7 +573,7 @@ int CLI::runBaselineModern() const {
         : (config_.city_index > kCityCount ? "Manual entry" : modern::cityLabel(config_.city_index));
 
     if (config_.output_format == "json") {
-        emit(jsonText(owner, h, kind));
+        emit(modern::renderJson(owner, h, kind, jsonProv(config_, nirayana, city)));
         return 0;
     }
 
@@ -701,7 +690,12 @@ int CLI::runBaselineLegacy() const {
     };
 
     if (config_.output_format == "json") {
-        emit(jsonText(owner, h, kind));
+        const std::string city =
+            config_.thathkala ? "Colombo (Thathkala default)"
+                              : (config_.city_index > kCityCount
+                                     ? "Manual entry"
+                                     : modern::cityLabel(config_.city_index));
+        emit(modern::renderJson(owner, h, kind, jsonProv(config_, nirayana, city)));
         return 0;
     }
 

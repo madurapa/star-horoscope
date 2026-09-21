@@ -74,6 +74,7 @@ add_star_test(test_attributes_data)
 add_star_test(test_hora_chain)
 add_star_test(test_karana_data)
 add_star_test(test_locale)
+add_star_test(test_json_schema)
 add_star_test(verifier)
 # CLI validation test links the CLI translation unit.
 add_executable(test_cli_valid tests/test_cli_valid.cpp src/CLI.cpp src/VargaEngine.cpp src/SwissFeed.cpp)

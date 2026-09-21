@@ -4,6 +4,15 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.11.0
+
+- Phase 4 increment 1: frozen JSON schema `star-horoscope/1`
+  (docs/json_schema.md) — provenance in every document
+  (schema/version/method/engine/display/locale/birth/place),
+  minimal string escaping, `src/JsonOutput.hpp` renderer,
+  `tests/test_json_schema.cpp` conformance. Python/TS
+  consumers later (binding decision open).
+
 ## 2.10.2
 
 - Wording: modern options row "Manual Geo" → "Manual
