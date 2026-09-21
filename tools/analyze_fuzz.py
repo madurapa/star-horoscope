@@ -114,7 +114,8 @@ def main():
         y, mo, d = bdate.split()
         hh, mm = btime.split()
         cmd = [MODERN, "--name", name, "--year", y, "--month", mo, "--day", d,
-               "--hour", hh, "--minute", mm, "--city", city]
+               "--hour", hh, "--minute", mm, "--city", city, "--nirayana",
+               "--display", "legacy", "--engine", "dos"]
         try:
             ours = subprocess.run(cmd, capture_output=True, text=True, timeout=60).stdout
         except Exception as e:
