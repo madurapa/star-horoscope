@@ -114,6 +114,51 @@ int main() {
         STAR_CHECK(std::string(conceptText(static_cast<Concept>(237 + i)).en) == ruxhaFor(i),
                    "ruxha en %d", i);
     }
+    STAR_CHECK(static_cast<int>(Concept::Count) == 353, "concept count %d",
+               static_cast<int>(Concept::Count));
+    auto keysOf = [](const modern::KeyRows& rows) {
+        std::vector<std::string> k;
+        for (const auto& r : rows) k.push_back(r.first);
+        return k;
+    };
+    {
+        const HoroscopeOwner owner{"Test User", 2000, 8, 17, 14, 5};
+        const std::vector<std::string> want = {"Full Name", "Birth Date", "Birth Day",
+                                               "Birth Place"};
+        STAR_CHECK(keysOf(modern::birthProfileRows(owner, "Ratnapura", "Thursday")) == want,
+                   "profile keys");
+    }
+    {
+        const std::vector<std::string> want = {"Tithi", "Nakshatra", "Nakshatra Pada",
+                                               "Yoga", "Karana"};
+        STAR_CHECK(keysOf(modern::panchangaRows(PanchangaInfo{})) == want, "panchanga keys");
+    }
+    {
+        const std::vector<std::string> want = {"Starting", "Period", "Reference"};
+        STAR_CHECK(keysOf(modern::dasaInfoRows(DasaBalance{})) == want, "dasa keys");
+    }
+    {
+        const std::vector<std::string> want = {"Kala", "Panchama", "Sukshama"};
+        STAR_CHECK(keysOf(modern::horaRows("a", "b", "c")) == want, "hora keys");
+    }
+    {
+        const std::vector<std::string> want = {"Gana",     "Yoni",  "Linga", "Naadi",
+                                               "Varna",    "Ruxha", "Paxhi", "Gothra",
+                                               "Rajju",    "Bhutha"};
+        STAR_CHECK(keysOf(modern::chakraRows(0)) == want, "chakra keys");
+    }
+    // Row-function keys must equal the matching UI concepts (order-sensitive).
+    static const Concept kProfileCon[4] = {Concept::UiProfileFullName, Concept::UiProfileBirthDate,
+                                           Concept::UiProfileBirthDay,
+                                           Concept::UiProfileBirthPlace};
+    {
+        const HoroscopeOwner owner{"Test User", 2000, 8, 17, 14, 5};
+        const auto keys =
+            keysOf(modern::birthProfileRows(owner, "Ratnapura", "Thursday"));
+        for (int i = 0; i < 4; ++i)
+            STAR_CHECK(keys[static_cast<std::size_t>(i)] == conceptText(kProfileCon[i]).en,
+                       "profile concept %d", i);
+    }
     // Every concept: non-empty en; si/ta fall back to en; both Unsourced.
     for (int i = 0; i < static_cast<int>(Concept::Count); ++i) {
         const Concept c = static_cast<Concept>(i);

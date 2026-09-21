@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.9.5
+
+- Phase 3 increment 4: locale model 264→353 concepts — all
+  modern UI strings (row-function keys pinned by calling them,
+  prompts/hints/titles/kendra labels transcribed exact).
+  si/ta still Unsourced; output unchanged.
+
 ## 2.9.4
 
 - Phase 3 increment 3: locale model 99→264 concepts — yogas,
