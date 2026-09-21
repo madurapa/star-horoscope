@@ -13,4 +13,8 @@
 // NOTE: this file is #included by src/Locale.hpp, so it must stay valid
 // C++ initializers (UTF-8, one row per line, trailing comma ok).
 //
+// EXAMPLE (commented out — copy, fill, uncomment; keep the shape exact):
+//   {Concept::RasiMesha, "<Tamil script>", "<romanized>", ReviewStatus::Draft},
+//   {Concept::UiTitleHoroscopeProfile, "<Tamil script>", "<romanized>", ReviewStatus::Draft},
+//
 // (No rows yet — the sourcing track has not started.)
