@@ -8,6 +8,8 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
+from kendra import houses_from_longitudes, render_diamond
+
 PLANETS = ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja", "Guru",
            "Shani", "Raahu", "Kethu", "Urenus", "Neptune", "Pluto"]
 
@@ -40,4 +42,6 @@ def render_provenance(doc, console: Console) -> None:
 def render_all(doc, console: Console) -> None:
     render_profile(doc, console)
     render_longitudes(doc, console)
+    houses, lagna_rasi = houses_from_longitudes(doc["longitudes"])
+    render_diamond(houses, lagna_rasi, console)
     render_provenance(doc, console)

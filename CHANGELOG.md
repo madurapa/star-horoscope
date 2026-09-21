@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.15.0
+
+- Console: modernized Sri Lankan diamond chart (default) —
+  roomy color boxes, Lagna highlight, responsive width, houses
+  derived from schema JSON. C++ charts frozen; square and other
+  styles plug in later as options.
+
 ## 2.14.0
 
 - Python console pilot (`console/`): rich full-width tables over
