@@ -4,6 +4,14 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.9.7
+
+- Phase 3: translations split into translator-editable
+  `src/locale_si.inc` / `src/locale_ta.inc` (sparse rows with
+  script + romanized + review status; absent = English
+  fallback). Header no longer carries untranslatable cells.
+  Tables start empty — output unchanged.
+
 ## 2.9.6
 
 - Phase 3 increment 5: `--locale en|si|ta` wired through a

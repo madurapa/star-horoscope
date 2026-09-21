@@ -167,8 +167,33 @@ int main() {
         STAR_CHECK(std::string(localeText(c, Locale::En)) == t.en, "en passthrough %d", i);
         STAR_CHECK(std::string(localeText(c, Locale::Si)) == t.en, "si fallback %d", i);
         STAR_CHECK(std::string(localeText(c, Locale::Ta)) == t.en, "ta fallback %d", i);
-        STAR_CHECK(t.siStatus == ReviewStatus::Unsourced, "si unsourced %d", i);
-        STAR_CHECK(t.taStatus == ReviewStatus::Unsourced, "ta unsourced %d", i);
+        STAR_CHECK(std::string(localeRoman(c, Locale::Si)) == t.en, "roman fallback %d", i);
+    }
+    // Translator tables start empty (sourcing track not started).
+    {
+        size_t ns = 99, nt = 99;
+        detail::siRows(&ns);
+        detail::taRows(&nt);
+        STAR_CHECK(ns == 0, "si rows %u", (unsigned)ns);
+        STAR_CHECK(nt == 0, "ta rows %u", (unsigned)nt);
+    }
+    // Lookup mechanism (synthetic rows): first non-empty wins, empties skip.
+    {
+        static const TrRow rows[] = {
+            {Concept::UiMiscYes, "", "", ReviewStatus::Unsourced},
+            {Concept::UiMiscYes, "Y-SI", "Y-RO", ReviewStatus::Draft},
+            {Concept::UiMiscNo, "N-SI", "", ReviewStatus::Reviewed},
+        };
+        STAR_CHECK(std::string(detail::trLookup(rows, 3, Concept::UiMiscYes, false)) == "Y-SI",
+                   "lookup script");
+        STAR_CHECK(std::string(detail::trLookup(rows, 3, Concept::UiMiscYes, true)) == "Y-RO",
+                   "lookup roman");
+        STAR_CHECK(std::string(detail::trLookup(rows, 3, Concept::UiMiscNo, false)) == "N-SI",
+                   "lookup reviewed");
+        STAR_CHECK(detail::trLookup(rows, 3, Concept::UiMiscNo, true) == nullptr,
+                   "lookup empty roman");
+        STAR_CHECK(detail::trLookup(rows, 3, Concept::RasiMesha, false) == nullptr,
+                   "lookup miss");
     }
     // Locale parsing for the future --locale flag.
     Locale loc = Locale::En;

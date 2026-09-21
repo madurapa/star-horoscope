@@ -413,13 +413,17 @@ enum class Concept : std::uint16_t {
 
 
 struct ConceptText {
-    const char* en = "";       // current modern-display string (fallback)
-    const char* si = "";       // Sinhala script (empty until sourced)
-    const char* ta = "";       // Tamil script (empty until sourced)
-    const char* siRoman = "";  // romanized Sinhala (empty until sourced)
-    const char* taRoman = "";  // romanized Tamil (empty until sourced)
-    ReviewStatus siStatus = ReviewStatus::Unsourced;
-    ReviewStatus taStatus = ReviewStatus::Unsourced;
+    const char* en = "";  // current modern-display string (fallback)
+};
+
+// A translated row. Rows live in the translator files src/locale_si.inc /
+// src/locale_ta.inc (sparse: absent concepts fall back to English), so
+// translators never touch this header or the concept table.
+struct TrRow {
+    Concept c;
+    const char* s = "";      // script form (empty = untranslated)
+    const char* roman = "";  // romanized form (empty = untranslated)
+    ReviewStatus st = ReviewStatus::Unsourced;
 };
 
 // PROVENANCE: SCAFFOLD (en cells mirror ModernRenderer tables; si/ta pending
@@ -517,12 +521,58 @@ struct ConceptText {
     return k[static_cast<std::size_t>(c)];
 }
 
+// Translation-table detail (after Concept: rows reference concept ids).
+namespace detail {
+
+inline const TrRow* siRows(size_t* n) {
+    static const TrRow k[] = {
+#include "locale_si.inc"
+    };
+    *n = sizeof(k) / sizeof(k[0]);
+    return k;
+}
+
+inline const TrRow* taRows(size_t* n) {
+    static const TrRow k[] = {
+#include "locale_ta.inc"
+    };
+    *n = sizeof(k) / sizeof(k[0]);
+    return k;
+}
+
+// First non-empty row wins; empty cells fall through to English.
+[[nodiscard]] inline const char* trLookup(const TrRow* rows, size_t n, Concept c,
+                                          bool roman) noexcept {
+    for (size_t i = 0; i < n; ++i) {
+        if (rows[i].c != c) continue;
+        const char* s = roman ? rows[i].roman : rows[i].s;
+        if (s != nullptr && s[0] != '\0') return s;
+    }
+    return nullptr;
+}
+
+}  // namespace detail
+
 // Localized string with English fallback for untranslated cells.
 [[nodiscard]] inline const char* localeText(Concept c, Locale loc) noexcept {
-    const ConceptText& t = conceptText(c);
-    if (loc == Locale::Si && t.si[0] != '\0') return t.si;
-    if (loc == Locale::Ta && t.ta[0] != '\0') return t.ta;
-    return t.en;
+    if (loc == Locale::Si || loc == Locale::Ta) {
+        size_t n = 0;
+        const TrRow* rows = (loc == Locale::Si) ? detail::siRows(&n) : detail::taRows(&n);
+        const char* s = detail::trLookup(rows, n, c, false);
+        if (s != nullptr) return s;
+    }
+    return conceptText(c).en;
+}
+
+// Romanized form with English fallback.
+[[nodiscard]] inline const char* localeRoman(Concept c, Locale loc) noexcept {
+    if (loc == Locale::Si || loc == Locale::Ta) {
+        size_t n = 0;
+        const TrRow* rows = (loc == Locale::Si) ? detail::siRows(&n) : detail::taRows(&n);
+        const char* s = detail::trLookup(rows, n, c, true);
+        if (s != nullptr) return s;
+    }
+    return conceptText(c).en;
 }
 
 // Reverse map for the string-layer chokepoints (sectionTitle/divider titles
@@ -582,3 +632,5 @@ struct ConceptText {
 }
 
 }  // namespace star
+
+
