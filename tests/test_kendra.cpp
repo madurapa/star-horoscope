@@ -49,16 +49,16 @@ int main(int argc, char* argv[]) {
         const char* v[6];
     };
     const Row rows[10] = {
-        {"Lagna", "", {"Meena", "Sinha", "Kataka", "Meena", "Mesha", "Kanya"}},
-        {"Chandra", "Ch", {"Mesha", "Mituna", "Sinha", "Mesha", "Kataka", "Dhanu"}},
-        {"Ravi", "Rv", {"Wrschika", "Makara", "Sinha", "Kataka", "Sinha", "Makara"}},
-        {"Budha", "Bu", {"Wrschika", "Makara", "Sinha", "Kataka", "Kataka", "Makara"}},
-        {"Sikuru", "Si", {"Makara", "Kumba", "Kataka", "Makara", "Meena", "Kanya"}},
-        {"Kuja", "Ku", {"Kanya", "Makara", "Kataka", "Kanya", "Thula", "Wrushaba"}},
-        {"Guru", "Gu", {"Thula", "Dhanu", "Sinha", "Thula", "Makara", "Kumba"}},
-        {"Shani", "Sh", {"Kanya", "Sinha", "Sinha", "Wrushaba", "Kataka", "Wrushaba"}},
-        {"Raahu", "Ra", {"Kataka", "Kataka", "Kataka", "Kataka", "Kataka", "Wrushaba"}},
-        {"Kethu", "Ke", {"Makara", "Makara", "Kataka", "Makara", "Makara", "Wrushaba"}},
+        {"Lagna", "", {"Wrschika", "Meena", "Sinha", "Kataka", "Thula", "Wrushaba"}},
+        {"Chandra", "Ch", {"Kumba", "Wrushaba", "Kataka", "Thula", "Dhanu", "Thula"}},
+        {"Ravi", "Rv", {"Sinha", "Mesha", "Sinha", "Sinha", "Sinha", "Mesha"}},
+        {"Budha", "Bu", {"Kataka", "Kumba", "Sinha", "Meena", "Wrushaba", "Wrushaba"}},
+        {"Sikuru", "Si", {"Sinha", "Kanya", "Kataka", "Dhanu", "Meena", "Mituna"}},
+        {"Kuja", "Ku", {"Kataka", "Dhanu", "Sinha", "Wrschika", "Makara", "Meena"}},
+        {"Guru", "Gu", {"Wrushaba", "Wrushaba", "Kataka", "Kanya", "Thula", "Meena"}},
+        {"Shani", "Sh", {"Wrushaba", "Kumba", "Kataka", "Wrushaba", "Kataka", "Kanya"}},
+        {"Raahu", "Ra", {"Mituna", "Mituna", "Kataka", "Kumba", "Wrushaba", "Thula"}},
+        {"Kethu", "Ke", {"Dhanu", "Dhanu", "Kataka", "Sinha", "Wrschika", "Thula"}},
     };
     // (screen file, left varga col, left lagna, left label, right varga col, ...)
     struct Pair {
@@ -71,10 +71,10 @@ int main(int argc, char* argv[]) {
         const char* rt;
     };
     const Pair pairs[4] = {
-        {"screen08.txt", 0, "Meena", "LAGNA", 1, "Sinha", "NAVAMSAKA"},
-        {"screen09.txt", 2, "Kataka", "HORA", 3, "Meena", "DESHKANA"},
-        {"screen10.txt", 4, "Mesha", "DVADASANSA", 5, "Kanya", "TRISANSAKA"},
-        {"screen11.txt", 0, "Wrschika", "SOORYARASI", 0, "Mesha", "SANDURASI"},
+        {"screen08.txt", 0, "Wrschika", "LAGNA", 1, "Meena", "NAVAMSAKA"},
+        {"screen09.txt", 2, "Sinha", "HORA", 3, "Kataka", "DESHKANA"},
+        {"screen10.txt", 4, "Thula", "DVADASANSA", 5, "Wrushaba", "TRISANSAKA"},
+        {"screen11.txt", 0, "Sinha", "SOORYARASI", 0, "Kumba", "SANDURASI"},
     };
     // Title lines per screen (binary's own spacing; compared loosely).
     for (const auto& pr : pairs) {
@@ -109,25 +109,25 @@ int main(int argc, char* argv[]) {
         if (g_fail == 0) std::printf("ok   %s art 21/21 lines\n", pr.file);
     }
 
-    // ---- Bhava: screen07 RASHI house column from Lagna Meena ----
-    const double lagna = 334.0 + 50.0 / 60.0 + 42.0 / 3600.0;
+    // ---- Bhava: screen07 RASHI house column from Lagna Wrschika ----
+    const double lagna = 239.0 + 7.0 / 60.0 + 8.0 / 3600.0;
     const struct {
         const char* name;
         double lon;
         int house;
     } bh[] = {
-        {"Chandra", 9 + 23.0 / 60 + 49.0 / 3600, 2},
-        {"Ravi", 232 + 33.0 / 60 + 32.0 / 3600, 9},
-        {"Budha", 231 + 17.0 / 60, 9},
-        {"Sikuru", 276 + 2.0 / 60 + 26.0 / 3600, 11},
-        {"Guru", 188 + 32.0 / 60 + 33.0 / 3600, 8},
-        {"Kuja", 152 + 42.0 / 60 + 30.0 / 3600, 7},
-        {"Shani", 176 + 32.0 / 60 + 50.0 / 3600, 7},
-        {"Raahu", 90 + 52.0 / 60 + 13.0 / 3600, 5},
-        {"Kethu", 270 + 52.0 / 60 + 13.0 / 3600, 11},
-        {"Urenus", 217 + 45.0 / 60 + 1.0 / 3600, 9},
-        {"Neptun", 240 + 40.0 / 60 + 59.0 / 3600, 10},
-        {"Pluto", 182 + 20.0 / 60 + 11.0 / 3600, 8},
+        {"Chandra", 325 + 6.0 / 60 + 45.0 / 3600, 4},
+        {"Ravi", 120 + 55.0 / 60 + 1.0 / 3600, 10},
+        {"Budha", 115 + 59.0 / 60 + 17.0 / 3600, 9},
+        {"Sikuru", 139 + 14.0 / 60 + 48.0 / 3600, 10},
+        {"Guru", 44 + 29.0 / 60 + 23.0 / 3600, 7},
+        {"Kuja", 106 + 40.0 / 60 + 47.0 / 3600, 9},
+        {"Shani", 36 + 36.0 / 60 + 38.0 / 3600, 7},
+        {"Raahu", 89 + 5.0 / 60 + 27.0 / 3600, 8},
+        {"Kethu", 269 + 5.0 / 60 + 27.0 / 3600, 2},
+        {"Urenus", 294 + 58.0 / 60 + 6.0 / 3600, 3},
+        {"Neptun", 280 + 43.0 / 60 + 23.0 / 3600, 3},
+        {"Pluto", 225 + 59.0 / 60 + 55.0 / 3600, 1},
     };
     for (const auto& b : bh)
         CHECK(houseOf(b.lon, lagna) == b.house, "house %s = %d", b.name,
@@ -145,9 +145,9 @@ int main(int argc, char* argv[]) {
         if (want < 0.0) want += 360.0;
         CHECK(std::fabs(sandhis[static_cast<size_t>(i)] - want) < 1e-9, "sandhi %d", i);
     }
-    // Wrap: longitude 359.99 -> house 12 rasi; 0.0 -> Mesha house from Meena.
-    CHECK(houseOf(359.99, lagna) == 1, "wrap 359.99");
-    CHECK(houseOf(0.0, lagna) == 2, "wrap 0.0");
+    // Wrap: longitude 359.99 -> house 5 rasi; 0.0 -> Mesha house 6 from Wrschika.
+    CHECK(houseOf(359.99, lagna) == 5, "wrap 359.99");
+    CHECK(houseOf(0.0, lagna) == 6, "wrap 0.0");
 
     if (g_fail == 0) std::printf("KENDRA_BHAVA_ALL_GREEN\n");
     return g_fail > 125 ? 125 : g_fail;  // clamp: exit codes wrap past 255

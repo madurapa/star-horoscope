@@ -1,24 +1,6 @@
-KALA HORAVA : Guru      PANCHAMA HORAVA : Ravi     SUKSHAMA HORAVA : Budha
+KALA HORAVA : Kuja      PANCHAMA HORAVA : Kuja     SUKSHAMA HORAVA : Kuja
 
-GANA  :           Deva    YONI :          Ashva     RUXHA :         Godaka
-LINGA :        Purusha    NAADI:         Poorva     PAXHI :        Bheruda
-GOTHRA:         Marivi    VARNA:       Brahmana     RAJJU :           Pada
-BHUTHA:         Patavi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+GANA  :       Maanusha    YONI :     Sinha          RUXHA :      Mee Amba#
+LINGA :        Purusha    NAADI:         Poorva     PAXHI :          Maura
+GOTHRA:         Kruthu    VARNA:       Brahmana     RAJJU :          Nabhi
+BHUTHA:        Aakasha

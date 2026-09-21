@@ -69,7 +69,7 @@ int main() {
 
     // ---- Sayana = Nirayana + ayanamsa (TRANSCRI2 scenario) ----
     {
-        HoroscopeOwner o{"Test User", 1981, 12, 8, 12, 55};
+        HoroscopeOwner o{"Test User", 2000, 8, 17, 14, 5};
         const GeoCoord geo = cityByIndex(7).coord;
         const HoroscopeResult n = computeHoroscope(o, geo, true, EngineKind::Dos);
         const HoroscopeResult s = computeHoroscope(o, geo, false, EngineKind::Dos);

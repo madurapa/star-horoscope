@@ -11,9 +11,9 @@
 #include "swephexp.h"
 
 int main() {
-    // Baseline civil date, UT hours (12:55 IST = 07:25 UT).
-    const double jut = swe_julday(1981, 12, 8, 7.0 + 25.0 / 60.0, SE_GREG_CAL);
-    STAR_CHECK(jut > 2444900.0 && jut < 2445000.0, "jd %.6f", jut);
+    // Baseline civil date, UT hours (14:05 IST = 08:35 UT).
+    const double jut = swe_julday(2000, 8, 17, 8.0 + 35.0 / 60.0, SE_GREG_CAL);
+    STAR_CHECK(jut > 2451700.0 && jut < 2451800.0, "jd %.6f", jut);
     char serr[256] = {0};
     double xsun[6] = {0};
     const int frcSun =

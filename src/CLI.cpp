@@ -285,7 +285,7 @@ bool CLI::promptModern() {
         for (;;) {
             int v[2] = {config_.birth_hour, config_.birth_minute};
             if (!readInts("  Birth Time (HH MM, 24h): ", 2, v, true,
-                         "HH MM (24h), eg: 12 55", col))
+                         "HH MM (24h), eg: 14 05", col))
                 return false;
             const std::string err = validateTime(v[0], v[1]);
             if (err.empty()) {
@@ -792,7 +792,7 @@ int CLI::runBaselineLegacy() const {
 int CLI::runVerify() const {
     // Baseline checkpoints (AGENTS.md checkpoints 1-4).
     const GeoCoord geo = cityByIndex(7).coord;  // Ratnapura baseline
-    const HoroscopeOwner owner{"Test User", 1981, 12, 8, 12, 55};
+    const HoroscopeOwner owner{"Test User", 2000, 8, 17, 14, 5};
     const HoroscopeResult h = computeHoroscope(owner, geo, true, EngineKind::Dos);
 
     int fail = 0;
@@ -816,35 +816,32 @@ int CLI::runVerify() const {
         }
         return pl->ecliptic.toDecimal();
     };
-    checkDms("Lagna", lon("Lagna"), 334, 50, 42, 2.0);
-    checkDms("Chandra", lon("Chandra"), 9, 23, 49, 2.0);
-    checkDms("Ravi", lon("Ravi"), 232, 33, 32, 2.0);
-    checkDms("Budha", lon("Budha"), 231, 17, 0, 2.0);
-    checkDms("Sikuru", lon("Sikuru"), 276, 2, 26, 2.0);
-    checkDms("Kuja", lon("Kuja"), 152, 42, 30, 2.0);
-    checkDms("Guru", lon("Guru"), 188, 32, 33, 2.0);
-    checkDms("Shani", lon("Shani"), 176, 32, 50, 2.0);
-    checkDms("Raahu", lon("Raahu"), 90, 52, 13, 2.0);
-    checkDms("Kethu", lon("Kethu"), 270, 52, 13, 2.0);
+    checkDms("Lagna", lon("Lagna"), 239, 7, 8, 2.0);
+    checkDms("Chandra", lon("Chandra"), 325, 6, 45, 2.0);
+    checkDms("Ravi", lon("Ravi"), 120, 55, 1, 2.0);
+    checkDms("Budha", lon("Budha"), 115, 59, 17, 2.0);
+    checkDms("Sikuru", lon("Sikuru"), 139, 14, 48, 2.0);
+    checkDms("Kuja", lon("Kuja"), 106, 40, 47, 2.0);
+    checkDms("Guru", lon("Guru"), 44, 29, 23, 2.0);
+    checkDms("Shani", lon("Shani"), 36, 36, 38, 2.0);
+    checkDms("Raahu", lon("Raahu"), 89, 5, 27, 2.0);
+    checkDms("Kethu", lon("Kethu"), 269, 5, 27, 2.0);
 
-    if (std::fabs(h.jd - 2444946.809) > 5e-4) {
+    if (std::fabs(h.jd - 2451773.858) > 5e-4) {
         ++fail;
-        std::printf("FAIL JD got %.6f want 2444946.809\n", h.jd);
+        std::printf("FAIL JD got %.6f want 2451773.858\n", h.jd);
     } else {
         std::printf("ok   JD %.6f\n", h.jd);
     }
 
-    const YMD birth{1981, 12, 8};
-    const double r0 = fracYear(1981, 12, 8);
+    const YMD birth{2000, 8, 17};
+    const double r0 = fracYear(2000, 8, 17);
     const DasaBalance bal = dasaBalance(h.moonNirayanaDeg);
-    // Razor-boundary note: the 23|24-day display flips within 0.2" of Moon
-    // longitude; the engine Moon sits 0.63" under the screen value, so both
-    // roundings are accepted here.
-    if (bal.ymd.y != 2 || bal.ymd.m != 0 || (bal.ymd.d != 23 && bal.ymd.d != 24)) {
+    if (bal.ymd.y != 9 || bal.ymd.m != 10 || bal.ymd.d != 11) {
         ++fail;
-        std::printf("FAIL balance got %d-%d-%d want 2-0-23\n", bal.ymd.y, bal.ymd.m, bal.ymd.d);
+        std::printf("FAIL balance got %d-%d-%d want 9-10-11\n", bal.ymd.y, bal.ymd.m, bal.ymd.d);
     } else {
-        std::printf("ok   balance 2-0-%d (screen: 2-0-23)\n", bal.ymd.d);
+        std::printf("ok   balance %d-%d-%d (screen: 9-10-11)\n", bal.ymd.y, bal.ymd.m, bal.ymd.d);
     }
     const auto mahas = mahaTimeline(birth, r0, bal);
     auto checkYmd = [&](const char* tag, YMD got, int y, int m, int d) {
@@ -855,13 +852,13 @@ int CLI::runVerify() const {
             std::printf("ok   %s %d-%d-%d\n", tag, got.y, got.m, got.d);
         }
     };
-    checkYmd("Ketu-end", mahas[0].to, 1984, 1, 2);
-    checkYmd("Kuja-start", mahas[4].from, 2020, 1, 2);
-    checkYmd("Kuja-end", mahas[4].to, 2027, 1, 2);
-    const auto kb = bhuktiTimeline(birth, fracYear(2020, 1, 2), 4, 7.0);
-    checkYmd("Kuja-Budha", kb[4].to, 2024, 6, 29);
-    checkYmd("Kuja-Ketu", kb[5].to, 2024, 11, 26);
-    checkYmd("Kuja-Sikuru", kb[6].to, 2026, 1, 26);
+    checkYmd("Guru-end", mahas[0].to, 2010, 6, 28);
+    checkYmd("Kuja-start", mahas[7].from, 2089, 6, 28);
+    checkYmd("Kuja-end", mahas[7].to, 2096, 6, 28);
+    const auto kb = bhuktiTimeline(birth, fracYear(2089, 6, 28), 4, 7.0);
+    checkYmd("Kuja-Sikuru", kb[6].to, 2095, 7, 22);
+    checkYmd("Kuja-Ravi", kb[7].to, 2095, 11, 28);
+    checkYmd("Kuja-Sandu", kb[8].to, 2096, 6, 28);
 
     if (fail == 0) std::printf("VERIFY_ALL_GREEN\n");
     return fail == 0 ? 0 : 1;

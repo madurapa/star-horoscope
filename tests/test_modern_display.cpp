@@ -12,7 +12,7 @@
 using namespace star;
 
 static HoroscopeResult baseline() {
-    HoroscopeOwner o{"Test User", 1981, 12, 8, 12, 55};
+    HoroscopeOwner o{"Test User", 2000, 8, 17, 14, 5};
     return computeHoroscope(o, cityByIndex(7).coord, true, EngineKind::Dos);
 }
 
@@ -29,7 +29,7 @@ static bool hasLineOver(const std::string& s, size_t w) {
 int main() {
     const HoroscopeResult h = baseline();
     const GeoCoord geo = cityByIndex(7).coord;
-    HoroscopeOwner o{"Test User", 1981, 12, 8, 12, 55};
+    HoroscopeOwner o{"Test User", 2000, 8, 17, 14, 5};
     const DasaBalance bal = dasaBalance(h.moonNirayanaDeg);
     const int W = 80;
 
@@ -40,7 +40,7 @@ int main() {
     STAR_CHECK(houses.find("Shukra") != std::string::npos, "modern Shukra");
     STAR_CHECK(houses.find("Uranus") != std::string::npos, "modern Uranus");
     STAR_CHECK(houses.find("Vrishchika") != std::string::npos, "modern Vrishchika");
-    STAR_CHECK(houses.find("Asvida") != std::string::npos, "nakshatra kept");
+    STAR_CHECK(houses.find("Puvaputupa") != std::string::npos, "nakshatra kept");
     STAR_CHECK(houses.find("Pada") != std::string::npos, "Pada column restored");
     STAR_CHECK(houses.find("Rasi Longitude") != std::string::npos, "full header words");
     STAR_CHECK(houses.find("Nakshatra") != std::string::npos, "modern Nakshatra header");
@@ -50,9 +50,9 @@ int main() {
         STAR_CHECK(houses.find(bad) == std::string::npos, "no legacy %s", bad);
     }
     // ...same numbers (presentation-only change).
-    STAR_CHECK(houses.find("334\xC2\xB0" "50'42\"") != std::string::npos, "lagna numbers");
-    STAR_CHECK(houses.find("9\xC2\xB0" "23'49\"") != std::string::npos, "moon numbers");
-    STAR_CHECK(houses.find("232\xC2\xB0" "33'32\"") != std::string::npos, "sun numbers");
+    STAR_CHECK(houses.find("239\xC2\xB0" "07'08\"") != std::string::npos, "lagna numbers");
+    STAR_CHECK(houses.find("325\xC2\xB0" "06'45\"") != std::string::npos, "moon numbers");
+    STAR_CHECK(houses.find("120\xC2\xB0" "55'01\"") != std::string::npos, "sun numbers");
     // Table skill rules: within width, no trailing spaces.
     STAR_CHECK(!hasLineOver(houses, 80), "house table fits 80, no trailing ws");
 
@@ -74,14 +74,14 @@ int main() {
     const std::string prof = modern::renderKeyValues(
         modern::birthProfileRows(o, "Ratnapura", h.panchanga.weekday), W, false);
     STAR_CHECK(prof.find("Full Name") != std::string::npos, "full name label");
-    STAR_CHECK(prof.find("1981-12-08") != std::string::npos, "birth date");
-    STAR_CHECK(prof.find("Tuesday") != std::string::npos, "birth day");
+    STAR_CHECK(prof.find("2000-08-17") != std::string::npos, "birth date");
+    STAR_CHECK(prof.find("Thursday") != std::string::npos, "birth day");
     STAR_CHECK(prof.find("79\xC2\xB0") == std::string::npos, "bare city name");
 
     const std::string astro =
         modern::renderKeyValues(modern::astroRows(h.output), W, false);
     STAR_CHECK(astro.find("Julian Date") != std::string::npos, "astro JD label");
-    STAR_CHECK(astro.find("2444946.809") != std::string::npos, "astro JD");
+    STAR_CHECK(astro.find("2451773.858") != std::string::npos, "astro JD");
     STAR_CHECK(astro.find("Lagna Degree") != std::string::npos, "lagna degree");
     STAR_CHECK(astro.find("Lagna Navamsa") != std::string::npos, "lagna navamsa");
 
@@ -89,43 +89,43 @@ int main() {
         modern::timeRows(h.birthDecHours, h.lmstHours, geo, h.riseH, h.setH), W, false);
     STAR_CHECK(times.find("True Local Mean Time") != std::string::npos, "full time label");
     STAR_CHECK(times.find("Universal Time (UT)") != std::string::npos, "UT label");
-    STAR_CHECK(times.find("07:25:00") != std::string::npos, "summary UT");
+    STAR_CHECK(times.find("08:35:00") != std::string::npos, "summary UT");
 
     const std::string pan =
         modern::renderKeyValues(modern::panchangaRows(h.panchanga), W, false);
     STAR_CHECK(pan.find("Nakshatra Pada") != std::string::npos, "pada row");
     STAR_CHECK(pan.find("Tithi") != std::string::npos, "tithi row");
-    STAR_CHECK(pan.find("Pura-Doloswaka -12") != std::string::npos, "tithi single-spaced");
+    STAR_CHECK(pan.find("Ava -Thiyawaka - 3") != std::string::npos, "tithi single-spaced");
     STAR_CHECK(pan.find("Doloswaka  -12") == std::string::npos, "no pad artifact");
 
     const std::string dinfo = modern::renderKeyValues(modern::dasaInfoRows(bal), W, false);
     STAR_CHECK(dinfo.find("Starting") != std::string::npos, "dasa starting");
-    STAR_CHECK(dinfo.find("Ketu") != std::string::npos, "dasa lord");
-    STAR_CHECK(dinfo.find("2 years 0 months 23 days") != std::string::npos, "dasa period");
+    STAR_CHECK(dinfo.find("Guru") != std::string::npos, "dasa lord");
+    STAR_CHECK(dinfo.find("9 years 10 months 11 days") != std::string::npos, "dasa period");
     STAR_CHECK(dinfo.find("From birth") != std::string::npos, "dasa reference");
 
-    const YMD birth{1981, 12, 8};
-    const std::string dasa = modern::renderDasa(birth, fracYear(1981, 12, 8), bal,
+    const YMD birth{2000, 8, 17};
+    const std::string dasa = modern::renderDasa(birth, fracYear(2000, 8, 17), bal,
                                                 h.moonNirayanaDeg, W, false);
-    STAR_CHECK(dasa.find("2020-01-02") != std::string::npos, "dasa ISO dates");
+    STAR_CHECK(dasa.find("2010-06-28") != std::string::npos, "dasa ISO dates");
     STAR_CHECK(dasa.find("\nMahadasa\n") == std::string::npos, "no root label");
     STAR_CHECK(dasa.find("\xE2\x94\x9C\xE2\x94\x80 "
-                         "Ketu: 1981-12-08 to 1984-01-02 (0y 0m 0d to 2y 0m 24d)") !=
+                         "Guru: 2000-08-17 to 2010-06-28 (0y 0m 0d to 9y 10m 11d)") !=
                    std::string::npos,
                "maha branch line");
     STAR_CHECK(dasa.find("\xE2\x94\x82  \xE2\x94\x9C\xE2\x94\x80 "
-                         "Shani: 1981-12-08 to 1983-01-05") != std::string::npos,
+                         "Shani: 2010-06-28 to 2013-07-01") != std::string::npos,
                "direct leaf");
     STAR_CHECK(dasa.find("\xE2\x94\x82  \xE2\x94\x94\xE2\x94\x80 Athurudasa") ==
                        std::string::npos &&
                    dasa.find("\n   \xE2\x94\x94\xE2\x94\x80 Athurudasa") == std::string::npos,
                "no athuru branch line");
-    STAR_CHECK(dasa.find("Shukra: 1984-01-02 to 2004-01-02") != std::string::npos,
+    STAR_CHECK(dasa.find("Shukra: 2053-06-28 to 2073-06-28") != std::string::npos,
                "dasa Shukra");
     STAR_CHECK(!hasLineOver(dasa, 80), "tree fits 80");
     {
-        const YMD b2{1981, 12, 8};
-        const std::string dc = modern::renderDasa(b2, fracYear(1981, 12, 8), bal,
+        const YMD b2{2000, 8, 17};
+        const std::string dc = modern::renderDasa(b2, fracYear(2000, 8, 17), bal,
                                                   h.moonNirayanaDeg, 80, true);
         std::string stripped;
         for (size_t i = 0; i < dc.size();) {
@@ -137,8 +137,8 @@ int main() {
             }
         }
         STAR_CHECK(stripped == dasa, "tree color fallback identical");
-        STAR_CHECK(dc.find("\033[95mKetu") != std::string::npos, "maha lord magenta");
-        STAR_CHECK(dc.find("\033[36m1981-12-08") != std::string::npos, "dates cyan");
+        STAR_CHECK(dc.find("\033[95mGuru") != std::string::npos, "maha lord magenta");
+        STAR_CHECK(dc.find("\033[36m2000-08-17") != std::string::npos, "dates cyan");
         STAR_CHECK(dc.find("\033[37m(") != std::string::npos, "ages light gray");
     }
 
@@ -250,7 +250,7 @@ int main() {
         }
         STAR_CHECK(sawBox, "boxed table spans 96");
         STAR_CHECK(centeredHead, "boxed header centered");
-        STAR_CHECK(bh.find("334\xC2\xB0" "50'42\"") != std::string::npos,
+        STAR_CHECK(bh.find("239\xC2\xB0" "07'08\"") != std::string::npos,
                    "boxed numbers intact");
     }
 
@@ -271,7 +271,7 @@ int main() {
     STAR_CHECK(!hasLineOver(narrow, 50), "narrow fits 50");
 
     const std::string hora =
-        modern::renderKeyValues(modern::horaRows("Guru", "Shani", "Budha"), W, false);
+        modern::renderKeyValues(modern::horaRows("Kuja", "Kuja", "Kuja"), W, false);
     STAR_CHECK(hora.find("Kala") != std::string::npos, "short hora label");
     STAR_CHECK(hora.find("Kala Hora") == std::string::npos, "no hora suffix");
     const std::string chakra =

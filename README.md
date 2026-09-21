@@ -77,8 +77,8 @@ every input is validated):
 Batch/scripting flags (see `./modern_star --help` for the full list):
 
 ```bash
-./modern_star --name "Test User" --year 1981 --month 12 --day 8 \
-  --hour 12 --minute 55 --city 7 --nirayana
+./modern_star --name "Test User" --year 2000 --month 8 --day 17 \
+  --hour 14 --minute 5 --city 7 --nirayana
 ```
 
 Key options:

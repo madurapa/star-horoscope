@@ -18,16 +18,16 @@ struct Row {
 int main() {
     using namespace star;
     const Row rows[] = {
-        {1981, 12, 8, 7, 6, 8, 15},    // Ratnapura baseline
-        {1979, 12, 1, 7, 6, 5, 1},     // Ratnapura
+        {2000, 8, 17, 7, 6, 2, 45},    // Ratnapura baseline
+        {1995, 4, 3, 7, 6, 6, 14},     // Ratnapura
         {1980, 2, 29, 1, 6, 23, 38},   // Colombo (CLOMBO)
         {1989, 2, 29, 1, 6, 23, 28},   // Colombo (non-leap input as captured)
         {1975, 3, 2, 1, 6, 22, 51},    // Colombo
         {1985, 4, 10, 1, 6, 4, 44},    // Colombo
         {1975, 3, 22, 12, 6, 8, 50},   // Trinco
         {1990, 5, 15, 2, 5, 53, 29},   // Galle
-        {2022, 8, 1, 2, 6, 4, 17},     // Galle Test User D
-        {2025, 9, 22, 2, 5, 58, 9},    // Galle Test User E
+        {2023, 5, 19, 2, 5, 53, 9},     // Galle Test User D
+        {2024, 9, 11, 2, 6, 0, 10},    // Galle Test User E
         {2026, 9, 12, 1, 6, 1, 28},    // Colombo
     };
     for (const auto& r : rows) {

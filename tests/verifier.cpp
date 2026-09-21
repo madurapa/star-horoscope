@@ -75,9 +75,9 @@ int main(int argc, char* argv[]) {
     for (int i = 1; i + 1 < argc; ++i)
         if (std::strcmp(argv[i], "--screens") == 0) screensDir = argv[i + 1];
 
-    // Baseline scenario (AGENTS.md): Test User, 1981-12-08 12:55,
+    // Baseline scenario (AGENTS.md): Test User, 2000-08-17 14:05,
     // Ratnapura (7), Nirayana.
-    const HoroscopeOwner owner{"Test User", 1981, 12, 8, 12, 55};
+    const HoroscopeOwner owner{"Test User", 2000, 8, 17, 14, 5};
     const GeoCoord geo = cityByIndex(7).coord;
     const HoroscopeResult h = computeHoroscope(owner, geo, true, EngineKind::Dos);
 
@@ -85,16 +85,16 @@ int main(int argc, char* argv[]) {
     const auto lon = [&](const char* k) {
         return findLongitude(h.output, k)->ecliptic.toDecimal();
     };
-    checkDms("Lagna", lon("Lagna"), 334, 50, 42, 2.0);
-    checkDms("Chandra", lon("Chandra"), 9, 23, 49, 2.0);
-    checkDms("Ravi", lon("Ravi"), 232, 33, 32, 2.0);
-    checkDms("Budha", lon("Budha"), 231, 17, 0, 2.0);
-    checkDms("Sikuru", lon("Sikuru"), 276, 2, 26, 2.0);
-    checkDms("Kuja", lon("Kuja"), 152, 42, 30, 2.0);
-    checkDms("Guru", lon("Guru"), 188, 32, 33, 2.0);
-    checkDms("Shani", lon("Shani"), 176, 32, 50, 2.0);
-    checkDms("Raahu", lon("Raahu"), 90, 52, 13, 2.0);
-    checkDms("Kethu", lon("Kethu"), 270, 52, 13, 2.0);
+    checkDms("Lagna", lon("Lagna"), 239, 7, 8, 2.0);
+    checkDms("Chandra", lon("Chandra"), 325, 6, 45, 2.0);
+    checkDms("Ravi", lon("Ravi"), 120, 55, 1, 2.0);
+    checkDms("Budha", lon("Budha"), 115, 59, 17, 2.0);
+    checkDms("Sikuru", lon("Sikuru"), 139, 14, 48, 2.0);
+    checkDms("Kuja", lon("Kuja"), 106, 40, 47, 2.0);
+    checkDms("Guru", lon("Guru"), 44, 29, 23, 2.0);
+    checkDms("Shani", lon("Shani"), 36, 36, 38, 2.0);
+    checkDms("Raahu", lon("Raahu"), 89, 5, 27, 2.0);
+    checkDms("Kethu", lon("Kethu"), 269, 5, 27, 2.0);
 
     std::printf("=== CHECKPOINT 2: shadvarga seats (screen06) ===\n");
     const auto seat = [&](const char* planet, int vargaIdx) {
@@ -102,85 +102,80 @@ int main(int argc, char* argv[]) {
         return rasiName(VargaEngine::GetShadvarga(dec)[vargaIdx]);
     };
     // GetShadvarga order: {Rashi, Navamsa, Hora, Deshkana, Dvadasansa, Trishansa}.
-    checkStr("Lagna-Rashi", seat("Lagna", 0), "Meena");
-    checkStr("Lagna-Navamsa", seat("Lagna", 1), "Sinha");
-    checkStr("Lagna-Hora", seat("Lagna", 2), "Kataka");
-    checkStr("Lagna-Deshkana", seat("Lagna", 3), "Meena");
-    checkStr("Lagna-Dvadasansa", seat("Lagna", 4), "Mesha");
-    checkStr("Lagna-Trishansa", seat("Lagna", 5), "Kanya");
-    checkStr("Ravi-Rashi", seat("Ravi", 0), "Wrschika");
-    checkStr("Ravi-Navamsa", seat("Ravi", 1), "Makara");
+    checkStr("Lagna-Rashi", seat("Lagna", 0), "Wrschika");
+    checkStr("Lagna-Navamsa", seat("Lagna", 1), "Meena");
+    checkStr("Lagna-Hora", seat("Lagna", 2), "Sinha");
+    checkStr("Lagna-Deshkana", seat("Lagna", 3), "Kataka");
+    checkStr("Lagna-Dvadasansa", seat("Lagna", 4), "Thula");
+    checkStr("Lagna-Trishansa", seat("Lagna", 5), "Wrushaba");
+    checkStr("Ravi-Rashi", seat("Ravi", 0), "Sinha");
+    checkStr("Ravi-Navamsa", seat("Ravi", 1), "Mesha");
     checkStr("Ravi-Hora", seat("Ravi", 2), "Sinha");
-    checkStr("Ravi-Deshkana", seat("Ravi", 3), "Kataka");
+    checkStr("Ravi-Deshkana", seat("Ravi", 3), "Sinha");
     checkStr("Ravi-Dvadasansa", seat("Ravi", 4), "Sinha");
-    checkStr("Ravi-Trishansa", seat("Ravi", 5), "Makara");
+    checkStr("Ravi-Trishansa", seat("Ravi", 5), "Mesha");
 
     std::printf("=== CHECKPOINT 3: time engine + precession (screen12) ===\n");
-    if (std::fabs(h.jd - 2444946.809) > 5e-4) {
+    if (std::fabs(h.jd - 2451773.858) > 5e-4) {
         ++g_fail;
-        std::printf("FAIL JD          got %.6f want 2444946.809\n", h.jd);
+        std::printf("FAIL JD          got %.6f want 2451773.858\n", h.jd);
     } else {
         ++g_pass;
         std::printf("ok   JD          %.6f\n", h.jd);
     }
     const HMS ut = displayHms(h.birthDecHours - kTzHours);
-    if (ut.h != 7 || ut.m != 25 || ut.s != 0) {
+    if (ut.h != 8 || ut.m != 35 || ut.s != 0) {
         ++g_fail;
-        std::printf("FAIL UT          got %d:%d:%d want 7:25:0\n", ut.h, ut.m, ut.s);
+        std::printf("FAIL UT          got %d:%d:%d want 8:35:0\n", ut.h, ut.m, ut.s);
     } else {
         ++g_pass;
-        std::printf("ok   UT          7:25:0\n");
+        std::printf("ok   UT          8:35:0\n");
     }
     const AngularDegrees ay = AngularDegrees::fromDecimal(h.ayanamsaDeg);
-    if (ay.deg != 23 || ay.min != 34 || ay.sec != 21) {
+    if (ay.deg != 23 || ay.min != 50 || ay.sec != 1) {
         ++g_fail;
-        std::printf("FAIL Ayanamsa   got %d:%d:%d want 23:34:21\n", ay.deg, ay.min, ay.sec);
+        std::printf("FAIL Ayanamsa   got %d:%d:%d want 23:50:1\n", ay.deg, ay.min, ay.sec);
     } else {
         ++g_pass;
-        std::printf("ok   Ayanamsa   23:34:21\n");
+        std::printf("ok   Ayanamsa   23:50:1\n");
     }
 
     std::printf("=== PANCHANGAYA (screen12) ===\n");
-    checkStr("Day", h.panchanga.weekday, "Tuesday");
-    checkStr("Neketha", h.panchanga.nakshatra, "Asvida");
-    if (h.panchanga.pada != 3) {
+    checkStr("Day", h.panchanga.weekday, "Thursday");
+    checkStr("Neketha", h.panchanga.nakshatra, "Puvaputupa");
+    if (h.panchanga.pada != 2) {
         ++g_fail;
-        std::printf("FAIL Pada        got %d want 3\n", h.panchanga.pada);
+        std::printf("FAIL Pada        got %d want 2\n", h.panchanga.pada);
     } else {
         ++g_pass;
-        std::printf("ok   Pada        3\n");
+        std::printf("ok   Pada        2\n");
     }
-    checkStr("Thithiya", h.panchanga.tithiText, "Pura-Doloswaka  -12");
-    checkStr("Yogaya", h.panchanga.yoga, "Parigha");
-    checkStr("Karanaya", h.panchanga.karana, "Bava");
+    checkStr("Thithiya", h.panchanga.tithiText, "Ava -Thiyawaka  - 3");
+    checkStr("Yogaya", h.panchanga.yoga, "Sukarna");
+    checkStr("Karanaya", h.panchanga.karana, "Kavlava");
 
     std::printf("=== CHECKPOINT 4: dasa timelines (screen14-16) ===\n");
-    const YMD birth{1981, 12, 8};
-    const double r0 = fracYear(1981, 12, 8);
+    const YMD birth{2000, 8, 17};
+    const double r0 = fracYear(2000, 8, 17);
     const DasaBalance bal = dasaBalance(h.moonNirayanaDeg);
-    // NOTE: the "23 Days" display sits on a razor boundary: it flips to 24
-    // when the Moon drops below 9:23:48.57". The engine Moon (9:23:48.37",
-    // 0.63" under screen05's 9:23:49) straddles it — a documented
-    // sub-arcsecond harness residual, not a logic error. Accept 23|24 here;
-    // all timeline DATE boundaries below remain exact.
-    if (std::string(kDasaCycle[bal.lordCycleIdx].name) != "Ketu" ||
-        bal.ymd.y != 2 || bal.ymd.m != 0 || (bal.ymd.d != 23 && bal.ymd.d != 24)) {
+    if (std::string(kDasaCycle[bal.lordCycleIdx].name) != "Guru" ||
+        bal.ymd.y != 9 || bal.ymd.m != 10 || bal.ymd.d != 11) {
         ++g_fail;
-        std::printf("FAIL balance    got %s %d-%d-%d want Ketu 2-0-23(24)\n",
+        std::printf("FAIL balance    got %s %d-%d-%d want Guru 9-10-11\n",
                     kDasaCycle[bal.lordCycleIdx].name, bal.ymd.y, bal.ymd.m, bal.ymd.d);
     } else {
         ++g_pass;
-        std::printf("ok   balance    %s %d-%d-%d (screen: Ketu 2-0-23)\n",
+        std::printf("ok   balance    %s %d-%d-%d (screen: Guru 9-10-11)\n",
                     kDasaCycle[bal.lordCycleIdx].name, bal.ymd.y, bal.ymd.m, bal.ymd.d);
     }
     const std::vector<DasaSpan> mahas = mahaTimeline(birth, r0, bal);
-    checkYmd("Ketu-end", mahas[0].to, 1984, 1, 2);
-    checkYmd("Kuja-start", mahas[4].from, 2020, 1, 2);
-    checkYmd("Kuja-end", mahas[4].to, 2027, 1, 2);
-    const std::vector<DasaSpan> kb = bhuktiTimeline(birth, fracYear(2020, 1, 2), 4, 7.0);
-    checkYmd("Kuja-Budha", kb[4].to, 2024, 6, 29);
-    checkYmd("Kuja-Ketu", kb[5].to, 2024, 11, 26);
-    checkYmd("Kuja-Sikuru", kb[6].to, 2026, 1, 26);
+    checkYmd("Guru-end", mahas[0].to, 2010, 6, 28);
+    checkYmd("Kuja-start", mahas[7].from, 2089, 6, 28);
+    checkYmd("Kuja-end", mahas[7].to, 2096, 6, 28);
+    const std::vector<DasaSpan> kb = bhuktiTimeline(birth, fracYear(2089, 6, 28), 4, 7.0);
+    checkYmd("Kuja-Sikuru", kb[6].to, 2095, 7, 22);
+    checkYmd("Kuja-Ravi", kb[7].to, 2095, 11, 28);
+    checkYmd("Kuja-Sandu", kb[8].to, 2096, 6, 28);
 
     std::printf("=== RENDERED TABLES (structural) ===\n");
     const std::string t07 = renderScreen07(h.output, true);
@@ -201,9 +196,9 @@ int main(int argc, char* argv[]) {
     // ---- Baseline AVASTHA column (screen05, exact strings) ----
     std::printf("=== AVASTHA (screen05) ===\n");
     const std::vector<std::pair<std::string, const char*>> avExp = {
-        {"Chandra", "Upeveshana"}, {"Ravi", "Nidra"}, {"Budha", "Agamana"},
-        {"Sikuru", "Nidra"}, {"Kuja", "Agamana"}, {"Guru", "Bhojana"},
-        {"Shani", "Nidra"}, {"Raahu", "Upeveshana"}, {"Kethu", "Nethrapani"},
+        {"Chandra", "Bhojana"}, {"Ravi", "Nethrapani"}, {"Budha", "Gamana"},
+        {"Sikuru", "Gamana"}, {"Kuja", "AAgama"}, {"Guru", "Gamana"},
+        {"Shani", "AAgama"}, {"Raahu", "Gamana"}, {"Kethu", "Kavthuka"},
     };
     for (const auto& av : avExp) {
         int pi = -1;
@@ -271,18 +266,18 @@ int main(int argc, char* argv[]) {
     // ---- Scenario 1: baseline Sayana house table (TRANSCRI2, 13 cells) ----
     std::printf("=== Scenario-1 Sayana display-exact (TRANSCRI2) ===\n");
     {
-        const HoroscopeOwner o1{"Test User", 1981, 12, 8, 12, 55};
+        const HoroscopeOwner o1{"Test User", 2000, 8, 17, 14, 5};
         const HoroscopeResult h1 =
             computeHoroscope(o1, cityByIndex(7).coord, false, EngineKind::Dos);
         const struct {
             const char* k;
             int d, m, s;
         } cells[] = {
-            {"Lagna", 358, 25, 3}, {"Chandra", 32, 58, 9}, {"Ravi", 256, 7, 53},
-            {"Budha", 254, 51, 21}, {"Sikuru", 299, 36, 46}, {"Kuja", 176, 16, 51},
-            {"Guru", 212, 6, 53}, {"Shani", 200, 7, 11}, {"Raahu", 114, 26, 34},
-            {"Kethu", 294, 26, 34}, {"Urenus", 241, 19, 21}, {"Neptune", 264, 15, 20},
-            {"Pluto", 205, 54, 32},
+            {"Lagna", 262, 57, 9}, {"Chandra", 348, 56, 46}, {"Ravi", 144, 45, 2},
+            {"Budha", 139, 49, 18}, {"Sikuru", 163, 4, 49}, {"Kuja", 130, 30, 48},
+            {"Guru", 68, 19, 24}, {"Shani", 60, 26, 39}, {"Raahu", 112, 55, 28},
+            {"Kethu", 292, 55, 28}, {"Urenus", 318, 48, 7}, {"Neptune", 304, 33, 24},
+            {"Pluto", 249, 49, 56},
         };
         for (const auto& c : cells) {
             const AngularDegrees got = findLongitude(h1.output, c.k)->ecliptic;
@@ -297,12 +292,12 @@ int main(int argc, char* argv[]) {
             }
         }
         // Sayana-mode balance follows the Sayana Moon (TRANSCRI2 dasa opens
-        // Ravi Maha 1981-12-08 -> 1985-02-07).
+        // Budha Maha 2000-08-17 -> 2014-09-20).
         const DasaBalance b1 = dasaBalance(h1.moonNirayanaDeg);
-        checkStr("S1-bal-lord", kDasaCycle[b1.lordCycleIdx].name, "Ravi");
-        const YMD birth1{1981, 12, 8};
-        const auto mahas1 = mahaTimeline(birth1, fracYear(1981, 12, 8), b1);
-        checkYmd("S1-Ravi-end", mahas1[0].to, 1985, 2, 7);
+        checkStr("S1-bal-lord", kDasaCycle[b1.lordCycleIdx].name, "Budha");
+        const YMD birth1{2000, 8, 17};
+        const auto mahas1 = mahaTimeline(birth1, fracYear(2000, 8, 17), b1);
+        checkYmd("S1-Budha-end", mahas1[0].to, 2014, 9, 20);
     }
 
     // ---- TRANSCRI4 scenario (2026-09-12 16:57 Colombo, Sayana) ----

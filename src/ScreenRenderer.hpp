@@ -467,6 +467,8 @@ inline KendraChart makeKendra(int lagnaSeat, const std::string& lagnaName,
         if (pg.first == "Ra" || pg.first == "Ke") nodes.push_back(pg);
         else rest.push_back(pg);
     }
+    // Fill order nodes-first (decoded; a strict-order probe showed no
+    // effect either way, so the decoded order stands).
     auto place = [&](const std::pair<std::string, int>& pg) {
         if (pg.second < 1 || pg.second > 12) return;  // gated varga: skip
         const int house = ((pg.second - lagnaSeat + 12) % 12) + 1;
@@ -521,8 +523,8 @@ struct KendraHome {
     int col;
 };
 // PROVENANCE: DECODED (binary GOTOXY cursor table behind sub_1D989; screens 08-11 exemplars).
-inline const std::array<KendraHome, 55>& kendraHomes() {
-    static const std::array<KendraHome, 55> k{{
+inline const std::array<KendraHome, 82>& kendraHomes() {
+    static const std::array<KendraHome, 82> k{{
         {1, 2, 4, 21},  // H1 Budha
         {1, 0, 5, 21},  // H1 Chandra
         {1, 8, 6, 15},  // H1 Kethu
@@ -531,22 +533,32 @@ inline const std::array<KendraHome, 55>& kendraHomes() {
         {1, 1, 3, 21},  // H1 Ravi
         {1, 6, 3, 15},  // H1 Shani
         {1, 3, 4, 15},  // H1 Sikuru
+        {1, 5, 2, 21},  // H1 Guru
         {2, 2, 3, 11},  // H2 Budha
         {2, 0, 4, 10},  // H2 Chandra
         {2, 5, 1, 6},  // H2 Guru
         {2, 1, 1, 12},  // H2 Ravi
         {2, 6, 2, 6},  // H2 Shani
+        {2, 8, 1, 9},  // H2 Kethu
+        {2, 3, 3, 7},  // H2 Sikuru
         {3, 8, 2, 1},  // H3 Kethu
         {3, 6, 4, 5},  // H3 Shani
         {3, 3, 6, 5},  // H3 Sikuru
+        {3, 0, 6, 1},  // H3 Chandra
+        {3, 5, 3, 2},  // H3 Guru
         {4, 2, 11, 3},  // H4 Budha
         {4, 0, 10, 7},  // H4 Chandra
         {4, 7, 10, 3},  // H4 Raahu
         {4, 6, 12, 7},  // H4 Shani
+        {4, 4, 11, 7},  // H4 Kuja
+        {4, 5, 12, 3},  // H4 Guru
         {5, 2, 15, 6},  // H5 Budha
         {5, 5, 14, 2},  // H5 Guru
         {5, 7, 16, 6},  // H5 Raahu
         {5, 1, 14, 6},  // H5 Ravi
+        {5, 4, 15, 2},  // H5 Kuja
+        {5, 8, 18, 2},  // H5 Kethu
+        {5, 6, 14, 10},  // H5 Shani
         {6, 2, 19, 4},  // H6 Budha
         {6, 0, 19, 11},  // H6 Chandra
         {6, 5, 16, 11},  // H6 Guru
@@ -554,13 +566,18 @@ inline const std::array<KendraHome, 55>& kendraHomes() {
         {6, 4, 19, 7},  // H6 Kuja
         {6, 1, 18, 11},  // H6 Ravi
         {6, 6, 18, 7},  // H6 Shani
+        {6, 3, 17, 11},  // H6 Sikuru
+        {6, 7, 17, 8},  // H6 Raahu
         {7, 5, 15, 15},  // H7 Guru
         {7, 4, 17, 21},  // H7 Kuja
         {7, 6, 16, 15},  // H7 Shani
         {7, 3, 17, 15},  // H7 Sikuru
+        {7, 0, 18, 21},  // H7 Chandra
+        {7, 1, 16, 21},  // H7 Ravi
         {8, 2, 18, 26},  // H8 Budha
         {8, 5, 16, 26},  // H8 Guru
         {8, 1, 18, 29},  // H8 Ravi
+        {8, 7, 19, 30},  // H8 Raahu
         {9, 2, 16, 37},  // H9 Budha
         {9, 8, 14, 36},  // H9 Kethu
         {9, 4, 16, 33},  // H9 Kuja
@@ -570,14 +587,26 @@ inline const std::array<KendraHome, 55>& kendraHomes() {
         {10, 5, 12, 27},  // H10 Guru
         {10, 8, 8, 27},  // H10 Kethu
         {10, 3, 9, 32},  // H10 Sikuru
+        {10, 1, 9, 27},  // H10 Ravi
+        {10, 4, 11, 32},  // H10 Kuja
+        {10, 6, 12, 32},  // H10 Shani
         {11, 0, 6, 32},  // H11 Chandra
         {11, 8, 3, 35},  // H11 Kethu
         {11, 4, 5, 31},  // H11 Kuja
         {11, 6, 4, 36},  // H11 Shani
         {11, 3, 6, 36},  // H11 Sikuru
+        {11, 1, 4, 32},  // H11 Ravi
+        {11, 5, 2, 36},  // H11 Guru
+        {11, 7, 5, 35},  // H11 Raahu
         {12, 5, 1, 26},  // H12 Guru
         {12, 7, 5, 26},  // H12 Raahu
         {12, 3, 3, 26},  // H12 Sikuru
+        {12, 0, 4, 27},  // H12 Chandra
+        {12, 1, 1, 34},  // H12 Ravi
+        {12, 2, 3, 30},  // H12 Budha
+        {12, 4, 2, 31},  // H12 Kuja
+        {12, 6, 2, 26},  // H12 Shani
+        {12, 8, 1, 30},  // H12 Kethu
     }};
     return k;
 }

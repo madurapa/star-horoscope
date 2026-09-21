@@ -2,23 +2,15 @@ GRAHA  POSITIONS  IN  SHAD  VARGA
 
 GRHAYA        RASHI  NAVAMSAKA HORA DESHKANA DVADASANSA TRISHANSA
 -----------------------------------------------------------------
-Chandra     |   2      11       2       2       4       4
-Ravi        |   9       6       2       5       5       5
-Budha       |   9       6       2       5       4       5
-Sikuru      |  11       7       1      11      12       1
-Guru        |   8       5       2       8      10       6
-Kuja        |   7       6       1       7       7       9
-Shani       |   7       1       2       3       4       9
-Raahu       |   5      12       1       5       4       9
-Kethu       |  11       6       1      11      10       9
-Urenus      |   9       2       1       9      11       1
-Neptune     |  10       9       2      10       9       8
-Pluuto      |   8       3       2       8       7       8
-
-
-
-
-
-
-
-
+Chandra     |   4       3      12       4       3       6
+Ravi        |  10       2       1       2      11      12
+Budha       |   9      12       1       9       8       1
+Sikuru      |  10       7      12       6       6       2
+Guru        |   7       3      12       3       1      11
+Kuja        |   9      10       1       5       4      11
+Shani       |   7      12      12      11      10       5
+Raahu       |   8       4      12       8       8       6
+Kethu       |   2      10      12       2       2       6
+Urenus      |   3       6       1       3       1       1
+Neptune     |   3       2      12      11       8       5
+Pluuto      |   1       9       1       9       8      11

@@ -4,6 +4,15 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.8.18
+
+- Patch: synthetic-data swap (§4.1a) — all birth-data tuples in
+  code/tests/fixtures replaced with the dummy family, goldens
+  re-baselined from fresh DOSBox captures; kendra home table
+  completed 55→82 cells (all 8 charts decode to fixed GOTOXY cells,
+  cross-chart consistent) + TRISANSAKA test-label fix.
+  Full gate 25/25, VERIFY_ALL_GREEN.
+
 ## 2.8.17
 
 - Patch: MSVC-only Windows leg — _MSC_VER compat shims

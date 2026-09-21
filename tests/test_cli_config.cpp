@@ -14,17 +14,17 @@ int main() {
     const std::string content =
         "# baseline profile\n"
         "name = Test User\n"
-        "birth_year = 1981\n"
-        "birth_month = 12\n"
-        "birth_day = 8\n"
-        "birth_hour = 12\n"
-        "birth_minute = 55\n"
+        "birth_year = 2000\n"
+        "birth_month = 8\n"
+        "birth_day = 17\n"
+        "birth_hour = 14\n"
+        "birth_minute = 5\n"
         "city_index = 7\n"
         "nirayana = true\n";
     const CLIConfig c = CLI::parseConfigFilePublic(content);
     STAR_CHECK(c.name == "Test User", "name %s", c.name.c_str());
-    STAR_CHECK(c.birth_year == 1981 && c.birth_month == 12 && c.birth_day == 8, "ymd");
-    STAR_CHECK(c.birth_hour == 12 && c.birth_minute == 55, "hm");
+    STAR_CHECK(c.birth_year == 2000 && c.birth_month == 8 && c.birth_day == 17, "ymd");
+    STAR_CHECK(c.birth_hour == 14 && c.birth_minute == 5, "hm");
     STAR_CHECK(c.city_index == 7, "city %d", c.city_index);
     STAR_CHECK(c.nirayana.has_value() && *c.nirayana, "nirayana");
     STAR_CHECK(c.show_all_screens, "screens default all");

@@ -19,8 +19,8 @@ int main() {
     STAR_CHECK(!CLI::validateDate(2023, 4, 31).empty(), "apr31 rejected");
     STAR_CHECK(!CLI::validateDate(2023, 13, 1).empty(), "month13 rejected");
     STAR_CHECK(!CLI::validateDate(999, 1, 1).empty(), "year999 rejected");
-    STAR_CHECK(CLI::validateDate(1981, 12, 8).empty(), "baseline date ok");
-    STAR_CHECK(CLI::validateTime(12, 55).empty(), "time ok");
+    STAR_CHECK(CLI::validateDate(2000, 8, 17).empty(), "baseline date ok");
+    STAR_CHECK(CLI::validateTime(14, 5).empty(), "time ok");
     STAR_CHECK(!CLI::validateTime(24, 0).empty(), "hour24 rejected");
     STAR_CHECK(!CLI::validateTime(12, 60).empty(), "min60 rejected");
     STAR_CHECK(CLI::validateName("Test User").empty(), "name ok");

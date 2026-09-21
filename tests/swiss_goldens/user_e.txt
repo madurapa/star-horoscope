@@ -4,21 +4,21 @@
 ─────────────────────────── Nirayana Table of Houses ───────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────
- Planet    Longitude    Nakshatra   Pada      Rasi      Rasi Longitude  Avastha
+ Planet    Longitude    Nakshatra   Pada     Rasi     Rasi Longitude   Avastha
 ────────────────────────────────────────────────────────────────────────────────
-Lagna     225°06'24"   Anura            4  Vrishchika   15°06'24"       -
-Chandra   159°39'20"   Utrapal          4  Kanya        9°39'20"        AAgama
-Ravi      155°14'56"   Utrapal          3  Kanya        5°14'56"        AAgama
-Budha     162°26'52"   Hata             1  Kanya        12°26'52"       Nidra
-Shukra    129°04'20"   Maa              3  Simha        9°04'20"        AAgama
-Kuja      185°42'28"   Sita             4  Tula         5°42'28"        AAgama
-Guru      87°05'11"    Punavasa         3  Mithuna      27°05'11"       Prakasha
-Shani     334°12'58"   Utraputupa       1  Meena        4°12'58"        Agamana
-Rahu      323°17'22"   Puvaputupa       1  Kumbha       23°17'22"       AAgama
-Ketu      143°17'22"   Puvapal          3  Simha        23°17'22"       AAgama
-Uranus    37°08'21"    Keti             4  Vrishabha    7°08'21"        -
-Neptune   336°34'36"   Utraputupa       1  Meena        6°34'36"        -
-Pluto     277°15'39"   Utrasala         4  Makara       7°15'39"        -
+Lagna     191°17'44"   Saa             2  Tula        11°17'44"       -
+Chandra   233°28'36"   Deta            3  Vrishchika  23°28'36"       Bhojana
+Ravi      144°42'03"   Puvapal         4  Simha       24°42'03"       AAgama
+Budha     128°33'55"   Maa             3  Simha       8°33'55"        Bhojana
+Shukra    171°12'21"   Hata            4  Kanya       21°12'21"       Bhojana
+Kuja      69°34'16"    Ada             1  Mithuna     9°34'16"        Bhojana
+Guru      55°51'24"    Muvasirasa      1  Vrishabha   25°51'24"       Kavthuka
+Shani     321°35'58"   Puvaputupa      1  Kumbha      21°35'58"       Saba
+Rahu      343°13'05"   Utraputupa      3  Meena       13°13'05"       Gamana
+Ketu      163°13'05"   Hata            1  Kanya       13°13'05"       Nethrapani
+Uranus    33°01'02"    Keti            2  Vrishabha   3°01'02"        -
+Neptune   334°35'05"   Utraputupa      1  Meena       4°35'05"        -
+Pluto     275°39'32"   Utrasala        3  Makara      5°39'32"        -
 ────────────────────────────────────────────────────────────────────────────────
 === shadvarga-names ===
 
@@ -28,19 +28,19 @@ Pluto     277°15'39"   Utrasala         4  Makara       7°15'39"        -
 ────────────────────────────────────────────────────────────────────────────────
  Graha       Rashi       Navamsa     Hora     Drekkana   Dvadasamsa   Trimshamsa
 ────────────────────────────────────────────────────────────────────────────────
-Lagna     Vrishchika   Vrishchika   Simha    Meena       Vrishabha    Meena
-Chandra   Kanya        Meena        Kataka   Kanya       Dhanu        Kanya
-Ravi      Kanya        Kumbha       Kataka   Kanya       Vrishchika   Kanya
-Budha     Kanya        Mesha        Kataka   Makara      Makara       Meena
-Shukra    Simha        Mithuna      Simha    Simha       Vrishchika   Dhanu
-Kuja      Tula         Vrishchika   Simha    Tula        Dhanu        Kumbha
-Guru      Mithuna      Mithuna      Kataka   Kumbha      Mesha        Tula
-Shani     Meena        Simha        Kataka   Meena       Mesha        Kanya
-Rahu      Kumbha       Mesha        Kataka   Tula        Vrishchika   Mithuna
-Ketu      Simha        Tula         Kataka   Mesha       Vrishabha    Mithuna
-Uranus    Vrishabha    Meena        Kataka   Vrishabha   Kataka       Kanya
-Neptune   Meena        Simha        Kataka   Meena       Vrishabha    Kanya
-Pluto     Makara       Meena        Kataka   Makara      Meena        Kanya
+Lagna     Tula         Makara       Simha    Kumbha      Kumbha       Dhanu
+Chandra   Vrishchika   Kumbha       Simha    Kataka      Simha        Makara
+Ravi      Simha        Vrishchika   Kataka   Mesha       Vrishabha    Tula
+Budha     Simha        Mithuna      Simha    Simha       Vrishchika   Kumbha
+Shukra    Kanya        Kataka       Simha    Vrishabha   Vrishabha    Makara
+Kuja      Mithuna      Dhanu        Simha    Mithuna     Kanya        Dhanu
+Guru      Vrishabha    Simha        Simha    Makara      Meena        Vrishabha
+Shani     Kumbha       Mesha        Kataka   Tula        Tula         Mithuna
+Rahu      Meena        Tula         Kataka   Kataka      Simha        Meena
+Ketu      Kanya        Mesha        Kataka   Makara      Kumbha       Meena
+Uranus    Vrishabha    Makara       Kataka   Vrishabha   Mithuna      Vrishabha
+Neptune   Meena        Simha        Kataka   Meena       Mesha        Kanya
+Pluto     Makara       Kumbha       Kataka   Makara      Meena        Kanya
 ────────────────────────────────────────────────────────────────────────────────
 === shadvarga-houses ===
 
@@ -50,148 +50,151 @@ Pluto     Makara       Meena        Kataka   Makara      Meena        Kanya
 ────────────────────────────────────────────────────────────────────────────────
   Graha      Rashi     Navamsa     Hora    Drekkana    Dvadasamsa    Trimshamsa
 ────────────────────────────────────────────────────────────────────────────────
-Chandra           11           5      12           7             8             7
-Ravi              11           4      12           7             7             7
-Budha             11           6      12          11             9             1
-Shukra            10           8       1           6             7            10
-Kuja              12           1       1           8             8            12
-Guru               8           8      12          12            12             8
-Shani              5          10      12           1            12             7
-Rahu               4           6      12           8             7             4
-Ketu              10          12      12           2             1             4
-Uranus             7           5      12           3             3             7
-Neptune            5          10      12           1             1             7
-Pluto              3           5      12          11            11             7
+Chandra            2           2       1           6             7             2
+Ravi              11          11      12           3             4            11
+Budha             11           6       1           7            10             3
+Shukra            12           7       1           4             4             2
+Kuja               9          12       1           5             8             1
+Guru               8           8       1          12             2             6
+Shani              5           4      12           9             9             7
+Rahu               6          10      12           6             7             4
+Ketu              12           4      12          12             1             4
+Uranus             8           1      12           4             5             6
+Neptune            6           8      12           2             3            10
+Pluto              4           2      12          12             2            10
 ────────────────────────────────────────────────────────────────────────────────
 === profile ===
 Full Name   : Test User E
-Birth Date  : 2025-09-22
-Birth Day   : Monday
+Birth Date  : 2024-09-11
+Birth Day   : Wednesday
 Birth Place : Galle
 === astro ===
-Julian Date   : 2460940.718
-Ayanamsa      : 24°12'59"
-Lagna         : Vrishchika
-Lagna Degree  : 15°06'24"
-Lagna Navamsa : Vrishchika
+Julian Date   : 2460564.649
+Ayanamsa      : 24°12'07"
+Lagna         : Tula
+Lagna Degree  : 11°17'44"
+Lagna Navamsa : Makara
 === times ===
-Birth Time           : 10:44:00
-Sinhala Time         : 11:54:36
-True Local Mean Time : 10:34:52
-Universal Time (UT)  : 05:14:00
-Universal Sidereal   : 05:10:10
-Local Mean Sidereal  : 10:40:10
-Sunrise              : 05:58:09
-Sunset               : 06:01:51
+Birth Time           : 09:05:00
+Sinhala Time         : 07:42:04
+True Local Mean Time : 08:55:52
+Universal Time (UT)  : 03:35:00
+Universal Sidereal   : 02:48:29
+Local Mean Sidereal  : 08:18:29
+Sunrise              : 06:00:10
+Sunset               : 05:59:50
 === panchanga ===
-Tithi          : Pura-Pelaviya - 1
-Nakshatra      : Utrapal
-Nakshatra Pada : 4
-Yoga           : Shubra
-Karana         : Kinsthugana
+Tithi          : Pura-Atawaka - 8
+Nakshatra      : Deta
+Nakshatra Pada : 3
+Yoga           : Preethi
+Karana         : Vishti
 === dasa-info ===
-Starting  : Ravi
-Period    : 0 years 1 months 25 days
+Starting  : Budha
+Period    : 8 years 3 months 24 days
 Reference : From birth
 === dasa ===
 
 
 ─────────────────────── Mahadasa and Athurudasa Timeline ───────────────────────
 
-├─ Ravi: 2025-09-22 to 2025-11-18 (0y 0m 0d to 0y 1m 26d)
-│  └─ Shukra: 2025-09-22 to 2025-11-18 (0y 0m 0d to 0y 1m 26d)
-├─ Chandra: 2025-11-18 to 2035-11-18 (0y 1m 26d to 10y 1m 26d)
-│  ├─ Chandra: 2025-11-18 to 2026-09-18 (0y 1m 26d to 0y 11m 26d)
-│  ├─ Kuja: 2026-09-18 to 2027-04-18 (0y 11m 26d to 1y 6m 26d)
-│  ├─ Rahu: 2027-04-18 to 2028-10-18 (1y 6m 26d to 3y 0m 26d)
-│  ├─ Guru: 2028-10-18 to 2030-02-18 (3y 0m 26d to 4y 4m 26d)
-│  ├─ Shani: 2030-02-18 to 2031-09-18 (4y 4m 26d to 5y 11m 26d)
-│  ├─ Budha: 2031-09-18 to 2033-02-18 (5y 11m 26d to 7y 4m 26d)
-│  ├─ Ketu: 2033-02-18 to 2033-09-18 (7y 4m 26d to 7y 11m 26d)
-│  ├─ Shukra: 2033-09-18 to 2035-05-18 (7y 11m 26d to 9y 7m 26d)
-│  └─ Ravi: 2035-05-18 to 2035-11-18 (9y 7m 26d to 10y 1m 26d)
-├─ Kuja: 2035-11-18 to 2042-11-18 (10y 1m 26d to 17y 1m 26d)
-│  ├─ Kuja: 2035-11-18 to 2036-04-15 (10y 1m 26d to 10y 6m 23d)
-│  ├─ Rahu: 2036-04-15 to 2037-05-03 (10y 6m 23d to 11y 7m 11d)
-│  ├─ Guru: 2037-05-03 to 2038-04-09 (11y 7m 11d to 12y 6m 17d)
-│  ├─ Shani: 2038-04-09 to 2039-05-18 (12y 6m 17d to 13y 7m 26d)
-│  ├─ Budha: 2039-05-18 to 2040-05-15 (13y 7m 26d to 14y 7m 23d)
-│  ├─ Ketu: 2040-05-15 to 2040-10-12 (14y 7m 23d to 15y 0m 20d)
-│  ├─ Shukra: 2040-10-12 to 2041-12-12 (15y 0m 20d to 16y 2m 20d)
-│  ├─ Ravi: 2041-12-12 to 2042-04-18 (16y 2m 20d to 16y 6m 26d)
-│  └─ Chandra: 2042-04-18 to 2042-11-18 (16y 6m 26d to 17y 1m 26d)
-├─ Rahu: 2042-11-18 to 2060-11-18 (17y 1m 26d to 35y 1m 26d)
-│  ├─ Rahu: 2042-11-18 to 2045-07-30 (17y 1m 26d to 19y 10m 8d)
-│  ├─ Guru: 2045-07-30 to 2047-12-24 (19y 10m 8d to 22y 3m 2d)
-│  ├─ Shani: 2047-12-24 to 2050-10-30 (22y 3m 2d to 25y 1m 8d)
-│  ├─ Budha: 2050-10-30 to 2053-05-18 (25y 1m 8d to 27y 7m 26d)
-│  ├─ Ketu: 2053-05-18 to 2054-06-06 (27y 7m 26d to 28y 8m 14d)
-│  ├─ Shukra: 2054-06-06 to 2057-06-06 (28y 8m 14d to 31y 8m 14d)
-│  ├─ Ravi: 2057-06-06 to 2058-04-30 (31y 8m 14d to 32y 7m 8d)
-│  ├─ Chandra: 2058-04-30 to 2059-10-30 (32y 7m 8d to 34y 1m 8d)
-│  └─ Kuja: 2059-10-30 to 2060-11-18 (34y 1m 8d to 35y 1m 26d)
-├─ Guru: 2060-11-18 to 2076-11-18 (35y 1m 26d to 51y 1m 26d)
-│  ├─ Guru: 2060-11-18 to 2063-01-06 (35y 1m 26d to 37y 3m 14d)
-│  ├─ Shani: 2063-01-06 to 2065-07-18 (37y 3m 14d to 39y 9m 26d)
-│  ├─ Budha: 2065-07-18 to 2067-10-24 (39y 9m 26d to 42y 1m 2d)
-│  ├─ Ketu: 2067-10-24 to 2068-09-30 (42y 1m 2d to 43y 0m 8d)
-│  ├─ Shukra: 2068-09-30 to 2071-05-30 (43y 0m 8d to 45y 8m 8d)
-│  ├─ Ravi: 2071-05-30 to 2072-03-18 (45y 8m 8d to 46y 5m 26d)
-│  ├─ Chandra: 2072-03-18 to 2073-07-18 (46y 5m 26d to 47y 9m 26d)
-│  ├─ Kuja: 2073-07-18 to 2074-06-24 (47y 9m 26d to 48y 9m 2d)
-│  └─ Rahu: 2074-06-24 to 2076-11-18 (48y 9m 2d to 51y 1m 26d)
-├─ Shani: 2076-11-18 to 2095-11-18 (51y 1m 26d to 70y 1m 26d)
-│  ├─ Shani: 2076-11-18 to 2079-11-21 (51y 1m 26d to 54y 1m 29d)
-│  ├─ Budha: 2079-11-21 to 2082-07-30 (54y 1m 29d to 56y 10m 8d)
-│  ├─ Ketu: 2082-07-30 to 2083-09-09 (56y 10m 8d to 57y 11m 17d)
-│  ├─ Shukra: 2083-09-09 to 2086-11-09 (57y 11m 17d to 61y 1m 17d)
-│  ├─ Ravi: 2086-11-09 to 2087-10-21 (61y 1m 17d to 62y 0m 29d)
-│  ├─ Chandra: 2087-10-21 to 2089-05-21 (62y 0m 29d to 63y 7m 29d)
-│  ├─ Kuja: 2089-05-21 to 2090-06-30 (63y 7m 29d to 64y 9m 8d)
-│  ├─ Rahu: 2090-06-30 to 2093-05-06 (64y 9m 8d to 67y 7m 14d)
-│  └─ Guru: 2093-05-06 to 2095-11-18 (67y 7m 14d to 70y 1m 26d)
-├─ Budha: 2095-11-18 to 2112-11-18 (70y 1m 26d to 87y 1m 26d)
-│  ├─ Budha: 2095-11-18 to 2098-04-15 (70y 1m 26d to 72y 6m 23d)
-│  ├─ Ketu: 2098-04-15 to 2099-04-12 (72y 6m 23d to 73y 6m 20d)
-│  ├─ Shukra: 2099-04-12 to 2102-02-12 (73y 6m 20d to 76y 4m 20d)
-│  ├─ Ravi: 2102-02-12 to 2102-12-18 (76y 4m 20d to 77y 2m 26d)
-│  ├─ Chandra: 2102-12-18 to 2104-05-18 (77y 2m 26d to 78y 7m 26d)
-│  ├─ Kuja: 2104-05-18 to 2105-05-15 (78y 7m 26d to 79y 7m 23d)
-│  ├─ Rahu: 2105-05-15 to 2107-12-03 (79y 7m 23d to 82y 2m 11d)
-│  ├─ Guru: 2107-12-03 to 2110-03-09 (82y 2m 11d to 84y 5m 17d)
-│  └─ Shani: 2110-03-09 to 2112-11-18 (84y 5m 17d to 87y 1m 26d)
-├─ Ketu: 2112-11-18 to 2119-11-18 (87y 1m 26d to 94y 1m 26d)
-│  ├─ Ketu: 2112-11-18 to 2113-04-15 (87y 1m 26d to 87y 6m 23d)
-│  ├─ Shukra: 2113-04-15 to 2114-06-15 (87y 6m 23d to 88y 8m 23d)
-│  ├─ Ravi: 2114-06-15 to 2114-10-21 (88y 8m 23d to 89y 0m 29d)
-│  ├─ Chandra: 2114-10-21 to 2115-05-21 (89y 0m 29d to 89y 7m 29d)
-│  ├─ Kuja: 2115-05-21 to 2115-10-18 (89y 7m 29d to 90y 0m 26d)
-│  ├─ Rahu: 2115-10-18 to 2116-11-06 (90y 0m 26d to 91y 1m 14d)
-│  ├─ Guru: 2116-11-06 to 2117-10-12 (91y 1m 14d to 92y 0m 20d)
-│  ├─ Shani: 2117-10-12 to 2118-11-21 (92y 0m 20d to 93y 1m 29d)
-│  └─ Budha: 2118-11-21 to 2119-11-18 (93y 1m 29d to 94y 1m 26d)
-└─ Shukra: 2119-11-18 to 2139-11-18 (94y 1m 26d to 114y 1m 26d)
-   ├─ Shukra: 2119-11-18 to 2123-03-18 (94y 1m 26d to 97y 5m 26d)
-   ├─ Ravi: 2123-03-18 to 2124-03-18 (97y 5m 26d to 98y 5m 26d)
-   ├─ Chandra: 2124-03-18 to 2125-11-18 (98y 5m 26d to 100y 1m 26d)
-   ├─ Kuja: 2125-11-18 to 2127-01-18 (100y 1m 26d to 101y 3m 26d)
-   ├─ Rahu: 2127-01-18 to 2130-01-18 (101y 3m 26d to 104y 3m 26d)
-   ├─ Guru: 2130-01-18 to 2132-09-18 (104y 3m 26d to 106y 11m 26d)
-   ├─ Shani: 2132-09-18 to 2135-11-18 (106y 11m 26d to 110y 1m 26d)
-   ├─ Budha: 2135-11-18 to 2138-09-18 (110y 1m 26d to 112y 11m 26d)
-   └─ Ketu: 2138-09-18 to 2139-11-18 (112y 11m 26d to 114y 1m 26d)
+├─ Budha: 2024-09-11 to 2033-01-05 (0y 0m 0d to 8y 3m 24d)
+│  ├─ Kuja: 2024-09-11 to 2025-07-02 (0y 0m 0d to 0y 9m 21d)
+│  ├─ Rahu: 2025-07-02 to 2028-01-20 (0y 9m 21d to 3y 4m 9d)
+│  ├─ Guru: 2028-01-20 to 2030-04-26 (3y 4m 9d to 5y 7m 15d)
+│  └─ Shani: 2030-04-26 to 2033-01-05 (5y 7m 15d to 8y 3m 24d)
+├─ Ketu: 2033-01-05 to 2040-01-05 (8y 3m 24d to 15y 3m 24d)
+│  ├─ Ketu: 2033-01-05 to 2033-06-02 (8y 3m 24d to 8y 8m 21d)
+│  ├─ Shukra: 2033-06-02 to 2034-08-02 (8y 8m 21d to 9y 10m 21d)
+│  ├─ Ravi: 2034-08-02 to 2034-12-08 (9y 10m 21d to 10y 2m 27d)
+│  ├─ Chandra: 2034-12-08 to 2035-07-08 (10y 2m 27d to 10y 9m 27d)
+│  ├─ Kuja: 2035-07-08 to 2035-12-05 (10y 9m 27d to 11y 2m 24d)
+│  ├─ Rahu: 2035-12-05 to 2036-12-23 (11y 2m 24d to 12y 3m 12d)
+│  ├─ Guru: 2036-12-23 to 2037-11-29 (12y 3m 12d to 13y 2m 18d)
+│  ├─ Shani: 2037-11-29 to 2039-01-08 (13y 2m 18d to 14y 3m 27d)
+│  └─ Budha: 2039-01-08 to 2040-01-05 (14y 3m 27d to 15y 3m 24d)
+├─ Shukra: 2040-01-05 to 2060-01-05 (15y 3m 24d to 35y 3m 24d)
+│  ├─ Shukra: 2040-01-05 to 2043-05-05 (15y 3m 24d to 18y 7m 24d)
+│  ├─ Ravi: 2043-05-05 to 2044-05-05 (18y 7m 24d to 19y 7m 24d)
+│  ├─ Chandra: 2044-05-05 to 2046-01-05 (19y 7m 24d to 21y 3m 24d)
+│  ├─ Kuja: 2046-01-05 to 2047-03-05 (21y 3m 24d to 22y 5m 24d)
+│  ├─ Rahu: 2047-03-05 to 2050-03-05 (22y 5m 24d to 25y 5m 24d)
+│  ├─ Guru: 2050-03-05 to 2052-11-05 (25y 5m 24d to 28y 1m 24d)
+│  ├─ Shani: 2052-11-05 to 2056-01-05 (28y 1m 24d to 31y 3m 24d)
+│  ├─ Budha: 2056-01-05 to 2058-11-05 (31y 3m 24d to 34y 1m 24d)
+│  └─ Ketu: 2058-11-05 to 2060-01-05 (34y 1m 24d to 35y 3m 24d)
+├─ Ravi: 2060-01-05 to 2066-01-05 (35y 3m 24d to 41y 3m 24d)
+│  ├─ Ravi: 2060-01-05 to 2060-04-23 (35y 3m 24d to 35y 7m 12d)
+│  ├─ Chandra: 2060-04-23 to 2060-10-23 (35y 7m 12d to 36y 1m 12d)
+│  ├─ Kuja: 2060-10-23 to 2061-02-29 (36y 1m 12d to 36y 5m 18d)
+│  ├─ Rahu: 2061-02-29 to 2062-01-23 (36y 5m 18d to 37y 4m 12d)
+│  ├─ Guru: 2062-01-23 to 2062-11-11 (37y 4m 12d to 38y 2m 0d)
+│  ├─ Shani: 2062-11-11 to 2063-10-23 (38y 2m 0d to 39y 1m 12d)
+│  ├─ Budha: 2063-10-23 to 2064-08-29 (39y 1m 12d to 39y 11m 18d)
+│  ├─ Ketu: 2064-08-29 to 2065-01-05 (39y 11m 18d to 40y 3m 24d)
+│  └─ Shukra: 2065-01-05 to 2066-01-05 (40y 3m 24d to 41y 3m 24d)
+├─ Chandra: 2066-01-05 to 2076-01-05 (41y 3m 24d to 51y 3m 24d)
+│  ├─ Chandra: 2066-01-05 to 2066-11-05 (41y 3m 24d to 42y 1m 24d)
+│  ├─ Kuja: 2066-11-05 to 2067-06-05 (42y 1m 24d to 42y 8m 24d)
+│  ├─ Rahu: 2067-06-05 to 2068-12-05 (42y 8m 24d to 44y 2m 24d)
+│  ├─ Guru: 2068-12-05 to 2070-04-05 (44y 2m 24d to 45y 6m 24d)
+│  ├─ Shani: 2070-04-05 to 2071-11-05 (45y 6m 24d to 47y 1m 24d)
+│  ├─ Budha: 2071-11-05 to 2073-04-05 (47y 1m 24d to 48y 6m 24d)
+│  ├─ Ketu: 2073-04-05 to 2073-11-05 (48y 6m 24d to 49y 1m 24d)
+│  ├─ Shukra: 2073-11-05 to 2075-07-05 (49y 1m 24d to 50y 9m 24d)
+│  └─ Ravi: 2075-07-05 to 2076-01-05 (50y 9m 24d to 51y 3m 24d)
+├─ Kuja: 2076-01-05 to 2083-01-05 (51y 3m 24d to 58y 3m 24d)
+│  ├─ Kuja: 2076-01-05 to 2076-06-02 (51y 3m 24d to 51y 8m 21d)
+│  ├─ Rahu: 2076-06-02 to 2077-06-20 (51y 8m 21d to 52y 9m 9d)
+│  ├─ Guru: 2077-06-20 to 2078-05-26 (52y 9m 9d to 53y 8m 15d)
+│  ├─ Shani: 2078-05-26 to 2079-07-05 (53y 8m 15d to 54y 9m 24d)
+│  ├─ Budha: 2079-07-05 to 2080-07-02 (54y 9m 24d to 55y 9m 21d)
+│  ├─ Ketu: 2080-07-02 to 2080-11-29 (55y 9m 21d to 56y 2m 18d)
+│  ├─ Shukra: 2080-11-29 to 2082-01-29 (56y 2m 18d to 57y 4m 18d)
+│  ├─ Ravi: 2082-01-29 to 2082-06-05 (57y 4m 18d to 57y 8m 24d)
+│  └─ Chandra: 2082-06-05 to 2083-01-05 (57y 8m 24d to 58y 3m 24d)
+├─ Rahu: 2083-01-05 to 2101-01-05 (58y 3m 24d to 76y 3m 24d)
+│  ├─ Rahu: 2083-01-05 to 2085-09-17 (58y 3m 24d to 61y 0m 6d)
+│  ├─ Guru: 2085-09-17 to 2088-02-11 (61y 0m 6d to 63y 5m 0d)
+│  ├─ Shani: 2088-02-11 to 2090-12-17 (63y 5m 0d to 66y 3m 6d)
+│  ├─ Budha: 2090-12-17 to 2093-07-05 (66y 3m 6d to 68y 9m 24d)
+│  ├─ Ketu: 2093-07-05 to 2094-07-23 (68y 9m 24d to 69y 10m 12d)
+│  ├─ Shukra: 2094-07-23 to 2097-07-23 (69y 10m 12d to 72y 10m 12d)
+│  ├─ Ravi: 2097-07-23 to 2098-06-17 (72y 10m 12d to 73y 9m 6d)
+│  ├─ Chandra: 2098-06-17 to 2099-12-17 (73y 9m 6d to 75y 3m 6d)
+│  └─ Kuja: 2099-12-17 to 2101-01-05 (75y 3m 6d to 76y 3m 24d)
+├─ Guru: 2101-01-05 to 2117-01-05 (76y 3m 24d to 92y 3m 24d)
+│  ├─ Guru: 2101-01-05 to 2103-02-23 (76y 3m 24d to 78y 5m 12d)
+│  ├─ Shani: 2103-02-23 to 2105-09-05 (78y 5m 12d to 80y 11m 24d)
+│  ├─ Budha: 2105-09-05 to 2107-12-11 (80y 11m 24d to 83y 3m 0d)
+│  ├─ Ketu: 2107-12-11 to 2108-11-17 (83y 3m 0d to 84y 2m 6d)
+│  ├─ Shukra: 2108-11-17 to 2111-07-17 (84y 2m 6d to 86y 10m 6d)
+│  ├─ Ravi: 2111-07-17 to 2112-05-05 (86y 10m 6d to 87y 7m 24d)
+│  ├─ Chandra: 2112-05-05 to 2113-09-05 (87y 7m 24d to 88y 11m 24d)
+│  ├─ Kuja: 2113-09-05 to 2114-08-11 (88y 11m 24d to 89y 11m 0d)
+│  └─ Rahu: 2114-08-11 to 2117-01-05 (89y 11m 0d to 92y 3m 24d)
+└─ Shani: 2117-01-05 to 2136-01-05 (92y 3m 24d to 111y 3m 24d)
+   ├─ Shani: 2117-01-05 to 2120-01-08 (92y 3m 24d to 95y 3m 27d)
+   ├─ Budha: 2120-01-08 to 2122-09-17 (95y 3m 27d to 98y 0m 6d)
+   ├─ Ketu: 2122-09-17 to 2123-10-26 (98y 0m 6d to 99y 1m 15d)
+   ├─ Shukra: 2123-10-26 to 2126-12-26 (99y 1m 15d to 102y 3m 15d)
+   ├─ Ravi: 2126-12-26 to 2127-12-08 (102y 3m 15d to 103y 2m 27d)
+   ├─ Chandra: 2127-12-08 to 2129-07-08 (103y 2m 27d to 104y 9m 27d)
+   ├─ Kuja: 2129-07-08 to 2130-08-17 (104y 9m 27d to 105y 11m 6d)
+   ├─ Rahu: 2130-08-17 to 2133-06-23 (105y 11m 6d to 108y 9m 12d)
+   └─ Guru: 2133-06-23 to 2136-01-05 (108y 9m 12d to 111y 3m 24d)
 === hora ===
-Kala     : Ravi
-Panchama : Budha
-Sukshama : Shani
+Kala     : Guru
+Panchama : Guru
+Sukshama : Kuja
 === chakra ===
-Gana   : Maanusha
-Yoni   : Gavadena*
-Linga  : Sthree
+Gana   : Raxha
+Yoni   : Muva
+Linga  : Purusha
 Naadi  : Poorva
 Varna  : Sankara
-Ruxha  : Alari#
-Paxhi  : Kaka
-Gothra : Vashista
-Rajju  : Nabhi
-Bhutha : Thejo
+Ruxha  : Vetake#
+Paxhi  : Kukuta
+Gothra : Pulasthi
+Rajju  : Pada
+Bhutha : Vaayo

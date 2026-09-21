@@ -53,7 +53,7 @@ int main() {
     CHECK(ht.sukshama == "Budha", "sukshama %s", ht.sukshama.c_str());
 
     // Antardasa L3 inside Kuja-Budha bhukti (2023-07-02 -> 2024-06-29).
-    const YMD birthYmd{1981, 12, 8};
+    const YMD birthYmd{2000, 8, 17};
     const double bStart = fracYear(2023, 7, 2);
     const double bEnd = fracYear(2024, 6, 29);
     // Budha index in dasa cycle = 8.

@@ -28,9 +28,9 @@ struct Profile {
 };
 
 const Profile kProfiles[3] = {
-    {"baseline", "Test User", 1981, 12, 8, 12, 55, 7, "Ratnapura"},
-    {"user_d", "Test User D", 2022, 8, 1, 12, 25, 2, "Galle"},
-    {"user_e", "Test User E", 2025, 9, 22, 10, 44, 2, "Galle"},
+    {"baseline", "Test User", 2000, 8, 17, 14, 5, 7, "Ratnapura"},
+    {"user_d", "Test User D", 2023, 5, 19, 16, 20, 2, "Galle"},
+    {"user_e", "Test User E", 2024, 9, 11, 9, 5, 2, "Galle"},
 };
 
 std::string buildGolden(const Profile& p) {

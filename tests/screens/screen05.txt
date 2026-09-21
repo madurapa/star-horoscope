@@ -2,23 +2,18 @@
 
 PLANET      LONGITUDE    NEKETH   PADA RASI      RASI LONGITUDE   AVASTHA
 ____________________________________________________________________________
-Lagna   334   50     42  Utraputupa 1 Meena       4   50     42
+Lagna   239    7      8  Deta       4 Wrschika   29    7      8
 
-Sandu     9   23     49  Asvida     3 Mesha       9   23     49   Upeveshana
-Ravi    232   33     32  Deta       2 Wrschika   22   33     32   Nidra
-Budha   231   17      0  Deta       2 Wrschika   21   17      0   Agamana
-Sikuru  276    2     26  Utrasala   3 Makara      6    2     26   Nidra
-Kuja    152   42     30  Utrapal    2 Kanya       2   42     30   Agamana
-Guru    188   32     33  Saa        1 Thula       8   32     33   Bhojana
-Shani   176   32     50  Sita       1 Kanya      26   32     50   Nidra
-Raahu    90   52     13  Punavasa   4 Kataka      0   52     13   Upeveshana
-Kethu   270   52     13  Utrasala   2 Makara      0   52     13   Nethrapani
-Urenus  217   45      1  Anura      2 Wrschika    7   45      1
-Neptun  240   40     59  Mula       1 Dhanu       0   40     59
-Pluto   182   20     11  Sita       3 Thula       2   20     11
+Sandu   325    6     45  Puvaputupa 2 Kumba      25    6     45   Bhojana
+Ravi    120   55      1  Maa        1 Sinha       0   55      1   Nethrapani
+Budha   115   59     17  Aslisa     3 Kataka     25   59     17   Gamana
+Sikuru  139   14     48  Puvapal    2 Sinha      19   14     48   Gamana
+Kuja    106   40     47  Aslisa     1 Kataka     16   40     47   AAgama
+Guru     44   29     23  Rehena     2 Wrushaba   14   29     23   Gamana
+Shani    36   36     38  Keti       3 Wrushaba    6   36     38   AAgama
+Raahu    89    5     27  Punavasa   3 Mithuna    29    5     27   Gamana
+Kethu   269    5     27  Utrasala   1 Dhanu      29    5     27   Kavthuka
+Urenus  294   58      6  Denata     1 Makara     24   58      6
+Neptun  280   43     23  Suvana     1 Makara     10   43     23
+Pluto   225   59     55  Anura      4 Wrschika   15   59     55
 ____________________________________________________________________________
-
-
-
-
-

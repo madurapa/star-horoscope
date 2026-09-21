@@ -12,7 +12,7 @@
 
 int main() {
     using namespace star;
-    const HoroscopeOwner o{"Test User", 1981, 12, 8, 12, 55};
+    const HoroscopeOwner o{"Test User", 2000, 8, 17, 14, 5};
     const GeoCoord geo = cityByIndex(7).coord;
     const HoroscopeResult d = computeHoroscope(o, geo, true, EngineKind::Dos);
     const HoroscopeResult s = computeHoroscope(o, geo, true, EngineKind::Swiss);
