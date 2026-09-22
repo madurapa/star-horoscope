@@ -22,13 +22,17 @@ def horoscope(
     engine: str = typer.Option("swisseph", "--engine"),
     locale: str = typer.Option("en", "--locale"),
     width: int = typer.Option(None, "--width", help="Console width (auto-detect)"),
+    chart: str = typer.Option("diamond", "--chart",
+                              help="Chart style: diamond (Sri Lankan) or south"),
 ) -> None:
     import pystar
 
+    if chart not in ("diamond", "south"):
+        raise typer.BadParameter("--chart wants diamond|south")
     doc = json.loads(pystar.horoscope(
         name, year, month, day, hour, minute, city,
         nirayana=nirayana, engine=engine, locale=locale))
-    render_all(doc, Console(width=width))
+    render_all(doc, Console(width=width), chart=chart)
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ from rich.table import Table
 from rich.text import Text
 
 from kendra import RASIS, houses_from_longitudes, parse_dms, render_diamond
+from south import render_south
 
 PLANETS = ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja", "Guru",
            "Shani", "Raahu", "Kethu", "Urenus", "Neptune", "Pluto"]
@@ -150,14 +151,17 @@ def render_hora_chakra(doc, console: Console) -> None:
     console.print(right)
 
 
-def render_all(doc, console: Console) -> None:
+def render_all(doc, console: Console, chart: str = "diamond") -> None:
     render_profile(doc, console)
     render_reference(doc, console)
     render_time_panchanga(doc, console)
     render_houses(doc, console)
     render_shadvarga(doc, console)
     houses, lagna_rasi = houses_from_longitudes(doc["longitudes"])
-    render_diamond(houses, lagna_rasi, console)
+    if chart == "south":
+        render_south(doc["longitudes"], lagna_rasi, console)
+    else:
+        render_diamond(houses, lagna_rasi, console)
     render_dasa(doc, console)
     render_hora_chakra(doc, console)
     render_provenance(doc, console)

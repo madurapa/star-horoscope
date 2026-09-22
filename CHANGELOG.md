@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.19.0
+
+- S3 South Indian square chart: fixed-sign 4×4 grid renderer
+  with Lagna highlight, `--chart diamond|south` (diamond
+  default). No schema need; sign-pinning tested.
+
 ## 2.18.0
 
 - S2 Avastha: schema gains the engine's planet-indexed `avastha`
