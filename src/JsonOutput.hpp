@@ -10,6 +10,7 @@
 #include <sstream>
 #include <string>
 
+#include "Attributes.hpp"
 #include "Bhava.hpp"
 #include "Engine.hpp"
 #include "ModernRenderer.hpp"
@@ -146,7 +147,21 @@ inline std::string renderJson(const HoroscopeOwner& owner, const HoroscopeResult
            << "\", \"to\": \"" << ymd(mahas[i].to) << "\"}" << (i + 1 < mahas.size() ? "," : "")
            << "\n";
     }
-    js << "  ]}\n}\n";
+    js << "  ]}\n,\n";
+    // Hora lords + chakra attributes (yoni display-truncated like modern).
+    const HoraTriple ht =
+        horaChain(weekdayIndex(h.jdn0), sinhalaGhati(h.birthDecHours, h.riseH));
+    const NakAttributes at = attributesFor(h.panchanga.nakIndex);
+    js << "  \"hora\": {\"kala\": \"" << jsonEscape(ht.kala) << "\", \"panchama\": \""
+       << jsonEscape(ht.pancha) << "\", \"sukshama\": \"" << jsonEscape(ht.sukshama)
+       << "\"},\n";
+    js << "  \"chakra\": {\"gana\": \"" << jsonEscape(ganaFor(h.panchanga.nakIndex))
+       << "\", \"yoni\": \"" << jsonEscape(displayYoni(at.yoni)) << "\", \"linga\": \""
+       << jsonEscape(at.linga) << "\", \"naadi\": \"" << jsonEscape(at.naadi)
+       << "\", \"varna\": \"" << jsonEscape(at.varna) << "\", \"ruxha\": \""
+       << jsonEscape(at.ruxha) << "\", \"paxhi\": \"" << jsonEscape(at.paxhi)
+       << "\", \"gothra\": \"" << jsonEscape(at.gothra) << "\", \"rajju\": \""
+       << jsonEscape(at.rajju) << "\", \"bhutha\": \"" << jsonEscape(at.bhutha) << "\"}\n}\n";
     return js.str();
 }
 

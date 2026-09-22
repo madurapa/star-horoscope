@@ -132,6 +132,22 @@ def render_dasa(doc, console: Console) -> None:
     console.print(t)
 
 
+def render_hora_chakra(doc, console: Console) -> None:
+    hh = doc["hora"]
+    left = _kv("Hora", [
+        ("Kala", hh["kala"]), ("Panchama", hh["panchama"]),
+        ("Sukshama", hh["sukshama"])])
+    cc = doc["chakra"]
+    right = _kv("Chakra", [
+        ("Gana", cc["gana"]), ("Yoni", cc["yoni"].strip()),
+        ("Linga", cc["linga"]), ("Naadi", cc["naadi"]),
+        ("Varna", cc["varna"]), ("Ruxha", cc["ruxha"]),
+        ("Paxhi", cc["paxhi"]), ("Gothra", cc["gothra"]),
+        ("Rajju", cc["rajju"]), ("Bhutha", cc["bhutha"])])
+    console.print(left)
+    console.print(right)
+
+
 def render_all(doc, console: Console) -> None:
     render_profile(doc, console)
     render_reference(doc, console)
@@ -141,4 +157,5 @@ def render_all(doc, console: Console) -> None:
     houses, lagna_rasi = houses_from_longitudes(doc["longitudes"])
     render_diamond(houses, lagna_rasi, console)
     render_dasa(doc, console)
+    render_hora_chakra(doc, console)
     render_provenance(doc, console)

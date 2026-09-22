@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.17.0
+
+- S1 Hora + Chakra: schema gains `hora`/`chakra` blocks
+  (backward-compatible), rich rows in the dashboard after the
+  dasa timeline.
+
 ## 2.16.0
 
 - Schema P1 blocks (additive): lagna, houses, shadvarga,

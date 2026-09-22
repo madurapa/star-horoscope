@@ -33,6 +33,11 @@ DOC = {
                  {"lord": "Guru", "from": "2000-08-17", "to": "2010-06-28"},
                  {"lord": "Shani", "from": "2010-06-28", "to": "2029-06-28"},
              ]},
+    "hora": {"kala": "Kuja", "panchama": "Kuja", "sukshama": "Kuja"},
+    "chakra": {"gana": "Deva", "yoni": "Ashva", "linga": "Purusha",
+               "naadi": "Poorva", "varna": "Brahmana", "ruxha": "Godaka",
+               "paxhi": "Bheruda", "gothra": "Marivi", "rajju": "Pada",
+               "bhutha": "Patavi"},
 }
 
 
@@ -51,6 +56,8 @@ def test_renders_all_planets_at_fixed_width():
         assert section in out, section
     assert "Guru" in out and "2010-06-28" in out
     assert "Thursday" in out and "Asvida" in out
+    assert "Hora" in out and "Kuja" in out
+    assert "Chakra" in out and "Ashva" in out and "Patavi" in out
 
 
 def test_missing_planet_raises():
