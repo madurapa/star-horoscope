@@ -91,9 +91,11 @@ def render_houses(doc, console: Console) -> None:
     t.add_column("Longitude", justify="right")
     t.add_column("Rasi")
     t.add_column("House", justify="right")
+    t.add_column("Avastha")
     for p in PLANETS:
         lon = doc["longitudes"][p]
-        t.add_row(p, lon, rasi_of(lon), str(doc["houses"][p]))
+        t.add_row(p, lon, rasi_of(lon), str(doc["houses"][p]),
+                  doc["avastha"][p] or "-")
     console.print(t)
 
 

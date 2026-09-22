@@ -20,6 +20,10 @@ DOC = {
                ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
                 "Guru", "Shani", "Raahu", "Kethu", "Urenus", "Neptune",
                 "Pluto"]},
+    "avastha": {p: ("Bhojana" if p == "Chandra" else "") for p in
+                ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
+                 "Guru", "Shani", "Raahu", "Kethu", "Urenus", "Neptune",
+                 "Pluto"]},
     "shadvarga": {p: ["Mesha"] * 6 for p in
                   ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
                    "Guru", "Shani", "Raahu", "Kethu", "Urenus", "Neptune",
@@ -56,6 +60,7 @@ def test_renders_all_planets_at_fixed_width():
         assert section in out, section
     assert "Guru" in out and "2010-06-28" in out
     assert "Thursday" in out and "Asvida" in out
+    assert "Bhojana" in out and "Avastha" in out
     assert "Hora" in out and "Kuja" in out
     assert "Chakra" in out and "Ashva" in out and "Patavi" in out
 

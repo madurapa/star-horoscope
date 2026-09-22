@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.18.0
+
+- S2 Avastha: schema gains the engine's planet-indexed `avastha`
+  map (no plumbing needed — already computed); rich houses table
+  grows its fifth column.
+
 ## 2.17.0
 
 - S1 Hora + Chakra: schema gains `hora`/`chakra` blocks

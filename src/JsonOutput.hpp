@@ -100,6 +100,16 @@ inline std::string renderJson(const HoroscopeOwner& owner, const HoroscopeResult
            << "\": " << houseOf(lon, lagnaDec);
     }
     js << "\n  },\n";
+    // Avastha states (already planet-indexed by the engine; "" if blank).
+    js << "  \"avastha\": {\n";
+    first = true;
+    for (int i = 0; i < 13; ++i) {
+        if (!first) js << ",\n";
+        first = false;
+        js << "    \"" << kPlanetNames[static_cast<std::size_t>(i)]
+           << "\": \"" << jsonEscape(h.output.avastha[static_cast<std::size_t>(i)]) << "\"";
+    }
+    js << "\n  },\n";
     // Shadvarga seats (modern rasi spellings).
     js << "  \"shadvarga\": {\n";
     first = true;
