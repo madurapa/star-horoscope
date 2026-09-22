@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.21.0
+
+- S5 HTML export: `--export-html FILE` writes a self-contained
+  report (inline styles, double-clickable in any browser) —
+  the shareable GUI-quality output with no server.
+
 ## 2.20.0
 
 - S4 Bhukti drill-down: schema `dasa.mahas[].bhuktis`

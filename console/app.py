@@ -26,6 +26,8 @@ def horoscope(
                               help="Chart style: diamond (Sri Lankan) or south"),
     dasa: str = typer.Option(None, "--dasa",
                              help="Expand bhukti detail: a maha lord or 'all'"),
+    export_html: str = typer.Option(None, "--export-html",
+                                    help="Write a self-contained HTML report"),
 ) -> None:
     import pystar
 
@@ -34,6 +36,13 @@ def horoscope(
     doc = json.loads(pystar.horoscope(
         name, year, month, day, hour, minute, city,
         nirayana=nirayana, engine=engine, locale=locale))
+    if export_html:
+        rec = Console(width=width, record=True)
+        render_all(doc, rec, chart=chart, dasa=dasa)
+        with open(export_html, "w", encoding="utf-8") as f:
+            f.write(rec.export_html(inline_styles=True))
+        print(f"wrote {export_html}")
+        return
     render_all(doc, Console(width=width), chart=chart, dasa=dasa)
 
 

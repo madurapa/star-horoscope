@@ -97,3 +97,20 @@ def test_missing_planet_raises():
     except KeyError:
         return
     raise AssertionError("expected KeyError")
+
+
+def test_export_html_self_contained(tmp_path):
+    from rich.console import Console as RC
+
+    from render import render_all as ra
+
+    rec = RC(width=140, record=True)
+    ra(DOC, rec)
+    html = rec.export_html(inline_styles=True)
+    assert "<html" in html and "</html>" in html
+    for section in ["Horoscope Profile", "Mahadasa Timeline", "Sri Lankan diamond",
+                    "Shadvarga Seats", "Hora", "Chakra"]:
+        assert section in html, section
+    p = tmp_path / "report.html"
+    p.write_text(html, encoding="utf-8")
+    assert p.stat().st_size > 10000
