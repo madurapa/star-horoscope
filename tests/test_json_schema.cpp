@@ -47,6 +47,7 @@ int main() {
         STAR_CHECK(doc.find(k) != std::string::npos, "has %s", k);
     // Spot values (engine-truth lives in verifier; here shape + echo).
     STAR_CHECK(doc.find("\"rasi\": \"Vrishchika\"") != std::string::npos, "lagna rasi");
+    STAR_CHECK(doc.find("\"seats\": [8, ") != std::string::npos, "lagna seats");
     STAR_CHECK(doc.find("\"Kuja\": 9") != std::string::npos, "kuja house");
     STAR_CHECK(doc.find("\"Chandra\": \"Bhojana\"") != std::string::npos, "chandra avastha");
     STAR_CHECK(doc.find("\"balance_lord\": \"Guru\"") != std::string::npos, "dasa lord");

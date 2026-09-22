@@ -84,10 +84,13 @@ inline std::string renderJson(const HoroscopeOwner& owner, const HoroscopeResult
     js << "\n  },\n";
     // Lagna reference (modern corrected rasi spellings throughout).
     const double lagnaDec = h.output.lonOf(Planet::Lagna).ecliptic.toDecimal();
+    const std::array<int, 6> lagnaSeats = VargaEngine::GetShadvarga(lagnaDec);
     js << "  \"lagna\": {\"rasi\": \"" << rasiName(VargaEngine::GetRashiIndex(lagnaDec))
        << "\", \"degree\": \"" << formatDMS(h.output.lonOf(Planet::Lagna).rasiRel)
        << "\", \"navamsa\": \"" << rasiName(VargaEngine::GetNavamshaIndex(lagnaDec))
-       << "\"},\n";
+       << "\", \"seats\": [";
+    for (int v = 0; v < 6; ++v) js << (v ? ", " : "") << lagnaSeats[v];
+    js << "]},\n";
     // Equal houses from Lagna (Bhava houseOf; avastha deferred — needs
     // mode-longitude plumbing, see Avastha.hpp).
     js << "  \"houses\": {\n";

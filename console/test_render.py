@@ -15,7 +15,8 @@ DOC = {
                    ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
                     "Guru", "Shani", "Raahu", "Kethu", "Urenus", "Neptune",
                     "Pluto"]},
-    "lagna": {"rasi": "Mesha", "degree": " 0:00:00", "navamsa": "Mesha"},
+    "lagna": {"rasi": "Mesha", "degree": " 0:00:00", "navamsa": "Mesha",
+              "seats": [1, 2, 3, 4, 5, 6]},
     "houses": {p: 1 for p in
                ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
                 "Guru", "Shani", "Raahu", "Kethu", "Urenus", "Neptune",
@@ -68,6 +69,53 @@ def test_renders_all_planets_at_fixed_width():
     assert "Bhojana" in out and "Avastha" in out
     assert "Hora" in out and "Kuja" in out
     assert "Chakra" in out and "Ashva" in out and "Patavi" in out
+
+
+def test_cli_mirror_order_and_all_charts():
+    import render as R
+
+    buf = io.StringIO()
+    R.render_all(DOC, Console(file=buf, width=140, color_system=None))
+    out = buf.getvalue()
+    seq = ["Horoscope Profile", "Birth Profile", "Astronomical & Chart Reference",
+           "Time & Solar Metrics", "Panchanga", "Dasa Information", "Hora",
+           "Chakra", "Selected Options", "Nirayana Table of Houses",
+           "Shadvarga Seats", "Shadvarga Positions", "Lagna Chart",
+           "Navamsa Chart", "Hora Chart", "Drekkana Chart", "Dvadasamsa Chart",
+           "Trimshamsa Chart", "Sun Chart", "Moon Chart", "Mahadasa Timeline"]
+    pos = -1
+    for s in seq:
+        nxt = out.find(s, pos + 1)
+        assert nxt > pos, s
+        pos = nxt
+
+
+def test_chart_data_sun_moon_lagna():
+    import render as R
+
+    doc = dict(DOC)
+    shad = {p: (["Mesha"] * 6) for p in DOC["shadvarga"]}
+    shad["Ravi"] = ["Simha"] * 6
+    shad["Chandra"] = ["Kumbha"] + ["Mesha"] * 5
+    doc["shadvarga"] = shad
+    houses, seats, lagna_seat = R.chart_data(doc, 0, "Ravi")
+    assert lagna_seat == 5
+    assert houses[1] == ["Ravi"]
+    houses, seats, lagna_seat = R.chart_data(doc, 0, "Chandra")
+    assert lagna_seat == 11
+    houses, seats, lagna_seat = R.chart_data(doc, 0, None)
+    assert lagna_seat == 1  # DOC lagna.seats[0]
+
+
+def test_svg_charts():
+    from svgchart import svg_diamond, svg_square
+
+    d = svg_diamond({1: ["Guru"], 4: ["Chandra"]}, 8, "Lagna Chart")
+    assert d.startswith("<svg") and "Guru" in d and "Vrishchika" in d
+    assert d.count("<rect") == 12
+    s = svg_square({"Chandra": 11, "Ravi": 5}, 8, "Lagna Chart")
+    assert s.startswith("<svg") and "Chandra" in s and "Kumbha" in s
+    assert "Lagna" in s
 
 
 def test_dasa_drilldown():

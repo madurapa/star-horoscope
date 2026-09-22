@@ -7,7 +7,7 @@ DMS strings client-side). Center 2x2 carries the Lagna rasi. The diamond
 from rich.console import Console
 from rich.text import Text
 
-from kendra import RASIS, parse_dms, planet_style
+from kendra import RASIS, planet_style
 
 # Fixed rasi per grid cell (None = center block).
 GRID = [
@@ -18,15 +18,13 @@ GRID = [
 ]
 
 
-def render_south(longitudes: dict, lagna_rasi: int, console: Console,
-                 box_w: int = 17, title: str = "Rasi Chart") -> None:
+def render_south_from_seats(seats: dict, lagna_rasi: int, console: Console,
+                          box_w: int = 17, title: str = "Rasi Chart") -> None:
     box_w = max(13, box_w)
     inner = box_w - 2
     by_rasi: dict = {i: [] for i in range(1, 13)}
-    for p, v in longitudes.items():
-        if p == "Lagna":
-            continue
-        by_rasi[int(parse_dms(v) // 30) + 1].append(p)
+    for p, r in seats.items():
+        by_rasi[r].append(p)
 
     def cell_lines(rasi, planets, hl):
         names = planets[:3]
@@ -87,3 +85,15 @@ def render_south(longitudes: dict, lagna_rasi: int, console: Console,
         console.print(line)
     console.print(Text(f"✦ {RASIS[lagna_rasi - 1]} Lagna ✦",
                        style="bold yellow", justify="center"))
+
+
+def render_south(longitudes: dict, lagna_rasi: int, console: Console,
+                 box_w: int = 17, title: str = "Rasi Chart") -> None:
+    from kendra import parse_dms as _parse
+
+    seats = {}
+    for p, v in longitudes.items():
+        if p == "Lagna":
+            continue
+        seats[p] = int(_parse(v) // 30) + 1
+    render_south_from_seats(seats, lagna_rasi, console, box_w, title)

@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.22.0
+
+- Console mirrors the CLI: section order, Dasa Information +
+  Selected Options panels, Shadvarga Positions, all 8 charts
+  (Lagna→Moon) in terminal and as hand-rolled SVG (no new
+  dependencies) in HTML export. Schema gains lagna seats.
+
 ## 2.21.0
 
 - S5 HTML export: `--export-html FILE` writes a self-contained

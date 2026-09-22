@@ -12,7 +12,8 @@ from rich.table import Table
 from rich.text import Text
 
 from kendra import RASIS, houses_from_longitudes, parse_dms, render_diamond
-from south import render_south
+from south import render_south, render_south_from_seats
+from svgchart import svg_diamond, svg_square
 
 PLANETS = ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja", "Guru",
            "Shani", "Raahu", "Kethu", "Urenus", "Neptune", "Pluto"]
@@ -63,7 +64,7 @@ def render_reference(doc, console: Console) -> None:
         ("Born", f"{doc['birth_date']} {doc['birth_time']}"),
         ("Place", f"{doc['place']['city']} ({doc['place']['city_index']})"),
         ("Method", doc["method"])])
-    right = _kv("Chart Reference", [
+    right = _kv("Astronomical & Chart Reference", [
         ("Lagna", lagna["rasi"]),
         ("Degree", lagna["degree"].strip()),
         ("Navamsa", lagna["navamsa"])])
@@ -157,17 +158,98 @@ def render_hora_chakra(doc, console: Console) -> None:
     console.print(right)
 
 
+def render_dasa_info(doc, console: Console) -> None:
+    dasa = doc["dasa"]
+    console.print(_kv("Dasa Information", [
+        ("Starting", dasa["balance_lord"]),
+        ("Period", dasa["balance"]),
+        ("Reference", "From birth")]))
+
+
+def render_options(doc, console: Console, chart: str) -> None:
+    place = doc["place"]
+    console.print(_kv("Selected Options", [
+        ("District", f"{place['city_index']} ({place['city']})"),
+        ("Method", doc["method"]),
+        ("Engine", doc["engine"]),
+        ("Locale", doc["locale"]),
+        ("Chart", chart)]))
+
+
+CHART_DEFS = [
+    ("Lagna Chart", 0, None),
+    ("Navamsa Chart", 1, None),
+    ("Hora Chart", 2, None),
+    ("Drekkana Chart", 3, None),
+    ("Dvadasamsa Chart", 4, None),
+    ("Trimshamsa Chart", 5, None),
+    ("Sun Chart", 0, "Ravi"),
+    ("Moon Chart", 0, "Chandra"),
+]
+
+
+def chart_data(doc, varga: int, lagna_planet=None):
+    """(houses, seats, lagna_seat): seats maps planet -> rasi index."""
+    seats = {}
+    for p in PLANETS:
+        seats[p] = RASIS.index(doc["shadvarga"][p][varga]) + 1
+    lagna_seat = seats[lagna_planet] if lagna_planet else doc["lagna"]["seats"][varga]
+    houses: dict = {i: [] for i in range(1, 13)}
+    for p in PLANETS:
+        if p == "Lagna":
+            continue
+        houses[((seats[p] - lagna_seat) % 12) + 1].append(p)
+    return houses, seats, lagna_seat
+
+
+def render_charts(doc, console: Console, style: str) -> None:
+    if style == "none":
+        return
+    use = style if style in ("diamond", "south") else "diamond"
+    for title, varga, lagna_planet in CHART_DEFS:
+        houses, seats, lagna_seat = chart_data(doc, varga, lagna_planet)
+        if use == "south":
+            render_south_from_seats(seats, lagna_seat, console, title=title)
+        else:
+            render_diamond(houses, lagna_seat, console, title=title)
+
+
+def svg_gallery(doc, style: str) -> str:
+    parts = ["<h2>Charts (SVG)</h2>"]
+    for title, varga, lagna_planet in CHART_DEFS:
+        houses, seats, lagna_seat = chart_data(doc, varga, lagna_planet)
+        if style == "south":
+            parts.append(svg_square(seats, lagna_seat, title))
+        else:
+            parts.append(svg_diamond(houses, lagna_seat, title))
+    return "\n".join(parts)
+
+
+def render_positions(doc, console: Console) -> None:
+    t = Table(title="Shadvarga Positions", expand=True)
+    t.add_column("Graha", style="bold")
+    for h in ["Rashi", "Navamsa", "Hora", "Drekkana", "Dvadasamsa", "Trimshamsa"]:
+        t.add_column(h, justify="right")
+    for p in PLANETS:
+        row = [p]
+        for v in range(6):
+            seat = RASIS.index(doc["shadvarga"][p][v]) + 1
+            lagna_seat = doc["lagna"]["seats"][v]
+            row.append(str(((seat - lagna_seat) % 12) + 1))
+        t.add_row(*row)
+    console.print(t)
+
+
 def render_all(doc, console: Console, chart: str = "diamond", dasa=None) -> None:
     render_profile(doc, console)
     render_reference(doc, console)
     render_time_panchanga(doc, console)
+    render_dasa_info(doc, console)
+    render_hora_chakra(doc, console)
+    render_options(doc, console, chart)
     render_houses(doc, console)
     render_shadvarga(doc, console)
-    houses, lagna_rasi = houses_from_longitudes(doc["longitudes"])
-    if chart == "south":
-        render_south(doc["longitudes"], lagna_rasi, console)
-    else:
-        render_diamond(houses, lagna_rasi, console)
+    render_positions(doc, console)
+    render_charts(doc, console, chart)
     render_dasa(doc, console, dasa)
-    render_hora_chakra(doc, console)
     render_provenance(doc, console)

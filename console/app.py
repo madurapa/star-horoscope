@@ -37,10 +37,16 @@ def horoscope(
         name, year, month, day, hour, minute, city,
         nirayana=nirayana, engine=engine, locale=locale))
     if export_html:
+        from render import svg_gallery
+
+        style = chart if chart in ("diamond", "south") else "diamond"
         rec = Console(width=width, record=True)
-        render_all(doc, rec, chart=chart, dasa=dasa)
+        render_all(doc, rec, chart="none", dasa=dasa)
+        html = rec.export_html(inline_styles=True)
+        gallery = svg_gallery(doc, style)
+        html = html.replace("</body>", gallery + "\n</body>")
         with open(export_html, "w", encoding="utf-8") as f:
-            f.write(rec.export_html(inline_styles=True))
+            f.write(html)
         print(f"wrote {export_html}")
         return
     render_all(doc, Console(width=width), chart=chart, dasa=dasa)
