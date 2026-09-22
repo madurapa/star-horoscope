@@ -34,8 +34,13 @@ DOC = {
               "sunset": "3", "ut": "4", "lmst": "5"},
     "dasa": {"balance_lord": "Guru", "balance": "9y 10m 11d",
              "mahas": [
-                 {"lord": "Guru", "from": "2000-08-17", "to": "2010-06-28"},
-                 {"lord": "Shani", "from": "2010-06-28", "to": "2029-06-28"},
+                 {"lord": "Guru", "from": "2000-08-17", "to": "2010-06-28",
+                  "bhuktis": [
+                      {"lord": "Budha", "from": "2000-08-17",
+                       "to": "2001-06-04", "age": "0y 0m 0d to 0y 9m 17d"},
+                  ]},
+                 {"lord": "Shani", "from": "2010-06-28", "to": "2029-06-28",
+                  "bhuktis": []},
              ]},
     "hora": {"kala": "Kuja", "panchama": "Kuja", "sukshama": "Kuja"},
     "chakra": {"gana": "Deva", "yoni": "Ashva", "linga": "Purusha",
@@ -63,6 +68,23 @@ def test_renders_all_planets_at_fixed_width():
     assert "Bhojana" in out and "Avastha" in out
     assert "Hora" in out and "Kuja" in out
     assert "Chakra" in out and "Ashva" in out and "Patavi" in out
+
+
+def test_dasa_drilldown():
+    import render as R
+
+    def shot(dasa=None):
+        buf = io.StringIO()
+        R.render_dasa(DOC, Console(file=buf, width=140, color_system=None),
+                      detail=dasa)
+        return buf.getvalue()
+
+    plain = shot()
+    assert "Budha" not in plain and "2001-06-04" not in plain
+    guru = shot("Guru")
+    assert "Budha" in guru and "2001-06-04" in guru
+    assert "Budha" not in shot("Shani")
+    assert "Budha" in shot("all")
 
 
 def test_missing_planet_raises():

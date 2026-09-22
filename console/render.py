@@ -115,7 +115,8 @@ def _iso(s: str) -> date:
     return date(int(y), int(m), int(d))
 
 
-def render_dasa(doc, console: Console) -> None:
+def render_dasa(doc, console: Console, detail=None) -> None:
+    """detail: None (bars only), "all", or a maha lord name to expand."""
     dasa = doc["dasa"]
     spans = dasa["mahas"]
     t0 = _iso(spans[0]["from"])
@@ -124,7 +125,7 @@ def render_dasa(doc, console: Console) -> None:
     t = Table(title=f"Mahadasa Timeline (balance {dasa['balance_lord']} "
                     f"{dasa['balance']})", expand=True, show_header=False,
               box=None)
-    t.add_column("lord", style="bold", no_wrap=True, width=8)
+    t.add_column("lord", style="bold", no_wrap=True, width=12)
     t.add_column("bar", ratio=1)
     t.add_column("span", no_wrap=True)
     for s in spans:
@@ -132,6 +133,11 @@ def render_dasa(doc, console: Console) -> None:
         fill = max(int(days / total * width), 1)
         bar = Text("▉" * fill + "░" * (width - fill), style="yellow")
         t.add_row(s["lord"], bar, f"{s['from']} → {s['to']}")
+        if detail == "all" or (detail and detail.lower() == s["lord"].lower()):
+            for b in s.get("bhuktis", []):
+                t.add_row("  └ " + b["lord"],
+                          Text(f"{b['from']} → {b['to']}", style="dim"),
+                          Text(b["age"], style="dim"))
     console.print(t)
 
 
@@ -151,7 +157,7 @@ def render_hora_chakra(doc, console: Console) -> None:
     console.print(right)
 
 
-def render_all(doc, console: Console, chart: str = "diamond") -> None:
+def render_all(doc, console: Console, chart: str = "diamond", dasa=None) -> None:
     render_profile(doc, console)
     render_reference(doc, console)
     render_time_panchanga(doc, console)
@@ -162,6 +168,6 @@ def render_all(doc, console: Console, chart: str = "diamond") -> None:
         render_south(doc["longitudes"], lagna_rasi, console)
     else:
         render_diamond(houses, lagna_rasi, console)
-    render_dasa(doc, console)
+    render_dasa(doc, console, dasa)
     render_hora_chakra(doc, console)
     render_provenance(doc, console)

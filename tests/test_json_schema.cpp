@@ -52,6 +52,9 @@ int main() {
     STAR_CHECK(doc.find("\"balance_lord\": \"Guru\"") != std::string::npos, "dasa lord");
     STAR_CHECK(doc.find("\"lord\": \"Guru\", \"from\": \"2000-08-17\"") != std::string::npos,
                "guru maha");
+    STAR_CHECK(doc.find("\"lord\": \"Budha\", \"from\": \"2000-08-17\", \"to\": "
+                        "\"2001-06-04\"") != std::string::npos,
+               "budha bhukti");
     STAR_CHECK(doc.find("\"hora\": {\"kala\": ") != std::string::npos, "hora block");
     STAR_CHECK(doc.find("\"chakra\": {\"gana\": ") != std::string::npos, "chakra block");
     // Escaping: the quote in the name must not break the document.

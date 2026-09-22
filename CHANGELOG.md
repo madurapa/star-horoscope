@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.20.0
+
+- S4 Bhukti drill-down: schema `dasa.mahas[].bhuktis`
+  (balance-anchored first maha, forward spans after — same as
+  the text timeline), `--dasa LORD|all` expands detail rows
+  with ages in the rich timeline.
+
 ## 2.19.0
 
 - S3 South Indian square chart: fixed-sign 4×4 grid renderer

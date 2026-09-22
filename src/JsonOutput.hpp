@@ -142,8 +142,15 @@ inline std::string renderJson(const HoroscopeOwner& owner, const HoroscopeResult
        << hms(displayHms(h.riseH)) << "\", \"sunset\": \"" << hms(setHms)
        << "\", \"ut\": \"" << hms(displayHms(h.birthDecHours - kTzHours))
        << "\", \"lmst\": \"" << hms(displayHms(h.lmstHours)) << "\"},\n";
-    // Dasa: opening balance + full maha timeline (ISO dates).
+    // Dasa: opening balance + full maha timeline (ISO dates) with bhukti
+    // drill-down per maha (same anchoring as renderDasa: balance-anchored
+    // first maha, forward spans after).
     const std::vector<DasaSpan> mahas = mahaTimeline(birth, birthFrac, bal);
+    auto lordIdx = [](const std::string& lord) {
+        for (size_t k = 0; k < kDasaCycle.size(); ++k)
+            if (lord == kDasaCycle[k].name) return static_cast<int>(k);
+        return 0;
+    };
     auto ymd = [](const YMD& d) {
         char b[16];
         std::snprintf(b, sizeof(b), "%04d-%02d-%02d", d.y, d.m, d.d);
@@ -153,9 +160,28 @@ inline std::string renderJson(const HoroscopeOwner& owner, const HoroscopeResult
        << "\", \"balance\": \"" << bal.ymd.y << "y " << bal.ymd.m << "m " << bal.ymd.d
        << "d\", \"mahas\": [\n";
     for (size_t i = 0; i < mahas.size(); ++i) {
-        js << "    {\"lord\": \"" << mahas[i].lord << "\", \"from\": \"" << ymd(mahas[i].from)
-           << "\", \"to\": \"" << ymd(mahas[i].to) << "\"}" << (i + 1 < mahas.size() ? "," : "")
-           << "\n";
+        const DasaSpan& m = mahas[i];
+        const int li = lordIdx(m.lord);
+        std::vector<DasaSpan> bh;
+        if (i == 0) {
+            bh = bhuktiTimeline(birth, birthFrac, li, bal.years,
+                                balanceElapsedUnits(h.moonNirayanaDeg),
+                                static_cast<double>(kDasaCycle[li].years));
+        } else {
+            const double span = m.to.y != 0
+                ? (fracYear(m.to.y, m.to.m, m.to.d) - fracYear(m.from.y, m.from.m, m.from.d))
+                : static_cast<double>(kDasaCycle[li].years);
+            bh = bhuktiTimeline(birth, fracYear(m.from.y, m.from.m, m.from.d), li, span);
+        }
+        js << "    {\"lord\": \"" << m.lord << "\", \"from\": \"" << ymd(m.from)
+           << "\", \"to\": \"" << ymd(m.to) << "\", \"bhuktis\": [\n";
+        for (size_t j = 0; j < bh.size(); ++j) {
+            js << "      {\"lord\": \"" << bh[j].lord << "\", \"from\": \"" << ymd(bh[j].from)
+               << "\", \"to\": \"" << ymd(bh[j].to) << "\", \"age\": \""
+               << formatAge(bh[j].ageFrom) << " to " << formatAge(bh[j].ageTo) << "\"}"
+               << (j + 1 < bh.size() ? "," : "") << "\n";
+        }
+        js << "    ]}" << (i + 1 < mahas.size() ? "," : "") << "\n";
     }
     js << "  ]}\n,\n";
     // Hora lords + chakra attributes (yoni display-truncated like modern).

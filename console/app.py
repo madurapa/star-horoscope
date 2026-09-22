@@ -24,6 +24,8 @@ def horoscope(
     width: int = typer.Option(None, "--width", help="Console width (auto-detect)"),
     chart: str = typer.Option("diamond", "--chart",
                               help="Chart style: diamond (Sri Lankan) or south"),
+    dasa: str = typer.Option(None, "--dasa",
+                             help="Expand bhukti detail: a maha lord or 'all'"),
 ) -> None:
     import pystar
 
@@ -32,7 +34,7 @@ def horoscope(
     doc = json.loads(pystar.horoscope(
         name, year, month, day, hour, minute, city,
         nirayana=nirayana, engine=engine, locale=locale))
-    render_all(doc, Console(width=width), chart=chart)
+    render_all(doc, Console(width=width), chart=chart, dasa=dasa)
 
 
 if __name__ == "__main__":
