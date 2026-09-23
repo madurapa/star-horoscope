@@ -261,16 +261,21 @@ def chart_data(doc, varga: int, lagna_planet=None):
     return houses, seats, lagna_seat
 
 
+CHART_STYLES = {"north", "south", "east", "diamond", "none"}
+
+
 def render_charts(doc, console: Console, style: str) -> None:
+    """Terminal charts: north/diamond render the fixed-house diamond
+    (CLI-like); south/east render the fixed-sign square (same signs)."""
     if style == "none":
         return
-    use = style if style in ("diamond", "south") else "diamond"
+    use = "south" if style in ("south", "east") else "diamond"
     for title, varga, lagna_planet in CHART_DEFS:
         houses, seats, lagna_seat = chart_data(doc, varga, lagna_planet)
         if use == "south":
             render_south_from_seats(seats, lagna_seat, console, title=title)
         else:
-            render_diamond(seats, lagna_seat, console, title=title)
+            render_diamond(houses, lagna_seat, console, title=title)
 
 
 def render_positions(doc, console: Console) -> None:
@@ -288,7 +293,7 @@ def render_positions(doc, console: Console) -> None:
     console.print(t)
 
 
-def render_all(doc, console: Console, chart: str = "diamond", dasa=None) -> None:
+def render_all(doc, console: Console, chart: str = "north", dasa=None) -> None:
     render_profile(doc, console)
     render_options(doc, console, chart)
     render_reference(doc, console)

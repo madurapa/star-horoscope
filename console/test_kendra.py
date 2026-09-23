@@ -1,4 +1,4 @@
-"""East fixed-sign diamond tests: signs pinned, houses from Lagna."""
+"""Fixed-house diamond tests: slots pinned, signs rotate with Lagna."""
 import io
 
 from rich.console import Console
@@ -6,40 +6,36 @@ from rich.console import Console
 from kendra import (houses_from_longitudes, parse_dms, planet_style,
                     render_diamond)
 
-# planet -> rasi index (Lagna Wrschika=8: Chandra Kumbha, Ravi Simha, ...)
-SEATS = {"Chandra": 11, "Ravi": 5, "Budha": 4, "Sikuru": 5, "Kuja": 4,
-         "Guru": 2, "Shani": 2, "Raahu": 3, "Kethu": 9}
+# house -> planets for Lagna Wrschika(8): H2 Ke, H4 Ch, H9 Bu/Ku, H10 Rv/Si
+HOUSES = {1: [], 2: ["Kethu"], 3: [], 4: ["Chandra"], 5: [],
+          6: [], 7: [], 8: [], 9: ["Budha", "Kuja"], 10: ["Ravi", "Sikuru"],
+          11: [], 12: []}
 
 
-def shot(width=140, seats=None, lagna_rasi=8, box_w=17):
+def shot(width=140, houses=None, lagna_rasi=8, box_w=17):
     buf = io.StringIO()
-    render_diamond(seats if seats is not None else SEATS, lagna_rasi,
+    render_diamond(houses if houses is not None else HOUSES, lagna_rasi,
                    Console(file=buf, width=width, color_system=None),
                    box_w=box_w)
     return buf.getvalue()
 
 
-def test_fixed_signs_and_houses():
+def test_fixed_houses_signs_rotate():
     out = shot()
-    assert "East Indian diamond" in out
-    # fixed signs present regardless of Lagna
-    for sign in ["Mesha", "Vrishabha", "Mithuna", "Kataka", "Simha",
-                 "Tula", "Makara", "Kumbha", "Meena"]:
-        assert sign in out, sign
-    # houses counted anti-clockwise from Lagna 8: Mesha -> house 6
-    assert "6 · Mesha" in out
-    # Chandra in Kumbha(11) -> house 4
-    assert "4 · Kumbha" in out and "Chandra" in out
-    # Lagna marked
-    assert "◆" in out
+    assert "diamond" in out
+    # house 1 top-center carries the Lagna rasi
+    assert "1 · Vrishchika" in out
+    # house 2 top-left holds Kethu (Dhanu from Wrschika)
+    assert "2 · Dhanu" in out and "Ketu" in out
+    # house 10 holds Ravi (display Shukra for Sikuru)
+    assert "10 · Simha" in out and "Ravi" in out and "Shukra" in out
 
 
-def test_signs_pinned_across_lagnas():
-    a = shot(lagna_rasi=8)
-    b = shot(lagna_rasi=1)
-    # same signs, different house numbers + different mark
-    assert "6 · Mesha" in a and "1 · Mesha" in b
-    assert a.count("Chandra") == b.count("Chandra")
+def test_signs_move_with_lagna():
+    out = shot(lagna_rasi=1)
+    # same houses, signs rotated: house 1 now Mesha
+    assert "1 · Mesha" in out
+    assert "2 · Vrishabha" in out
 
 
 def test_diamond_scales_with_box_width():

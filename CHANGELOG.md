@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.31.0
+
+- Charts match the CLI: `--chart north` (fixed houses, North
+  SVG + box diamond) is the default; `south`/`east` stay as
+  explicit fixed-sign alternatives. House numbers on North
+  compartments too.
+
 ## 2.30.0
 
 - House numbers on every fixed-sign compartment: fork East

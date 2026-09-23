@@ -38,17 +38,55 @@ def test_south_english():
 
 
 def test_gallery_all_eight():
-    g = gallery(DOC, "diamond", "en")
+    import copy
+
+    spread = copy.deepcopy(DOC)
+    # spread planets (9 in one house exceeds North slots; nodes oppose IRL)
+    lon_rasi = {"Ravi": "Simha", "Chandra": "Kumbha", "Kuja": "Kataka",
+                "Budha": "Kataka", "Guru": "Vrishabha", "Sikuru": "Simha",
+                "Shani": "Vrishabha", "Raahu": "Mithuna", "Kethu": "Dhanu"}
+    for p, v in lon_rasi.items():
+        spread["longitudes"][p] = "0:00:00"  # unused by chart_data
+        spread["shadvarga"][p] = [v] * 6
+    spread["lagna"]["seats"] = [1, 12, 5, 4, 7, 2]
+    g = gallery(spread, "diamond", "en")
     assert g.count("<svg") == 8
     for title in ["Lagna Chart", "Navamsa Chart", "Sun Chart", "Moon Chart"]:
         assert f"<h3>{title}</h3>" in g
-    g2 = gallery(DOC, "south", "ta")
+    g2 = gallery(spread, "south", "ta")
     assert g2.count("<svg") == 8 and "லக்னம்" in g2
 
 
 def test_outers_skipped():
     svg = east_svg(DOC, 0, None, "en", "Lagna Chart")
     assert "Urenus" not in svg and "Neptune" not in svg and "Pluto" not in svg
+
+
+def test_north_fixed_houses_match_cli():
+    import copy
+    import re
+
+    from jychart import north_svg
+
+    spread = copy.deepcopy(DOC)
+    rasis = {"Ravi": "Simha", "Sikuru": "Simha", "Kethu": "Dhanu"}
+    for p, v in rasis.items():
+        spread["shadvarga"][p] = [v] * 6
+    spread["lagna"]["seats"] = [8, 12, 5, 4, 7, 2]
+    svg = north_svg(spread, 0, None, "en", "Lagna Chart")
+    assert svg.startswith("<svg")
+    # Ravi + Sikuru in house 10 (right diamond): |x-310|+|y-210| < 100
+    found = {}
+    for m in re.finditer(r'<text[^>]*x="([\d.]+)"[^>]*y="([\d.]+)"[^>]*>(Su|Ve|Ke)</text>|'
+                         r'<text[^>]*y="([\d.]+)"[^>]*x="([\d.]+)"[^>]*>(Su|Ve|Ke)</text>',
+                         svg):
+        g = m.groups()
+        x, y, t = (float(g[0]), float(g[1]), g[2]) if g[0] else (float(g[4]), float(g[3]), g[5])
+        found[t] = abs(x - 310) + abs(y - 210) < 100
+    assert found == {"Su": True, "Ve": True, "Ke": False}
+    # 12 house numbers present
+    nums = re.findall(r'font-size="11"[^>]*>(\d+)</text>', svg)
+    assert sorted(nums, key=int) == [str(i) for i in range(1, 13)]
 
 
 def test_house_numbers_all_compartments():

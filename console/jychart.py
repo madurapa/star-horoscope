@@ -84,6 +84,22 @@ def _base(doc, varga: int, lagna_planet, locale: str, title: str, cls):
     return c.to_svg_string()
 
 
+def north_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
+    # Fixed-house diamond like the DOS original: houses are positions,
+    # signs rotate (housesigns). No division label needed — compartments
+    # carry house numbers plus rotating sign numbers.
+    lang = LOCALE.get(locale, "english")
+    houses, _, lagna_seat = chart_data(doc, varga, lagna_planet)
+    c = chart.NorthChart("", "", language=lang)
+    c.set_ascendantsign(MODERN_TO_CLASSICAL[RASIS[lagna_seat - 1]])
+    for p, const in PLANET_CONST.items():
+        c.add_planet(const, chart.get_planet_symbol(const, lang),
+                     _house_of(houses, p), colour="black")
+    c.updatechartcfg(**{k: v for k, v in LIGHT.items()
+                         if k not in ("clr_inbox", "clr_Asc")})
+    return c.to_svg_string()
+
+
 def east_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
     return _base(doc, varga, lagna_planet, locale, title, chart.EastChart)
 
@@ -94,7 +110,12 @@ def south_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
 
 def gallery(doc, style: str, locale: str) -> str:
     parts = ["<h2>Charts (SVG)</h2>"]
-    make = south_svg if style == "south" else east_svg
+    if style == "south":
+        make = south_svg
+    elif style == "east":
+        make = east_svg
+    else:
+        make = north_svg  # north/diamond default: fixed houses like the CLI
     for title, varga, lagna_planet in CHART_DEFS:
         parts.append(f"<h3>{title}</h3>")
         parts.append(make(doc, varga, lagna_planet, locale, title))

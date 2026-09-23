@@ -22,8 +22,9 @@ def horoscope(
     engine: str = typer.Option("swisseph", "--engine"),
     locale: str = typer.Option("en", "--locale"),
     width: int = typer.Option(None, "--width", help="Console width (auto-detect)"),
-    chart: str = typer.Option("diamond", "--chart",
-                              help="Chart style: diamond (Sri Lankan) or south"),
+    chart: str = typer.Option("north", "--chart",
+                              help="Chart style: north (fixed houses, CLI-like), "
+                              "south (fixed signs) or east (fixed signs)"),
     dasa: str = typer.Option(None, "--dasa",
                              help="Expand bhukti detail: a maha lord or 'all'"),
     export_html: str = typer.Option(None, "--export-html",
@@ -31,8 +32,8 @@ def horoscope(
 ) -> None:
     import pystar
 
-    if chart not in ("diamond", "south"):
-        raise typer.BadParameter("--chart wants diamond|south")
+    if chart not in ("north", "south", "east", "diamond", "none"):
+        raise typer.BadParameter("--chart wants north|south|east")
     doc = json.loads(pystar.horoscope(
         name, year, month, day, hour, minute, city,
         nirayana=nirayana, engine=engine, locale=locale))
@@ -40,7 +41,7 @@ def horoscope(
         from htmlreport import render_report
         from jychart import gallery
 
-        style = chart if chart in ("diamond", "south") else "diamond"
+        style = {"diamond": "north"}.get(chart, chart)
         html = render_report(doc, chart=chart, dasa=dasa,
                              gallery=gallery(doc, style, locale))
         with open(export_html, "w", encoding="utf-8") as f:
