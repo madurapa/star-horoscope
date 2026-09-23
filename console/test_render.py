@@ -107,17 +107,6 @@ def test_chart_data_sun_moon_lagna():
     assert lagna_seat == 1  # DOC lagna.seats[0]
 
 
-def test_svg_charts():
-    from svgchart import svg_diamond, svg_square
-
-    d = svg_diamond({1: ["Guru"], 4: ["Chandra"]}, 8, "Lagna Chart")
-    assert d.startswith("<svg") and "Guru" in d and "Vrishchika" in d
-    assert d.count("<rect") == 12
-    s = svg_square({"Chandra": 11, "Ravi": 5}, 8, "Lagna Chart")
-    assert s.startswith("<svg") and "Chandra" in s and "Kumbha" in s
-    assert "Lagna" in s
-
-
 def test_dasa_drilldown():
     import render as R
 

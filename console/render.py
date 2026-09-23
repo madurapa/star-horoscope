@@ -13,7 +13,6 @@ from rich.text import Text
 
 from kendra import RASIS, houses_from_longitudes, parse_dms, render_diamond
 from south import render_south, render_south_from_seats
-from svgchart import svg_diamond, svg_square
 
 PLANETS = ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja", "Guru",
            "Shani", "Raahu", "Kethu", "Urenus", "Neptune", "Pluto"]
@@ -212,17 +211,6 @@ def render_charts(doc, console: Console, style: str) -> None:
             render_south_from_seats(seats, lagna_seat, console, title=title)
         else:
             render_diamond(houses, lagna_seat, console, title=title)
-
-
-def svg_gallery(doc, style: str) -> str:
-    parts = ["<h2>Charts (SVG)</h2>"]
-    for title, varga, lagna_planet in CHART_DEFS:
-        houses, seats, lagna_seat = chart_data(doc, varga, lagna_planet)
-        if style == "south":
-            parts.append(svg_square(seats, lagna_seat, title))
-        else:
-            parts.append(svg_diamond(houses, lagna_seat, title))
-    return "\n".join(parts)
 
 
 def render_positions(doc, console: Console) -> None:

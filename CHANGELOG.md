@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.23.0
+
+- Charts via vendored jyotichart (MIT, pure stdlib): authentic
+  East Indian fixed-sign anti-clockwise SVGs (default) + South
+  squares, Sinhala/Tamil/English, all 8 charts in HTML export.
+  Hand-rolled SVG retired; terminal text charts unchanged.
+
 ## 2.22.0
 
 - Console mirrors the CLI: section order, Dasa Information +
