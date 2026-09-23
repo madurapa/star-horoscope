@@ -221,3 +221,13 @@ def test_boost_html_font():
     out = boost_html("<html><head></head><body>x</body></html>")
     assert "<style>body{font-size:15px}</style></head>" in out
     assert boost_html("<html><body>x</body></html>").startswith("<style>")
+
+
+def test_display_maps_mirror_modern():
+    from render import DASA_DISPLAY, KARANA_DISPLAY, YOGA_DISPLAY
+
+    assert YOGA_DISPLAY["Sukarna"] == "Sukarma"
+    assert YOGA_DISPLAY["Brahhma"] == "Brahma"
+    assert KARANA_DISPLAY["Kinsthugana"] == "Kimstughna"
+    assert DASA_DISPLAY["Sikuru"] == "Shukra"
+    assert YOGA_DISPLAY.get("Parigha", "Parigha") == "Parigha"

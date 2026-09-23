@@ -16,6 +16,12 @@ the literal.
 - East chart compartments name their sign (`4 · Aquarius`),
   so houses read without counting from Asc.
 
+## 2.33.3
+
+- Console panchanga mirrors the modern corrections
+  (Sukarma etc.) instead of raw engine strings; Panchanga
+  rows aligned to CLI keys.
+
 ## 2.33.1
 
 - East charts fixed-house throughout: the `fixed_houses`

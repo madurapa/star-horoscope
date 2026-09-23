@@ -7,7 +7,7 @@ SVG strings. Print-friendly light theme.
 import html as _html
 
 from i18n import tr
-from render import (DASA_DISPLAY, ayan_dms, disp, disp_lon, rasi_of)
+from render import (DASA_DISPLAY, KARANA_DISPLAY, YOGA_DISPLAY, ayan_dms, disp, disp_lon, rasi_of)
 
 CSS = """
 body{font-family:Georgia,serif;font-size:15px;color:#111;background:#fff;
@@ -139,8 +139,10 @@ def render_report(doc, chart="diamond", dasa=None, gallery="") -> str:
             ("Local Mean Sidereal Time", tm["lmst"])], locale),
         _kv_table("Panchanga", [
             ("Nakshatra", pg["nakshatra"]), ("Nakshatra Pada", pg["pada"]),
-            ("Tithi", pg["tithi"]), ("Yoga", pg["yoga"]),
-            ("Karana", pg["karana"])], locale),
+            ("Tithi", pg["tithi"]),
+            ("Yoga", YOGA_DISPLAY.get(pg["yoga"], pg["yoga"])),
+            ("Karana", KARANA_DISPLAY.get(pg["karana"], pg["karana"]))],
+            locale),
         _kv_table("Dasa Information", [
             ("Starting", doc["dasa"]["balance_lord"]),
             ("Period", doc["dasa"]["balance"]),

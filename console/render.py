@@ -23,6 +23,14 @@ DISPLAY = {"Sikuru": "Shukra", "Raahu": "Rahu", "Kethu": "Ketu",
            "Urenus": "Uranus"}
 # Dasa-table spellings to modern display (mirror dasaName).
 DASA_DISPLAY = {"Sikuru": "Shukra", "Sandu": "Chandra", "Rahu": "Rahu"}
+# Yoga/karana romanizations to modern display (mirror displayYogaName /
+# displayKaranaName; engine tables stay byte-faithful).
+YOGA_DISPLAY = {"Vishkamba": "Vishkambha", "Aaushmaan": "Ayushman",
+                "Savbhagya": "Saubhagya", "Sukarna": "Sukarma",
+                "Drathi": "Dhriti", "Drava": "Dhruva", "Shubra": "Shukla",
+                "Mahendra": "Indra", "Vydruthi": "Vaidhriti",
+                "Brahhma": "Brahma"}
+KARANA_DISPLAY = {"Kinsthugana": "Kimstughna"}
 
 
 def disp(planet: str) -> str:
@@ -138,8 +146,10 @@ def render_time_panchanga(doc, console: Console) -> None:
     pg = doc["panchanga"]
     right = _kv("Panchanga", [
         ("Nakshatra", pg["nakshatra"]),
-        ("Pada", pg["pada"]), ("Tithi", pg["tithi"]),
-        ("Yoga", pg["yoga"]), ("Karana", pg["karana"])], doc["locale"])
+        ("Nakshatra Pada", pg["pada"]), ("Tithi", pg["tithi"]),
+        ("Yoga", YOGA_DISPLAY.get(pg["yoga"], pg["yoga"])),
+        ("Karana", KARANA_DISPLAY.get(pg["karana"], pg["karana"]))],
+        doc["locale"])
     console.print(left)
     console.print(right)
 
