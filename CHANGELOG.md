@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.33.3
+
+- Single language source: `tools/gen_jylang.py` regenerates
+  jyotichart's si/ta sign names from the core concept rows
+  (`--check` pinned by test); symbols/labels/kannada/hindi
+  stay hand-maintained (no core counterpart).
+
 ## 2.33.2
 
 - East chart compartments name their sign (`4 · Aquarius`),

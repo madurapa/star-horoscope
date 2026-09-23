@@ -210,3 +210,14 @@ def test_house_numbers_all_compartments():
     assert hits == [("9", "Saggitarius")]
     # Lagna-chart house 4 compartment reads its sign too
     assert "4 · Aquarius" in svg or "4 · Cancer" in svg
+
+
+def test_language_single_source():
+    import os
+    import subprocess
+
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    r = subprocess.run(
+        ["python3", os.path.join(root, "tools", "gen_jylang.py"), "--check"],
+        capture_output=True, text=True, cwd=root)
+    assert r.returncode == 0, r.stdout + r.stderr

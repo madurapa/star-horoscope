@@ -116,32 +116,36 @@ sign_names = {
         "Pisces"      : "मीन"
     },
     "sinhala": {
-        "Aries"       : "මේෂ",
-        "Taurus"      : "වෘෂභ",
-        "Gemini"      : "මිථුන",
-        "Cancer"      : "කර්කට",
-        "Leo"         : "සිංහ",
-        "Virgo"       : "කන්‍යා",
-        "Libra"       : "තුලා",
-        "Scorpio"     : "වෘශ්චික",
-        "Saggitarius" : "ධනු",
-        "Capricorn"   : "මකර",
-        "Aquarius"    : "කුම්භ",
-        "Pisces"      : "මීන"
+# BEGIN GENERATED sign-names sinhala
+        "Aries"         : "මේෂ",
+        "Taurus"        : "වෘෂභ",
+        "Gemini"        : "මිථුන",
+        "Cancer"        : "කටක",
+        "Leo"           : "සිංහ",
+        "Virgo"         : "කන්‍යා",
+        "Libra"         : "තුලා",
+        "Scorpio"       : "වෘශ්චික",
+        "Saggitarius"   : "ධනු",
+        "Capricorn"     : "මකර",
+        "Aquarius"      : "කුම්භ",
+        "Pisces"        : "මීන",
+    # END GENERATED sign-names sinhala
     },
     "tamil": {
-        "Aries"       : "மேஷம்",
-        "Taurus"      : "ரிஷபம்",
-        "Gemini"      : "மிதுனம்",
-        "Cancer"      : "கடகம்",
-        "Leo"         : "சிம்மம்",
-        "Virgo"       : "கன்னி",
-        "Libra"       : "துலாம்",
-        "Scorpio"     : "விருச்சிகம்",
-        "Saggitarius" : "தனுசு",
-        "Capricorn"   : "மகரம்",
-        "Aquarius"    : "கும்பம்",
-        "Pisces"      : "மீனம்"
+# BEGIN GENERATED sign-names tamil
+        "Aries"         : "மேஷம்",
+        "Taurus"        : "ரிஷபம்",
+        "Gemini"        : "மிதுனம்",
+        "Cancer"        : "கடகம்",
+        "Leo"           : "சிம்மம்",
+        "Virgo"         : "கன்னி",
+        "Libra"         : "துலாம்",
+        "Scorpio"       : "விருச்சிகம்",
+        "Saggitarius"   : "தனுசு",
+        "Capricorn"     : "மகரம்",
+        "Aquarius"      : "கும்பம்",
+        "Pisces"        : "மீனம்",
+    # END GENERATED sign-names tamil
     }
 }
 
