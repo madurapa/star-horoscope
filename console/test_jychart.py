@@ -84,9 +84,8 @@ def test_north_fixed_houses_match_cli():
         x, y, t = (float(g[0]), float(g[1]), g[2]) if g[0] else (float(g[4]), float(g[3]), g[5])
         found[t] = abs(x - 310) + abs(y - 210) < 100
     assert found == {"Su": True, "Ve": True, "Ke": False}
-    # 12 house numbers present
-    nums = re.findall(r'font-size="11"[^>]*>(\d+)</text>', svg)
-    assert sorted(nums, key=int) == [str(i) for i in range(1, 13)]
+    # sign numbers rotate with Lagna (North shows signs, houses are positions)
+    assert len(re.findall(r'class="sign-num"', svg)) > 0
 
 
 def test_house_numbers_all_compartments():

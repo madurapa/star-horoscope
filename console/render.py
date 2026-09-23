@@ -293,7 +293,7 @@ def render_positions(doc, console: Console) -> None:
     console.print(t)
 
 
-def render_all(doc, console: Console, chart: str = "north", dasa=None) -> None:
+def render_all(doc, console: Console, chart: str = "east", dasa=None) -> None:
     render_profile(doc, console)
     render_options(doc, console, chart)
     render_reference(doc, console)

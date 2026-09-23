@@ -71,7 +71,7 @@ def test_renders_all_planets_at_fixed_width():
     assert "Ratnapura" in out
     for section in ["Chart Reference", "Time & Solar Metrics", "Panchanga",
                     "Nirayana Table of Houses", "Shadvarga Charts",
-                    "Mahadasa and Antardasa Timeline", "(diamond)"]:
+                    "Mahadasa and Antardasa Timeline", "South Indian square"]:
         assert section in out, section
     assert "Guru" in out and "2010-06-28" in out
     assert "Thursday" in out and "Asvida" in out
@@ -171,7 +171,7 @@ def test_export_html_self_contained(tmp_path):
     html = rec.export_html(inline_styles=True)
     assert "<html" in html and "</html>" in html
     for section in ["Horoscope Profile", "Mahadasa and Antardasa Timeline",
-                    "(diamond)", "Shadvarga Charts", "Hora", "Chakra"]:
+                    "South Indian square", "Shadvarga Charts", "Hora", "Chakra"]:
         assert section in html, section
     p = tmp_path / "report.html"
     p.write_text(html, encoding="utf-8")

@@ -112,10 +112,10 @@ def gallery(doc, style: str, locale: str) -> str:
     parts = ["<h2>Charts (SVG)</h2>"]
     if style == "south":
         make = south_svg
-    elif style == "east":
-        make = east_svg
+    elif style == "north":
+        make = north_svg  # fixed houses like the CLI
     else:
-        make = north_svg  # north/diamond default: fixed houses like the CLI
+        make = east_svg  # default: Sri Lankan East diamond
     for title, varga, lagna_planet in CHART_DEFS:
         parts.append(f"<h3>{title}</h3>")
         parts.append(make(doc, varga, lagna_planet, locale, title))

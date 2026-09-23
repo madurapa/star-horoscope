@@ -22,9 +22,9 @@ def horoscope(
     engine: str = typer.Option("swisseph", "--engine"),
     locale: str = typer.Option("en", "--locale"),
     width: int = typer.Option(None, "--width", help="Console width (auto-detect)"),
-    chart: str = typer.Option("north", "--chart",
-                              help="Chart style: north (fixed houses, CLI-like), "
-                              "south (fixed signs) or east (fixed signs)"),
+    chart: str = typer.Option("east", "--chart",
+                              help="Chart style: east (Sri Lankan diamond, default), "
+                              "north (fixed houses, CLI-like) or south (fixed signs)"),
     dasa: str = typer.Option(None, "--dasa",
                              help="Expand bhukti detail: a maha lord or 'all'"),
     export_html: str = typer.Option(None, "--export-html",

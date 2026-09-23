@@ -223,22 +223,6 @@ def write_signnumOnChart_nsc(chartSVG, signclr, signnumlist):
     chartSVG.write(f'''  <text id ="karch" x="298" y="98" fill="{signclr}" class="sign-num">{signnumlist[11]:02}</text>\n''')
     return
 
-# STAR addition: house numbers (1-12, fixed compartments) so houses are
-# unambiguous without counting from the ascendant. Small dim labels on the
-# outer border; verified clear of planet slots 1-4 in every house.
-NORTH_HOUSENUM_POS = [
-    (210, 24), (110, 24), (20, 110), (24, 210), (20, 310), (110, 404),
-    (210, 396), (310, 404), (396, 310), (396, 210), (396, 110), (310, 24),
-]
-
-
-def write_housenumOnChart_nsc(chartSVG, signclr):
-    chartSVG.write('\n  <!-- House numbers (STAR: fixed compartments) -->\n')
-    for i, (px, py) in enumerate(NORTH_HOUSENUM_POS, start=1):
-        chartSVG.write(f'''  <text x="{px}" y="{py}" font-size="11" fill="{signclr}" text-anchor="middle">{i}</text>\n''')
-    return
-
-
 def write_planetsOnChart_nsc(chartSVG, planets):
     chartSVG.write('\n  <!-- ********** Planets ********** -->\n')
     
@@ -302,7 +286,6 @@ def create_chartSVG(chartObj,location,chartSVGfilename):
     #create chart North indian style
     draw_classicNorthChartSkeleton(chartSVG, chartObj.chartcfg)    #Create skeleton
     write_signnumOnChart_nsc(chartSVG, chartObj.chartcfg["sign-colour"],chartObj.housesigns)    #Update the sign numbers on chart skeleton
-    write_housenumOnChart_nsc(chartSVG, chartObj.chartcfg["sign-colour"])
     write_planetsOnChart_nsc(chartSVG, chartObj.planets)    #Update the planets on chart for every house
     if(chartObj.chartcfg["aspect-visibility"] == True):
         write_planetsAspectsOnChart_nsc(chartSVG, chartObj.planets)

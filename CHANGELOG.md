@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.32.0
+
+- East design by default (`--chart east|south|north`):
+  upstream North file restored pristine — corrections live
+  only in the project-owned East code.
+
 ## 2.31.0
 
 - Charts match the CLI: `--chart north` (fixed houses, North
