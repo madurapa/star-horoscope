@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.33.2
+
+- East chart compartments name their sign (`4 · Aquarius`),
+  so houses read without counting from Asc.
+
 ## 2.33.1
 
 - East charts fixed-house throughout: the `fixed_houses`

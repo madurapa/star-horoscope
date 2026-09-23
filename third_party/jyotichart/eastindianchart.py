@@ -314,16 +314,20 @@ EAST_HOUSENUM_POS = {
 }
 
 
-def write_housepositionOnChart_esc(chartSVG, signclr):
-    """STAR: fixed-house East frame — compartment h (anti-clockwise from
-    top-center) carries house number h outright."""
-    chartSVG.write('\n  <!-- House positions (STAR fixed-house mode) -->\n')
+def write_housepositionOnChart_esc(chartSVG, signclr, ascendantsign):
+    """STAR fixed-house mode: compartment h shows "h · Sign" (signs rotate
+    with Lagna, so each box names its sign explicitly)."""
+    from support import general as _gen
+
+    ascnum = _gen.signnum(ascendantsign)
     order = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
              "Libra", "Scorpio", "Saggitarius", "Capricorn", "Aquarius",
              "Pisces"]
+    chartSVG.write('\n  <!-- House positions (STAR fixed-house mode) -->\n')
     for i, sign in enumerate(order, start=1):
         px, py = EAST_HOUSENUM_POS[sign]
-        chartSVG.write(f'''  <text x="{px:.1f}" y="{py:.1f}" font-size="11" fill="{signclr}" text-anchor="middle">{i}</text>\n''')
+        shown = _gen.signs[(_gen.compute_nthsignnum(ascnum, i) - 1)]
+        chartSVG.write(f'''  <text x="{px:.1f}" y="{py:.1f}" font-size="11" fill="{signclr}" text-anchor="middle">{i} · {shown}</text>\n''')
     return
 
 
@@ -427,7 +431,8 @@ def create_chartSVG(chartObj, location, chartSVGfilename, language="english"):
     write_signnumOnChart_esc(chartSVG, chartObj.chartcfg["sign-colour"], chartObj.ascendantsign, language,
                              getattr(chartObj, "fixed_houses", False))
     if getattr(chartObj, "fixed_houses", False):
-        write_housepositionOnChart_esc(chartSVG, chartObj.chartcfg["sign-colour"])
+        write_housepositionOnChart_esc(chartSVG, chartObj.chartcfg["sign-colour"],
+                                       chartObj.ascendantsign)
     else:
         write_housenumOnChart_esc(chartSVG, chartObj.chartcfg["sign-colour"], chartObj.ascendantsign)
     write_planetsOnChart_esc(chartSVG, chartObj.planets)
