@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.28.0
+
+- Mahadasa rows show their age ranges (schema `mahas[].age`;
+  same engine spans as the text timeline).
+- HTML view base type bumped to 15px (terminal cells cannot
+  scale type — export-only improvement).
+
 ## 2.27.2
 
 - Console dasa timeline: bars dropped — Mahadasa rows render

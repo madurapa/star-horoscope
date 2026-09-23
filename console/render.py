@@ -99,6 +99,15 @@ def trim_html(html: str) -> str:
     return "\n".join(out).rstrip() + "\n"
 
 
+def boost_html(html: str, px: int = 15) -> str:
+    """Bump the report base type size (HTML view only — terminal cells
+    cannot scale). Injected as one <style> rule, no per-span edits."""
+    tag = f"<style>body{{font-size:{px}px}}</style>"
+    if "</head>" in html:
+        return html.replace("</head>", tag + "</head>", 1)
+    return tag + html
+
+
 def render_reference(doc, console: Console) -> None:
     lagna = doc["lagna"]
     left = _kv("Birth Profile", [
@@ -184,7 +193,7 @@ def render_dasa(doc, console: Console, detail=None) -> None:
     for s in spans:
         lord = DASA_DISPLAY.get(s["lord"], s["lord"])
         t.add_row(Text(lord, style="bold"),
-                  Text(f"{s['from']} → {s['to']}", style="bold"))
+                  Text(f"{s['from']} → {s['to']} ({s['age']})", style="bold"))
         if detail == "all" or (detail and detail.lower() in (s["lord"].lower(), lord.lower())):
             for b in s.get("bhuktis", []):
                 t.add_row("  └ " + DASA_DISPLAY.get(b["lord"], b["lord"]),

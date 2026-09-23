@@ -196,7 +196,8 @@ inline std::string renderJson(const HoroscopeOwner& owner, const HoroscopeResult
             bh = bhuktiTimeline(birth, fracYear(m.from.y, m.from.m, m.from.d), li, span);
         }
         js << "    {\"lord\": \"" << m.lord << "\", \"from\": \"" << ymd(m.from)
-           << "\", \"to\": \"" << ymd(m.to) << "\", \"bhuktis\": [\n";
+           << "\", \"to\": \"" << ymd(m.to) << "\", \"age\": \"" << formatAge(m.ageFrom)
+           << " to " << formatAge(m.ageTo) << "\", \"bhuktis\": [\n";
         for (size_t j = 0; j < bh.size(); ++j) {
             js << "      {\"lord\": \"" << bh[j].lord << "\", \"from\": \"" << ymd(bh[j].from)
                << "\", \"to\": \"" << ymd(bh[j].to) << "\", \"age\": \""

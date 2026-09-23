@@ -41,11 +41,13 @@ DOC = {
     "dasa": {"balance_lord": "Guru", "balance": "9y 10m 11d",
              "mahas": [
                  {"lord": "Guru", "from": "2000-08-17", "to": "2010-06-28",
+                  "age": "0y 0m 0d to 9y 10m 11d",
                   "bhuktis": [
                       {"lord": "Budha", "from": "2000-08-17",
                        "to": "2001-06-04", "age": "0y 0m 0d to 0y 9m 17d"},
                   ]},
                  {"lord": "Shani", "from": "2010-06-28", "to": "2029-06-28",
+                  "age": "9y 10m 11d to 28y 10m 11d",
                   "bhuktis": []},
              ]},
     "hora": {"kala": "Kuja", "panchama": "Kuja", "sukshama": "Kuja"},
@@ -211,3 +213,11 @@ def test_disp_lon_clock_form():
 
     assert disp_lon("239:07:08") == "239°07'08\""
     assert disp_lon(" 44:29:23") == "44°29'23\""
+
+
+def test_boost_html_font():
+    from render import boost_html
+
+    out = boost_html("<html><head></head><body>x</body></html>")
+    assert "<style>body{font-size:15px}</style></head>" in out
+    assert boost_html("<html><body>x</body></html>").startswith("<style>")
