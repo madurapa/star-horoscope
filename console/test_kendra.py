@@ -1,4 +1,4 @@
-"""Kendra chart tests: synthetic placements, fixed widths."""
+"""East fixed-sign diamond tests: signs pinned, houses from Lagna."""
 import io
 
 from rich.console import Console
@@ -6,44 +6,56 @@ from rich.console import Console
 from kendra import (houses_from_longitudes, parse_dms, planet_style,
                     render_diamond)
 
-HOUSES = {1: ["Guru"], 2: [], 3: [], 4: ["Chandra"], 5: [],
-          6: [], 7: [], 8: [], 9: ["Budha"], 10: ["Ravi", "Sikuru"],
-          11: [], 12: []}
+# planet -> rasi index (Lagna Wrschika=8: Chandra Kumbha, Ravi Simha, ...)
+SEATS = {"Chandra": 11, "Ravi": 5, "Budha": 4, "Sikuru": 5, "Kuja": 4,
+         "Guru": 2, "Shani": 2, "Raahu": 3, "Kethu": 9}
 
 
-def shot(width=140, houses=None, lagna_rasi=8, box_w=17):
+def shot(width=140, seats=None, lagna_rasi=8, box_w=17):
     buf = io.StringIO()
-    render_diamond(houses if houses is not None else HOUSES, lagna_rasi,
+    render_diamond(seats if seats is not None else SEATS, lagna_rasi,
                    Console(file=buf, width=width, color_system=None),
                    box_w=box_w)
     return buf.getvalue()
 
 
-def test_diamond_places_glyphs_numbers_rasis():
+def test_fixed_signs_and_houses():
     out = shot()
-    assert "Sri Lankan diamond" in out
-    assert "1 · Vrishchika" in out  # house 1 carries the Lagna rasi
-    assert "4 · Kumbha" in out
-    for name in ["Guru", "Chandra", "Budha", "Ravi", "Shukra"]:
-        assert name in out, name
-    assert "✦ Vrishchika Lagna ✦" in out
+    assert "East Indian diamond" in out
+    # fixed signs present regardless of Lagna
+    for sign in ["Mesha", "Vrishabha", "Mithuna", "Kataka", "Simha",
+                 "Tula", "Makara", "Kumbha", "Meena"]:
+        assert sign in out, sign
+    # houses counted anti-clockwise from Lagna 8: Mesha -> house 6
+    assert "6 · Mesha" in out
+    # Chandra in Kumbha(11) -> house 4
+    assert "4 · Kumbha" in out and "Chandra" in out
+    # Lagna marked
+    assert "◆" in out
+
+
+def test_signs_pinned_across_lagnas():
+    a = shot(lagna_rasi=8)
+    b = shot(lagna_rasi=1)
+    # same signs, different house numbers + different mark
+    assert "6 · Mesha" in a and "1 · Mesha" in b
+    assert a.count("Chandra") == b.count("Chandra")
 
 
 def test_diamond_scales_with_box_width():
-    narrow = shot(box_w=11)
+    narrow = shot(box_w=13)
     wide = shot(box_w=21)
     assert len(wide.split("\n")[1]) > len(narrow.split("\n")[1])
-    assert "Guru" in narrow and "Guru" in wide
 
 
 def test_houses_from_longitudes():
     lon = {"Lagna": "239:05:18", "Chandra": "325:04:41",
-           "Ravi": "120:52:33", "Budha": "115:56:20"}
+           "Ravi": "120:52:33", "Budha": "115:59:17"}
     houses, lagna_rasi = houses_from_longitudes(lon)
     assert lagna_rasi == 8
-    assert houses[4] == ["Chandra"]  # Kumba(11) from Wrschika(8) = house 4
-    assert houses[10] == ["Ravi"]  # Sinha(5) from Wrschika(8) = house 10
-    assert houses[9] == ["Budha"]  # Kataka(4) -> house 9
+    assert houses[4] == ["Chandra"]
+    assert houses[10] == ["Ravi"]
+    assert houses[9] == ["Budha"]
 
 
 def test_parse_dms_leading_space():

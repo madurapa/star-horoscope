@@ -160,7 +160,10 @@ inline std::string renderJson(const HoroscopeOwner& owner, const HoroscopeResult
        << hms(displayHms(sinhalaGhati(h.birthDecHours, h.riseH))) << "\", \"sunrise\": \""
        << hms(displayHms(h.riseH)) << "\", \"sunset\": \"" << hms(setHms)
        << "\", \"ut\": \"" << hms(displayHms(h.birthDecHours - kTzHours))
-       << "\", \"lmst\": \"" << hms(displayHms(h.lmstHours)) << "\"},\n";
+       << "\", \"lmst\": \"" << hms(displayHms(h.lmstHours))
+       << "\", \"lmt\": \"" << hms(displayHms(trueLocalMeanHours(h.birthDecHours, h.lonDec)))
+       << "\", \"gmst\": \"" << hms(displayHms(printedUniversalSiderealHours(h.lmstHours)))
+       << "\"},\n";
     // Dasa: opening balance + full maha timeline (ISO dates) with bhukti
     // drill-down per maha (same anchoring as renderDasa: balance-anchored
     // first maha, forward spans after).

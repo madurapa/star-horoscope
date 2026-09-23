@@ -23,15 +23,14 @@ MALEFICS = {"Ravi", "Kuja", "Shani", "Raahu", "Kethu"}
 DISPLAY = {"Sikuru": "Shukra", "Raahu": "Rahu", "Kethu": "Ketu",
            "Urenus": "Uranus"}
 
-# Diamond rows: (house, x cell) with cell width unit; center gap holds Lagna.
+# Diamond rows: (kind, x cell, payload). Singletons hold one sign;
+# pairs hold the two triangle signs of a corner box (upper, lower).
 ROWS = [
-    [(1, 2)],
-    [(2, 1), (12, 3)],
-    [(3, 0), (11, 4)],
-    [(4, 1), (10, 3)],
-    [(5, 0), (9, 4)],
-    [(6, 1), (8, 3)],
-    [(7, 2)],
+    [("s", 2, 1)],
+    [("p", 1, (2, 3)), ("p", 3, (12, 11))],
+    [("s", 0, 4), ("s", 4, 10)],
+    [("p", 1, (5, 6)), ("p", 3, (9, 8))],
+    [("s", 2, 7)],
 ]
 
 
@@ -62,50 +61,87 @@ def planet_style(planet: str) -> str:
     return "yellow"
 
 
-def render_diamond(houses: dict, lagna_rasi: int, console: Console,
+def render_diamond(seats: dict, lagna_rasi: int, console: Console,
                    box_w: int = 17, title: str = "Rasi Chart") -> None:
-    box_w = max(11, box_w)
+    """East Indian fixed-sign diamond: signs pinned per the corner table,
+    planets placed by rasi, houses counted anti-clockwise from Lagna."""
+    box_w = max(13, box_w)
     inner = box_w - 2
-    lines: list = []
 
-    def box_top(hl: bool) -> tuple:
+    def house_of(sign: int) -> int:
+        return ((sign - lagna_rasi) % 12) + 1
+
+    def top(hl: bool) -> tuple:
         return ("┌" + "─" * inner + "┐", "", hl)
 
-    def box_bottom(hl: bool) -> tuple:
+    def bottom(hl: bool) -> tuple:
         return ("└" + "─" * inner + "┘", "", hl)
 
-    def box_line(text: str, style: str, hl: bool) -> tuple:
+    def mid(hl: bool) -> tuple:
+        return ("├" + "─" * inner + "┤", "", hl)
+
+    def sline(text: str, style: str, hl: bool) -> tuple:
+        text = text.center(inner)[:inner]
         pad = inner - len(text)
         left, right = pad // 2, pad - pad // 2
         return ("│" + " " * left + text + " " * right + "│", style, hl)
 
-    # Pre-render each house box as (line, style) runs.
+    def planets(sign: int):
+        return [p for p in seats if seats[p] == sign]
+
     boxes: dict = {}
-    for h in range(1, 13):
-        hl = (h == 1)
-        rasi = RASIS[(lagna_rasi - 1 + h - 1) % 12]
-        bl = [box_top(hl)]
-        bl.append((f"{h} · {rasi}".center(inner)[:inner], "dim", hl))
-        names = houses.get(h, [])
+
+    def single(sign: int):
+        key = ("s", sign)
+        hl = (sign == lagna_rasi)
+        bl = [top(hl)]
+        bl.append(sline(f"{house_of(sign)} · {RASIS[sign - 1]}",
+                        "bold yellow" if hl else "dim", hl))
+        names = planets(sign)
         for p in names[:3]:
-            bl.append((DISPLAY.get(p, p).center(inner)[:inner], planet_style(p), hl))
+            bl.append(sline(DISPLAY.get(p, p), planet_style(p), hl))
         for _ in range(3 - len(names[:3])):
-            bl.append((" " * inner, "", hl))
-        bl.append(box_bottom(hl))
-        boxes[h] = bl
-    height = len(next(iter(boxes.values())))
+            bl.append(sline(" ", "", hl))
+        bl.append(bottom(hl))
+        boxes[key] = bl
+
+    def pair(upper: int, lower: int):
+        key = ("p", upper, lower)
+        hl = lagna_rasi in (upper, lower)
+        bl = [top(hl)]
+        for sign in (upper, lower):
+            mark = "◆ " if sign == lagna_rasi else ""
+            bl.append(sline(f"{mark}{house_of(sign)} · {RASIS[sign - 1]}",
+                            "bold yellow" if sign == lagna_rasi else "dim", hl))
+            names = planets(sign)
+            for p in names[:2]:
+                bl.append(sline(DISPLAY.get(p, p), planet_style(p), hl))
+            for _ in range(2 - len(names[:2])):
+                bl.append(sline(" ", "", hl))
+            bl.append(mid(hl) if sign == upper else bottom(hl))
+        boxes[key] = bl
+
+    for row in ROWS:
+        for kind, _, payload in row:
+            if kind == "s":
+                single(payload)
+            else:
+                pair(*payload)
 
     unit = box_w + 1
     width_cells = 5 * unit
-    lagna_name = RASIS[lagna_rasi - 1]
-    for ri, row in enumerate(ROWS):
+    lines = []
+    for row in ROWS:
+        runs = []
+        for kind, x, payload in row:
+            key = (kind, payload) if kind == "s" else (kind, *payload)
+            runs.append((x * unit, boxes[key]))
+        height = max(len(r) for _, r in runs)
         for li in range(height):
-            # absolute placement on a char canvas per line
             canvas = [" "] * width_cells
             spans = []
-            for (h, x) in row:
-                off = x * unit
-                txt, st, hl = boxes[h][li]
+            for off, run in runs:
+                txt, st, hl = run[li]
                 for ci, ch in enumerate(txt):
                     canvas[off + ci] = ch
                 if st:
@@ -115,10 +151,7 @@ def render_diamond(houses: dict, lagna_rasi: int, console: Console,
             line = Text("".join(canvas).rstrip())
             for (a, b, st) in spans:
                 line.stylize(st, a, min(b, len(line.plain)))
-            if ri == 3 and li == 0:
-                tag = f" ✦ {lagna_name} Lagna ✦"
-                line.append(tag, style="bold yellow")
             lines.append(line)
-    console.print(Text(f"─── {title} (Sri Lankan diamond) ───", style="bold"))
+    console.print(Text(f"─── {title} (East Indian diamond) ───", style="bold"))
     for line in lines:
         console.print(line)

@@ -37,7 +37,7 @@ DOC = {
     "panchanga": {"weekday": "Thursday", "nakshatra": "Asvida", "pada": 3,
                   "tithi": "T", "yoga": "Y", "karana": "K"},
     "times": {"birth": "14:05:00", "sinhala": "1", "sunrise": "2",
-              "sunset": "3", "ut": "4", "lmst": "5"},
+              "sunset": "3", "ut": "4", "lmst": "5", "lmt": "6", "gmst": "7"},
     "dasa": {"balance_lord": "Guru", "balance": "9y 10m 11d",
              "mahas": [
                  {"lord": "Guru", "from": "2000-08-17", "to": "2010-06-28",
@@ -69,7 +69,7 @@ def test_renders_all_planets_at_fixed_width():
     assert "Ratnapura" in out
     for section in ["Chart Reference", "Time & Solar Metrics", "Panchanga",
                     "Nirayana Table of Houses", "Shadvarga Charts",
-                    "Mahadasa and Antardasa Timeline", "Sri Lankan diamond"]:
+                    "Mahadasa and Antardasa Timeline", "East Indian diamond"]:
         assert section in out, section
     assert "Guru" in out and "2010-06-28" in out
     assert "Thursday" in out and "Asvida" in out
@@ -85,10 +85,11 @@ def test_cli_mirror_order_and_all_charts():
     buf = io.StringIO()
     R.render_all(DOC, Console(file=buf, width=140, color_system=None))
     out = buf.getvalue()
-    seq = ["Horoscope Profile", "Birth Profile", "Astronomical & Chart Reference",
+    seq = ["Horoscope Profile", "Selected Options", "Birth Profile",
+           "Astronomical & Chart Reference",
            "Time & Solar Metrics", "Panchanga", "Dasa Information", "Hora",
-           "Chakra", "Selected Options", "Nirayana Table of Houses",
-           "Shadvarga Charts", "Shadvarga Positions", "Lagna Chart",
+           "Chakra", "Nirayana Table of Houses", "Shadvarga Charts",
+           "Shadvarga Positions", "Lagna Chart",
            "Navamsa Chart", "Hora Chart", "Drekkana Chart", "Dvadasamsa Chart",
            "Trimshamsa Chart", "Sun Chart", "Moon Chart", "Mahadasa and Antardasa Timeline"]
     pos = -1
@@ -117,26 +118,25 @@ def test_chart_data_sun_moon_lagna():
 
 def test_dasa_drilldown():
     import render as R
-    from datetime import date as _date
 
-    def shot(dasa="__none__", today=None):
+    def shot(dasa=None):
         buf = io.StringIO()
-        kw = {} if dasa == "__none__" else {"detail": dasa}
-        if today:
-            kw["today"] = today
+        kw = {} if dasa is None else {"detail": dasa}
         R.render_dasa(DOC, Console(file=buf, width=140, color_system=None), **kw)
         return buf.getvalue()
 
-    plain = shot("Shani")
-    assert "Budha" not in plain and "2001-06-04" not in plain
+    all_rows = shot()
+    assert "Budha" in all_rows and "2001-06-04" in all_rows  # default: all Antardasa
     guru = shot("Guru")
     assert "Budha" in guru and "2001-06-04" in guru
     assert "Budha" not in shot("Shani")
-    assert "Budha" in shot("all")
-    auto = shot(today=_date(2005, 6, 1))
-    assert "Budha" in auto and "2001-06-04" in auto  # current maha expanded
-    auto_none = shot(today=_date(1990, 1, 1))
-    assert "Budha" not in auto_none  # outside all spans: bars only
+
+
+def test_helpers():
+    from render import ayan_dms, disp_lon
+
+    assert ayan_dms(23.833639) == "23°50'01\""
+    assert disp_lon("239:07:08") == "239°07'08\""
 
 
 def test_trim_html():
@@ -169,7 +169,7 @@ def test_export_html_self_contained(tmp_path):
     html = rec.export_html(inline_styles=True)
     assert "<html" in html and "</html>" in html
     for section in ["Horoscope Profile", "Mahadasa and Antardasa Timeline",
-                    "Sri Lankan diamond", "Shadvarga Charts", "Hora", "Chakra"]:
+                    "East Indian diamond", "Shadvarga Charts", "Hora", "Chakra"]:
         assert section in html, section
     p = tmp_path / "report.html"
     p.write_text(html, encoding="utf-8")

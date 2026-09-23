@@ -67,6 +67,14 @@ def rasi_of(dms: str) -> str:
     return RASIS[int(parse_dms(dms) // 30) % 12]
 
 
+def ayan_dms(dec: float) -> str:
+    """Decimal degrees to CLI clock form (23.833639 -> 23°50'01")."""
+    d = int(dec)
+    m = int((dec - d) * 60)
+    sec = int(round((((dec - d) * 60) - m) * 60))
+    return f"{d}°{m:02d}'{sec:02d}\""
+
+
 def disp_lon(dms: str) -> str:
     """Schema DMS display-split to CLI clock form (239:07:08 -> 239°07'08")."""
     d, m, sec = dms.strip().split(":")
@@ -96,11 +104,14 @@ def render_reference(doc, console: Console) -> None:
     left = _kv("Birth Profile", [
         ("Name", doc["name"]),
         ("Born", f"{doc['birth_date']} {doc['birth_time']}"),
+        ("Birth Weekday", doc["panchanga"]["weekday"]),
         ("Place", f"{doc['place']['city']} ({doc['place']['city_index']})"),
         ("Method", doc["method"])], doc["locale"])
     right = _kv("Astronomical & Chart Reference", [
+        ("Julian Date", f"{doc['julian_date']:.3f}"),
+        ("Ayanamsa", ayan_dms(doc["ayanamsa_deg"])),
         ("Lagna", lagna["rasi"]),
-        ("Lagna Degree", lagna["degree"].strip()),
+        ("Lagna Degree", disp_lon(lagna["degree"])),
         ("Lagna Navamsa", lagna["navamsa"])], doc["locale"])
     console.print(left)
     console.print(right)
@@ -112,10 +123,12 @@ def render_time_panchanga(doc, console: Console) -> None:
         ("Birth Time", tm["birth"]), ("Sinhala Time", tm["sinhala"]),
         ("Sunrise", tm["sunrise"]), ("Sunset", tm["sunset"]),
         ("Universal Time (UT)", tm["ut"]),
+        ("Greenwich Mean Sidereal Time", tm["gmst"]),
+        ("Local Mean Time (LMT)", tm["lmt"]),
         ("Local Mean Sidereal Time", tm["lmst"])], doc["locale"])
     pg = doc["panchanga"]
     right = _kv("Panchanga", [
-        ("Weekday", pg["weekday"]), ("Nakshatra", pg["nakshatra"]),
+        ("Nakshatra", pg["nakshatra"]),
         ("Pada", pg["pada"]), ("Tithi", pg["tithi"]),
         ("Yoga", pg["yoga"]), ("Karana", pg["karana"])], doc["locale"])
     console.print(left)
@@ -130,7 +143,6 @@ def render_houses(doc, console: Console) -> None:
     t.add_column("Pada", justify="right")
     t.add_column("Rasi")
     t.add_column("Rasi Longitude", justify="right")
-    t.add_column("House", justify="right")
     t.add_column("Avastha")
     det = doc.get("details", {})
     for p in PLANETS:
@@ -139,7 +151,7 @@ def render_houses(doc, console: Console) -> None:
         t.add_row(disp(p), disp_lon(lon), d.get("nakshatra", "-"),
                   str(d.get("pada", "-")), rasi_of(lon),
                   d.get("rasi_longitude", "-").strip(),
-                  str(doc["houses"][p]), doc["avastha"][p] or "-")
+                  doc["avastha"][p] or "-")
     console.print(t)
 
 
@@ -158,19 +170,10 @@ def _iso(s: str) -> date:
     return date(int(y), int(m), int(d))
 
 
-def _current_maha(doc, today) -> str | None:
-    for s in doc["dasa"]["mahas"]:
-        if _iso(s["from"]) <= today <= _iso(s["to"]):
-            return s["lord"]
-    return None
-
-
-def render_dasa(doc, console: Console, detail=None, today=None) -> None:
-    """detail: None (bars + current maha expanded), "all", or a maha lord."""
-    from datetime import date as _date
-
+def render_dasa(doc, console: Console, detail=None) -> None:
+    """detail: None (bars + all Antardasa), or a maha lord to narrow."""
     if detail is None:
-        detail = _current_maha(doc, today or _date.today())
+        detail = "all"
     dasa = doc["dasa"]
     spans = dasa["mahas"]
     t0 = _iso(spans[0]["from"])
@@ -265,7 +268,7 @@ def render_charts(doc, console: Console, style: str) -> None:
         if use == "south":
             render_south_from_seats(seats, lagna_seat, console, title=title)
         else:
-            render_diamond(houses, lagna_seat, console, title=title)
+            render_diamond(seats, lagna_seat, console, title=title)
 
 
 def render_positions(doc, console: Console) -> None:
@@ -285,11 +288,11 @@ def render_positions(doc, console: Console) -> None:
 
 def render_all(doc, console: Console, chart: str = "diamond", dasa=None) -> None:
     render_profile(doc, console)
+    render_options(doc, console, chart)
     render_reference(doc, console)
     render_time_panchanga(doc, console)
     render_dasa_info(doc, console)
     render_hora_chakra(doc, console)
-    render_options(doc, console, chart)
     render_houses(doc, console)
     render_shadvarga(doc, console)
     render_positions(doc, console)

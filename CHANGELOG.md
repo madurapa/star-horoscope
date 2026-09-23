@@ -4,6 +4,14 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.27.0
+
+- Report section completion: Birth Weekday, Julian Date +
+  Ayanamsa, LMT + GMST rows (schema `times` extended), options
+  panel moved up, confusing House column dropped, all
+  Antardasa expanded by default, terminal diamond realigned to
+  fixed-sign East geometry.
+
 ## 2.26.0
 
 - Report data audit vs the native CLI (every houses-table
