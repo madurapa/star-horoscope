@@ -57,6 +57,24 @@ def rasi_of(dms: str) -> str:
     return RASIS[int(parse_dms(dms) // 30) % 12]
 
 
+def trim_html(html: str) -> str:
+    """Tidy exported HTML: strip trailing spaces per line (leading
+    indentation inside <pre> blocks is significant and kept) and
+    collapse 3+ blank lines. Never touches line starts."""
+    lines = [ln.rstrip() for ln in html.split("\n")]
+    out: list = []
+    blanks = 0
+    for ln in lines:
+        if ln.strip() == "":
+            blanks += 1
+            if blanks <= 2:
+                out.append("")
+        else:
+            blanks = 0
+            out.append(ln)
+    return "\n".join(out).rstrip() + "\n"
+
+
 def render_reference(doc, console: Console) -> None:
     lagna = doc["lagna"]
     left = _kv("Birth Profile", [

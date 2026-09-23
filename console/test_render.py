@@ -124,6 +124,14 @@ def test_dasa_drilldown():
     assert "Budha" in shot("all")
 
 
+def test_trim_html():
+    from render import trim_html
+
+    out = trim_html("<pre>\n    abc   \n\t\n\n\n\n<p>x</p>   \n\n\n")
+    assert out == "<pre>\n    abc\n\n\n<p>x</p>\n"
+    assert trim_html("") == "\n"
+
+
 def test_missing_planet_raises():
     import copy
     bad = copy.deepcopy(DOC)

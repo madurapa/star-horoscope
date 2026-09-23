@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.24.1
+
+- HTML export tidies whitespace (per-line rstrip, blank
+  collapsing; `<pre>` indentation untouched).
+
 ## 2.24.0
 
 - Consistent localized reports: section titles + row keys now
