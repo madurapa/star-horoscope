@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.30.0
+
+- House numbers on every fixed-sign compartment: fork East
+  charts gain small dim numbers (counted anti-clockwise from
+  Lagna), rich square boxes show `Hn · Sign`. "Second house"
+  is now unambiguous on all surfaces.
+
 ## 2.29.1
 
 - HTML gallery labels every chart (was title-less SVGs);

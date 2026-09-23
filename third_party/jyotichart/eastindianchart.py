@@ -292,6 +292,33 @@ def write_signnumOnChart_esc(chartSVG, signclr, ascendantsign, language="english
     return
 
 
+# STAR addition: house numbers (1-12 anti-clockwise from Lagna) so fixed
+# signs are unambiguous. Small dim labels tucked at each compartment's
+# right-angle corner; may touch a planet label only in 6+ planet loads.
+EAST_HOUSENUM_POS = {
+    "Aries": (153.7, 19.0),
+    "Taurus": (136.0, 11.0),
+    "Gemini": (10.5, 136.2),
+    "Cancer": (17.0, 155.7),
+    "Leo": (10.5, 283.8),
+    "Virgo": (136.2, 409.5),
+    "Libra": (153.7, 292.3),
+    "Scorpio": (283.8, 409.5),
+    "Saggitarius": (409.5, 283.8),
+    "Capricorn": (290.3, 155.7),
+    "Aquarius": (409.5, 136.2),
+    "Pisces": (283.8, 10.5),
+}
+
+
+def write_housenumOnChart_esc(chartSVG, signclr, ascendantsign):
+    chartSVG.write('\n  <!-- House numbers (STAR: anti-clockwise from Lagna) -->\n')
+    for sign, (px, py) in EAST_HOUSENUM_POS.items():
+        hn = gen.get_housenumofsign(sign, ascendantsign)
+        chartSVG.write(f'''  <text x="{px:.1f}" y="{py:.1f}" font-size="11" fill="{signclr}" text-anchor="middle">{hn}</text>\n''')
+    return
+
+
 def write_planetsOnChart_esc(chartSVG, planets):
     chartSVG.write('\n  <!-- ********** Planets ********** -->\n')
     for planetname in planets:
@@ -382,6 +409,7 @@ def create_chartSVG(chartObj, location, chartSVGfilename, language="english"):
     chartSVG.write(fonts.style_block(chartObj.chartcfg, BASE_FONTS))
     draw_classicEastChartSkeleton(chartSVG, chartObj.chartcfg)
     write_signnumOnChart_esc(chartSVG, chartObj.chartcfg["sign-colour"], chartObj.ascendantsign, language)
+    write_housenumOnChart_esc(chartSVG, chartObj.chartcfg["sign-colour"], chartObj.ascendantsign)
     write_planetsOnChart_esc(chartSVG, chartObj.planets)
     if chartObj.chartcfg["aspect-visibility"]:
         write_planetsAspectsOnChart_esc(chartSVG, chartObj.planets)

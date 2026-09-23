@@ -49,3 +49,19 @@ def test_gallery_all_eight():
 def test_outers_skipped():
     svg = east_svg(DOC, 0, None, "en", "Lagna Chart")
     assert "Urenus" not in svg and "Neptune" not in svg and "Pluto" not in svg
+
+
+def test_house_numbers_all_compartments():
+    import re
+
+    svg = east_svg(DOC, 0, None, "en", "Lagna Chart")
+    nums = re.findall(r'font-size="11"[^>]*>(\d+)</text>', svg)
+    assert sorted(nums, key=int) == [str(i) for i in range(1, 13)]
+    # Dhanu compartment (bottom-right upper triangle) reads house 9
+    # under Mesha Lagna (synthetic DOC lagna seat 1).
+    hits = [m.group(3) for m in
+            re.finditer(r'<text x="([\d.]+)" y="([\d.]+)" font-size="11"[^>]*>(\d+)</text>',
+                        svg)
+            if 278 <= float(m.group(1)) <= 415 and 278 <= float(m.group(2)) <= 415
+            and float(m.group(2)) < float(m.group(1))]
+    assert hits == ["9"]

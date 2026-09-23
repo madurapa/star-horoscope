@@ -26,9 +26,9 @@ def render_south_from_seats(seats: dict, lagna_rasi: int, console: Console,
     for p, r in seats.items():
         by_rasi[r].append(p)
 
-    def cell_lines(rasi, planets, hl):
+    def cell_lines(rasi, planets, hl, house):
         names = planets[:3]
-        lines = [(f"{RASIS[rasi - 1]}", "dim" if not hl else "bold yellow", hl)]
+        lines = [(f"{house} · {RASIS[rasi - 1]}", "bold yellow" if hl else "dim", hl)]
         for p in names:
             lines.append((DISPLAY.get(p, p).center(inner)[:inner], planet_style(p), hl))
         for _ in range(3 - len(names)):
@@ -53,7 +53,8 @@ def render_south_from_seats(seats: dict, lagna_rasi: int, console: Console,
             if rasi is None:
                 rows.append(None)
             else:
-                rows.append(cell_lines(rasi, by_rasi[rasi], rasi == lagna_rasi))
+                rows.append(cell_lines(rasi, by_rasi[rasi], rasi == lagna_rasi,
+                                         ((rasi - lagna_rasi) % 12) + 1))
         for li in range(height):
             line = Text()
             for entry in rows:
