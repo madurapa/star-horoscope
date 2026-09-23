@@ -23,6 +23,13 @@ def test_east_navamsa_lagna():
     assert svg.startswith("<svg")
     assert "Navamsa" in svg  # center division label
     assert 'fill="white"' in svg or "white" in svg  # light theme
+    assert "Georgia" not in svg  # default fonts only
+
+
+def test_center_no_name_or_chart_title():
+    svg = east_svg(DOC, 0, None, "en", "Lagna Chart")
+    assert "Test User" not in svg and "Chart :" not in svg
+    assert "Asc" in svg  # rising sign + Lagna marker
 
 
 def test_south_english():

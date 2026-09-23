@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.25.0
+
+- Chart center boxes: rising sign + division label only (owner
+  name/title dropped — already in the report); Lagna chart
+  centers on the Lagna marker; light theme without font
+  overrides (library defaults).
+
 ## 2.24.1
 
 - HTML export tidies whitespace (per-line rstrip, blank
