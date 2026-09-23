@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.29.0
+
+- HTML export rewritten as semantic markup (real tables,
+  sections, headings + print CSS) instead of terminal
+  `<pre>` spans.
+
 ## 2.28.0
 
 - Mahadasa rows show their age ranges (schema `mahas[].age`;

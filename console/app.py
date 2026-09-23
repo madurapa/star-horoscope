@@ -37,16 +37,14 @@ def horoscope(
         name, year, month, day, hour, minute, city,
         nirayana=nirayana, engine=engine, locale=locale))
     if export_html:
+        from htmlreport import render_report
         from jychart import gallery
-        from render import boost_html, trim_html
 
         style = chart if chart in ("diamond", "south") else "diamond"
-        rec = Console(width=width, record=True)
-        render_all(doc, rec, chart="none", dasa=dasa)
-        html = rec.export_html(inline_styles=True)
-        html = html.replace("</body>", gallery(doc, style, locale) + "\n</body>")
+        html = render_report(doc, chart=chart, dasa=dasa,
+                             gallery=gallery(doc, style, locale))
         with open(export_html, "w", encoding="utf-8") as f:
-            f.write(boost_html(trim_html(html)))
+            f.write(html)
         print(f"wrote {export_html}")
         return
     render_all(doc, Console(width=width), chart=chart, dasa=dasa)
