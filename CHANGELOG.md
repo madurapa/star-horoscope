@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.27.2
+
+- Console dasa timeline: bars dropped — Mahadasa rows render
+  bold like Antardasa rows (terminal cells can't scale type,
+  so bold is the emphasis).
+
 ## 2.27.1
 
 - Docs: engine-parity note (dos vs swisseph dasa dates differ

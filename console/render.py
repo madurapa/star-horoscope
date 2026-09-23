@@ -176,26 +176,19 @@ def render_dasa(doc, console: Console, detail=None) -> None:
         detail = "all"
     dasa = doc["dasa"]
     spans = dasa["mahas"]
-    t0 = _iso(spans[0]["from"])
-    total = max((_iso(spans[-1]["to"]) - t0).days, 1)
-    width = max(console.width - 34, 20)
     t = Table(title=tr("Mahadasa and Antardasa Timeline", doc["locale"]) +
                     f" (balance {dasa['balance_lord']} {dasa['balance']})",
               expand=True, show_header=False, box=None)
-    t.add_column("lord", style="bold", no_wrap=True, width=12)
-    t.add_column("bar", ratio=1)
+    t.add_column("name", style="bold", no_wrap=True, width=12)
     t.add_column("span", no_wrap=True)
     for s in spans:
-        days = (_iso(s["to"]) - _iso(s["from"])).days
-        fill = max(int(days / total * width), 1)
-        bar = Text("▉" * fill + "░" * (width - fill), style="yellow")
         lord = DASA_DISPLAY.get(s["lord"], s["lord"])
-        t.add_row(lord, bar, f"{s['from']} → {s['to']}")
+        t.add_row(Text(lord, style="bold"),
+                  Text(f"{s['from']} → {s['to']}", style="bold"))
         if detail == "all" or (detail and detail.lower() in (s["lord"].lower(), lord.lower())):
             for b in s.get("bhuktis", []):
                 t.add_row("  └ " + DASA_DISPLAY.get(b["lord"], b["lord"]),
-                          Text(f"{b['from']} → {b['to']}", style="dim"),
-                          Text(b["age"], style="dim"))
+                          Text(f"{b['from']} → {b['to']} ({b['age']})", style="dim"))
     console.print(t)
 
 
