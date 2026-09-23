@@ -37,7 +37,7 @@ LIGHT = dict(
 CONFIGS = [
     ("sinhala", "", "", "Colombo"),
     ("tamil", "", "", "Chennai"),
-    ("english", "D9 Navamsha", "Kamal", "Chennai"),
+    ("english", "", "", "Chennai"),
 ]
 
 for lang, chartname, person, pob in CONFIGS:

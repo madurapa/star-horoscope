@@ -11,6 +11,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
+from i18n import tr
 from kendra import RASIS, houses_from_longitudes, parse_dms, render_diamond
 from south import render_south, render_south_from_seats
 
@@ -24,11 +25,11 @@ def render_profile(doc, console: Console) -> None:
     console.print(Panel(
         f"[bold]{doc['name']}[/bold]  |  Born {born}  |  "
         f"{place['city']} ({place['city_index']})  |  {doc['method']}",
-        title="Horoscope Profile", expand=True))
+        title=tr("Horoscope Profile", doc["locale"]), expand=True))
 
 
 def render_longitudes(doc, console: Console) -> None:
-    t = Table(title="Nirayana Longitudes", expand=True)
+    t = Table(title=tr("Nirayana Longitudes", doc["locale"]), expand=True)
     t.add_column("Graha", style="bold")
     t.add_column("Longitude", justify="right")
     for p in PLANETS:
@@ -43,12 +44,12 @@ def render_provenance(doc, console: Console) -> None:
         f"ayanamsa {doc['ayanamsa_deg']}[/dim]")
 
 
-def _kv(title, rows) -> Table:
-    t = Table(title=title, expand=True, show_header=False, box=None)
+def _kv(title, rows, locale="en") -> Table:
+    t = Table(title=tr(title, locale), expand=True, show_header=False, box=None)
     t.add_column("k", style="bold", no_wrap=True)
     t.add_column("v")
     for k, v in rows:
-        t.add_row(k, str(v))
+        t.add_row(tr(k, locale), str(v))
     return t
 
 
@@ -62,11 +63,11 @@ def render_reference(doc, console: Console) -> None:
         ("Name", doc["name"]),
         ("Born", f"{doc['birth_date']} {doc['birth_time']}"),
         ("Place", f"{doc['place']['city']} ({doc['place']['city_index']})"),
-        ("Method", doc["method"])])
+        ("Method", doc["method"])], doc["locale"])
     right = _kv("Astronomical & Chart Reference", [
         ("Lagna", lagna["rasi"]),
-        ("Degree", lagna["degree"].strip()),
-        ("Navamsa", lagna["navamsa"])])
+        ("Lagna Degree", lagna["degree"].strip()),
+        ("Lagna Navamsa", lagna["navamsa"])], doc["locale"])
     console.print(left)
     console.print(right)
 
@@ -74,20 +75,21 @@ def render_reference(doc, console: Console) -> None:
 def render_time_panchanga(doc, console: Console) -> None:
     tm = doc["times"]
     left = _kv("Time & Solar Metrics", [
-        ("Birth", tm["birth"]), ("Sinhala", tm["sinhala"]),
+        ("Birth Time", tm["birth"]), ("Sinhala Time", tm["sinhala"]),
         ("Sunrise", tm["sunrise"]), ("Sunset", tm["sunset"]),
-        ("UT", tm["ut"]), ("LMST", tm["lmst"])])
+        ("Universal Time (UT)", tm["ut"]),
+        ("Local Mean Sidereal Time", tm["lmst"])], doc["locale"])
     pg = doc["panchanga"]
     right = _kv("Panchanga", [
         ("Weekday", pg["weekday"]), ("Nakshatra", pg["nakshatra"]),
         ("Pada", pg["pada"]), ("Tithi", pg["tithi"]),
-        ("Yoga", pg["yoga"]), ("Karana", pg["karana"])])
+        ("Yoga", pg["yoga"]), ("Karana", pg["karana"])], doc["locale"])
     console.print(left)
     console.print(right)
 
 
 def render_houses(doc, console: Console) -> None:
-    t = Table(title="Nirayana Table of Houses", expand=True)
+    t = Table(title=tr("Nirayana Table of Houses", doc["locale"]), expand=True)
     t.add_column("Graha", style="bold")
     t.add_column("Longitude", justify="right")
     t.add_column("Rasi")
@@ -101,7 +103,7 @@ def render_houses(doc, console: Console) -> None:
 
 
 def render_shadvarga(doc, console: Console) -> None:
-    t = Table(title="Shadvarga Seats", expand=True)
+    t = Table(title=tr("Shadvarga Charts", doc["locale"]), expand=True)
     t.add_column("Graha", style="bold")
     for h in ["Rashi", "Navamsa", "Hora", "Drekkana", "Dvadasamsa", "Trimshamsa"]:
         t.add_column(h)
@@ -122,9 +124,9 @@ def render_dasa(doc, console: Console, detail=None) -> None:
     t0 = _iso(spans[0]["from"])
     total = max((_iso(spans[-1]["to"]) - t0).days, 1)
     width = max(console.width - 34, 20)
-    t = Table(title=f"Mahadasa Timeline (balance {dasa['balance_lord']} "
-                    f"{dasa['balance']})", expand=True, show_header=False,
-              box=None)
+    t = Table(title=tr("Mahadasa and Antardasa Timeline", doc["locale"]) +
+                    f" (balance {dasa['balance_lord']} {dasa['balance']})",
+              expand=True, show_header=False, box=None)
     t.add_column("lord", style="bold", no_wrap=True, width=12)
     t.add_column("bar", ratio=1)
     t.add_column("span", no_wrap=True)
@@ -145,14 +147,14 @@ def render_hora_chakra(doc, console: Console) -> None:
     hh = doc["hora"]
     left = _kv("Hora", [
         ("Kala", hh["kala"]), ("Panchama", hh["panchama"]),
-        ("Sukshama", hh["sukshama"])])
+        ("Sukshama", hh["sukshama"])], doc["locale"])
     cc = doc["chakra"]
     right = _kv("Chakra", [
         ("Gana", cc["gana"]), ("Yoni", cc["yoni"].strip()),
         ("Linga", cc["linga"]), ("Naadi", cc["naadi"]),
         ("Varna", cc["varna"]), ("Ruxha", cc["ruxha"]),
         ("Paxhi", cc["paxhi"]), ("Gothra", cc["gothra"]),
-        ("Rajju", cc["rajju"]), ("Bhutha", cc["bhutha"])])
+        ("Rajju", cc["rajju"]), ("Bhutha", cc["bhutha"])], doc["locale"])
     console.print(left)
     console.print(right)
 
@@ -162,7 +164,7 @@ def render_dasa_info(doc, console: Console) -> None:
     console.print(_kv("Dasa Information", [
         ("Starting", dasa["balance_lord"]),
         ("Period", dasa["balance"]),
-        ("Reference", "From birth")]))
+        ("Reference", tr("From birth", doc["locale"]))], doc["locale"]))
 
 
 def render_options(doc, console: Console, chart: str) -> None:
@@ -172,7 +174,7 @@ def render_options(doc, console: Console, chart: str) -> None:
         ("Method", doc["method"]),
         ("Engine", doc["engine"]),
         ("Locale", doc["locale"]),
-        ("Chart", chart)]))
+        ("Chart", chart)], doc["locale"]))
 
 
 CHART_DEFS = [
@@ -214,7 +216,7 @@ def render_charts(doc, console: Console, style: str) -> None:
 
 
 def render_positions(doc, console: Console) -> None:
-    t = Table(title="Shadvarga Positions", expand=True)
+    t = Table(title=tr("Shadvarga Positions", doc["locale"]), expand=True)
     t.add_column("Graha", style="bold")
     for h in ["Rashi", "Navamsa", "Hora", "Drekkana", "Dvadasamsa", "Trimshamsa"]:
         t.add_column(h, justify="right")

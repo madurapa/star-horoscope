@@ -21,6 +21,8 @@ def test_east_sinhala_tamil():
 def test_east_navamsa_lagna():
     svg = east_svg(DOC, 1, None, "en", "Navamsa Chart")
     assert svg.startswith("<svg")
+    assert "Navamsa" in svg  # center division label
+    assert 'fill="white"' in svg or "white" in svg  # light theme
 
 
 def test_south_english():

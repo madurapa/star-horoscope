@@ -33,6 +33,33 @@ PLANET_CONST = {
 
 LOCALE = {"en": "english", "si": "sinhala", "ta": "tamil"}
 
+# Light theme matching the report page (styled_light.py pattern).
+LIGHT = dict(
+    aspect=False,
+    clr_background="white",
+    clr_outbox="gray",
+    clr_inbox="gray",
+    clr_line="gray",
+    clr_Asc="black",
+    clr_houses=["white"] * 12,
+    clr_details="black",
+    font_family="Georgia, serif",
+    font_sizes={"sign": 24, "planet": 17, "aspect": 18, "details": 14},
+)
+
+# Division label for the center box per chart (jyotichart vocabulary, so
+# si/ta translate; Sun/Moon pass through unchanged).
+DIVISIONS = {
+    "Lagna Chart": "Rashi",
+    "Navamsa Chart": "Navamsa",
+    "Hora Chart": "Hora",
+    "Drekkana Chart": "Drekkana",
+    "Dvadasamsa Chart": "Dwadasamsa",
+    "Trimshamsa Chart": "Trimsamsa",
+    "Sun Chart": "Sun",
+    "Moon Chart": "Moon",
+}
+
 
 def _house_of(houses: dict, planet: str) -> int:
     for h, ps in houses.items():
@@ -41,28 +68,25 @@ def _house_of(houses: dict, planet: str) -> int:
     return 1
 
 
-def east_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
+def _base(doc, varga: int, lagna_planet, locale: str, title: str, cls):
     lang = LOCALE.get(locale, "english")
     houses, _, lagna_seat = chart_data(doc, varga, lagna_planet)
-    c = chart.EastChart(title, doc["name"], language=lang)
-    c.set_birth_details(doc["birth_date"], doc["birth_time"], doc["place"]["city"])
+    c = cls(title, doc["name"], language=lang)
+    c.set_birth_details("", "", "")
     c.set_ascendantsign(MODERN_TO_CLASSICAL[RASIS[lagna_seat - 1]])
     for p, const in PLANET_CONST.items():
-        c.add_planet(const, chart.get_planet_symbol(const, lang), _house_of(houses, p))
-    c.updatechartcfg(aspect=False)
+        c.add_planet(const, chart.get_planet_symbol(const, lang),
+                     _house_of(houses, p), colour="black")
+    c.updatechartcfg(show_center_lagna=DIVISIONS[title], **LIGHT)
     return c.to_svg_string()
+
+
+def east_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
+    return _base(doc, varga, lagna_planet, locale, title, chart.EastChart)
 
 
 def south_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
-    lang = LOCALE.get(locale, "english")
-    houses, _, lagna_seat = chart_data(doc, varga, lagna_planet)
-    c = chart.SouthChart(title, doc["name"], language=lang)
-    c.set_birth_details(doc["birth_date"], doc["birth_time"], doc["place"]["city"])
-    c.set_ascendantsign(MODERN_TO_CLASSICAL[RASIS[lagna_seat - 1]])
-    for p, const in PLANET_CONST.items():
-        c.add_planet(const, chart.get_planet_symbol(const, lang), _house_of(houses, p))
-    c.updatechartcfg(aspect=False)
-    return c.to_svg_string()
+    return _base(doc, varga, lagna_planet, locale, title, chart.SouthChart)
 
 
 def gallery(doc, style: str, locale: str) -> str:

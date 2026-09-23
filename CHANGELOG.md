@@ -4,6 +4,14 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.24.0
+
+- Consistent localized reports: section titles + row keys now
+  render in the report locale (machine-generated map from the
+  translator files, test-pinned); values stay English.
+- Charts match the report: light theme, center box carries the
+  division + rising sign (no duplicated birth details).
+
 ## 2.23.0
 
 - Charts via vendored jyotichart (MIT, pure stdlib): authentic

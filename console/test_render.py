@@ -61,8 +61,8 @@ def test_renders_all_planets_at_fixed_width():
         assert p in out, p
     assert "Ratnapura" in out
     for section in ["Chart Reference", "Time & Solar Metrics", "Panchanga",
-                    "Nirayana Table of Houses", "Shadvarga Seats",
-                    "Mahadasa Timeline", "Sri Lankan diamond"]:
+                    "Nirayana Table of Houses", "Shadvarga Charts",
+                    "Mahadasa and Antardasa Timeline", "Sri Lankan diamond"]:
         assert section in out, section
     assert "Guru" in out and "2010-06-28" in out
     assert "Thursday" in out and "Asvida" in out
@@ -80,9 +80,9 @@ def test_cli_mirror_order_and_all_charts():
     seq = ["Horoscope Profile", "Birth Profile", "Astronomical & Chart Reference",
            "Time & Solar Metrics", "Panchanga", "Dasa Information", "Hora",
            "Chakra", "Selected Options", "Nirayana Table of Houses",
-           "Shadvarga Seats", "Shadvarga Positions", "Lagna Chart",
+           "Shadvarga Charts", "Shadvarga Positions", "Lagna Chart",
            "Navamsa Chart", "Hora Chart", "Drekkana Chart", "Dvadasamsa Chart",
-           "Trimshamsa Chart", "Sun Chart", "Moon Chart", "Mahadasa Timeline"]
+           "Trimshamsa Chart", "Sun Chart", "Moon Chart", "Mahadasa and Antardasa Timeline"]
     pos = -1
     for s in seq:
         nxt = out.find(s, pos + 1)
@@ -145,9 +145,39 @@ def test_export_html_self_contained(tmp_path):
     ra(DOC, rec)
     html = rec.export_html(inline_styles=True)
     assert "<html" in html and "</html>" in html
-    for section in ["Horoscope Profile", "Mahadasa Timeline", "Sri Lankan diamond",
-                    "Shadvarga Seats", "Hora", "Chakra"]:
+    for section in ["Horoscope Profile", "Mahadasa and Antardasa Timeline",
+                    "Sri Lankan diamond", "Shadvarga Charts", "Hora", "Chakra"]:
         assert section in html, section
     p = tmp_path / "report.html"
     p.write_text(html, encoding="utf-8")
     assert p.stat().st_size > 10000
+
+
+def test_sinhala_report_translated_titles_keys():
+    import copy
+
+    from i18n import STRINGS
+    from render import render_all as ra
+
+    si = copy.deepcopy(DOC)
+    si["locale"] = "si"
+    buf = io.StringIO()
+    ra(si, Console(file=buf, width=140, color_system=None))
+    out = buf.getvalue()
+    en_buf = io.StringIO()
+    ra(DOC, Console(file=en_buf, width=140, color_system=None))
+    en_out = en_buf.getvalue()
+    for en, (si_s, ta_s) in STRINGS.items():
+        if en in ("Nirayana Longitudes",):
+            continue  # technical table title, intentionally untranslated
+        if en not in en_out:
+            continue  # concept not emitted by this report
+        assert si_s in out, en
+    # titles fully switch; keys may echo as data headers (technical words)
+    for en in ["Horoscope Profile", "Birth Profile", "Time & Solar Metrics",
+               "Panchanga", "Dasa Information", "Selected Options",
+               "Nirayana Table of Houses", "Shadvarga Charts",
+               "Shadvarga Positions", "Mahadasa and Antardasa Timeline"]:
+        assert en not in out, en
+    # values stay English (data, not UI)
+    assert "Ratnapura" in out and "Guru" in out and "2000-08-17" in out
