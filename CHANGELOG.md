@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.32.1
+
+- 72-placement geometric regression test (all planets, all
+  charts, fixed-sign compartments).
+
 ## 2.32.0
 
 - East design by default (`--chart east|south|north`):
