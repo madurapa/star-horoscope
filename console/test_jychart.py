@@ -62,6 +62,66 @@ def test_outers_skipped():
     assert "Urenus" not in svg and "Neptune" not in svg and "Pluto" not in svg
 
 
+def _spread_doc():
+    import copy
+
+    spread = copy.deepcopy(DOC)
+    lon_rasi = {"Ravi": "Simha", "Chandra": "Kumbha", "Kuja": "Kataka",
+                "Budha": "Kataka", "Guru": "Vrishabha", "Sikuru": "Simha",
+                "Shani": "Vrishabha", "Raahu": "Mithuna", "Kethu": "Dhanu"}
+    for p, v in lon_rasi.items():
+        spread["shadvarga"][p] = [v] * 6
+    spread["lagna"]["seats"] = [8, 12, 5, 4, 7, 2]
+    return spread
+
+
+def _compartment(x, y):
+    C1, C2 = 141.67, 278.33
+    if C1 <= x <= C2 and 5 <= y <= C1:
+        return 1
+    if 5 <= x <= C1 and 5 <= y <= C1:
+        return 2 if y < x else 3
+    if C2 <= x <= 415 and 5 <= y <= C1:
+        return 12 if y < 420 - x else 11
+    if 5 <= x <= C1 and C1 <= y <= C2:
+        return 4
+    if 5 <= x <= C1 and C2 <= y <= 415:
+        return 5 if y < 420 - x else 6
+    if C1 <= x <= C2 and C2 <= y <= 415:
+        return 7
+    if C2 <= x <= 415 and C2 <= y <= 415:
+        return 9 if y < x else 8
+    if C2 <= x <= 415 and C1 <= y <= C2:
+        return 10
+    return 0
+
+
+def test_all_charts_placements_geometric():
+    import re
+
+    from kendra import RASIS
+    from render import CHART_DEFS
+
+    doc = _spread_doc()
+    sym2p = {"Su": "Ravi", "Mo": "Chandra", "Ma": "Kuja", "Me": "Budha",
+             "Ju": "Guru", "Ve": "Sikuru", "Sa": "Shani", "Ra": "Raahu",
+             "Ke": "Kethu"}
+    n = 0
+    for title, varga, lagna_planet in CHART_DEFS:
+        svg = east_svg(doc, varga, lagna_planet, "en", title)
+        for m in re.finditer(
+                r'<text[^>]*x="([\d.]+)"[^>]*y="([\d.]+)"[^>]*>(Su|Mo|Ma|Me|Ju|Ve|Sa|Ra|Ke)</text>|'
+                r'<text[^>]*y="([\d.]+)"[^>]*x="([\d.]+)"[^>]*>(Su|Mo|Ma|Me|Ju|Ve|Sa|Ra|Ke)</text>',
+                svg):
+            g = m.groups()
+            x, y, t = ((float(g[0]), float(g[1]), g[2]) if g[0]
+                       else (float(g[4]), float(g[3]), g[5]))
+            exp = RASIS.index(doc["shadvarga"][sym2p[t]][varga]) + 1
+            assert _compartment(x, y) == exp, (title, t, exp)
+            n += 1
+    assert n == 72
+
+
 def test_north_fixed_houses_match_cli():
     import copy
     import re
