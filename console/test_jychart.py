@@ -96,11 +96,52 @@ def _compartment(x, y):
     return 0
 
 
+def _compartment(x, y):
+    C1, C2 = 141.67, 278.33
+    if C1 <= x <= C2 and 5 <= y <= C1:
+        return 1
+    if 5 <= x <= C1 and 5 <= y <= C1:
+        return 2 if y < x else 3
+    if C2 <= x <= 415 and 5 <= y <= C1:
+        return 12 if y < 420 - x else 11
+    if 5 <= x <= C1 and C1 <= y <= C2:
+        return 4
+    if 5 <= x <= C1 and C2 <= y <= 415:
+        return 5 if y < 420 - x else 6
+    if C1 <= x <= C2 and C2 <= y <= 415:
+        return 7
+    if C2 <= x <= 415 and C2 <= y <= 415:
+        return 9 if y < x else 8
+    if C2 <= x <= 415 and C1 <= y <= C2:
+        return 10
+    return 0
+
+
+def _compartment(x, y):
+    C1, C2 = 141.67, 278.33
+    if C1 <= x <= C2 and 5 <= y <= C1:
+        return 1
+    if 5 <= x <= C1 and 5 <= y <= C1:
+        return 2 if y < x else 3
+    if C2 <= x <= 415 and 5 <= y <= C1:
+        return 12 if y < 420 - x else 11
+    if 5 <= x <= C1 and C1 <= y <= C2:
+        return 4
+    if 5 <= x <= C1 and C2 <= y <= 415:
+        return 5 if y < 420 - x else 6
+    if C1 <= x <= C2 and C2 <= y <= 415:
+        return 7
+    if C2 <= x <= 415 and C2 <= y <= 415:
+        return 9 if y < x else 8
+    if C2 <= x <= 415 and C1 <= y <= C2:
+        return 10
+    return 0
+
+
 def test_all_charts_placements_geometric():
     import re
 
-    from kendra import RASIS
-    from render import CHART_DEFS
+    from render import CHART_DEFS, chart_data
 
     doc = _spread_doc()
     sym2p = {"Su": "Ravi", "Mo": "Chandra", "Ma": "Kuja", "Me": "Budha",
@@ -109,6 +150,11 @@ def test_all_charts_placements_geometric():
     n = 0
     for title, varga, lagna_planet in CHART_DEFS:
         svg = east_svg(doc, varga, lagna_planet, "en", title)
+        houses, _, _ = chart_data(doc, varga, lagna_planet)
+        want = {}
+        for hh, ps in houses.items():
+            for p in ps:
+                want[p] = hh
         for m in re.finditer(
                 r'<text[^>]*x="([\d.]+)"[^>]*y="([\d.]+)"[^>]*>(Su|Mo|Ma|Me|Ju|Ve|Sa|Ra|Ke)</text>|'
                 r'<text[^>]*y="([\d.]+)"[^>]*x="([\d.]+)"[^>]*>(Su|Mo|Ma|Me|Ju|Ve|Sa|Ra|Ke)</text>',
@@ -116,8 +162,8 @@ def test_all_charts_placements_geometric():
             g = m.groups()
             x, y, t = ((float(g[0]), float(g[1]), g[2]) if g[0]
                        else (float(g[4]), float(g[3]), g[5]))
-            exp = RASIS.index(doc["shadvarga"][sym2p[t]][varga]) + 1
-            assert _compartment(x, y) == exp, (title, t, exp)
+            # fixed-house: planet sits in its house-numbered position
+            assert _compartment(x, y) == want[sym2p[t]], (title, t)
             n += 1
     assert n == 72
 

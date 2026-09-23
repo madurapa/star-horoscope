@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.33.0
+
+- East charts go fixed-house (Sri Lankan use): house h sits in
+  position h, signs rotate, Asc marker top-center — matching
+  the CLI on every chart. Upstream North file pristine again.
+
 ## 2.32.1
 
 - 72-placement geometric regression test (all planets, all

@@ -282,9 +282,12 @@ def draw_classicEastChartSkeleton(chartSVG, chartCfg):
     return
 
 
-def write_signnumOnChart_esc(chartSVG, signclr, ascendantsign, language="english"):
+def write_signnumOnChart_esc(chartSVG, signclr, ascendantsign, language="english",
+                             fixed_houses=False):
     chartSVG.write('\n  <!-- ********** Ascendant Sign ********** -->\n')
-    px, py = get_asc_position(ascendantsign)
+    # Fixed-house mode: the ascendant always sits in house 1 (top-center),
+    # so the marker does too; otherwise it follows the ascendant's sign.
+    px, py = get_asc_position("Aries" if fixed_houses else ascendantsign)
     asc_label = lang_module.get_ui_label("asc", language)
     # Smaller marker inside the cramped corner triangles.
     asc_class = "sign-num-tri" if is_triangle_sign(ascendantsign) else "sign-num"
@@ -309,6 +312,19 @@ EAST_HOUSENUM_POS = {
     "Aquarius": (409.5, 136.2),
     "Pisces": (283.8, 10.5),
 }
+
+
+def write_housepositionOnChart_esc(chartSVG, signclr):
+    """STAR: fixed-house East frame — compartment h (anti-clockwise from
+    top-center) carries house number h outright."""
+    chartSVG.write('\n  <!-- House positions (STAR fixed-house mode) -->\n')
+    order = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+             "Libra", "Scorpio", "Saggitarius", "Capricorn", "Aquarius",
+             "Pisces"]
+    for i, sign in enumerate(order, start=1):
+        px, py = EAST_HOUSENUM_POS[sign]
+        chartSVG.write(f'''  <text x="{px:.1f}" y="{py:.1f}" font-size="11" fill="{signclr}" text-anchor="middle">{i}</text>\n''')
+    return
 
 
 def write_housenumOnChart_esc(chartSVG, signclr, ascendantsign):
@@ -408,8 +424,12 @@ def create_chartSVG(chartObj, location, chartSVGfilename, language="english"):
     chartSVG.write(f'''<svg id="{chartObj.chartname}_chart_{chartObj.personname}" height="500" width="500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 420 420" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" charset="utf-16">\n''')
     chartSVG.write(fonts.style_block(chartObj.chartcfg, BASE_FONTS))
     draw_classicEastChartSkeleton(chartSVG, chartObj.chartcfg)
-    write_signnumOnChart_esc(chartSVG, chartObj.chartcfg["sign-colour"], chartObj.ascendantsign, language)
-    write_housenumOnChart_esc(chartSVG, chartObj.chartcfg["sign-colour"], chartObj.ascendantsign)
+    write_signnumOnChart_esc(chartSVG, chartObj.chartcfg["sign-colour"], chartObj.ascendantsign, language,
+                             getattr(chartObj, "fixed_houses", False))
+    if getattr(chartObj, "fixed_houses", False):
+        write_housepositionOnChart_esc(chartSVG, chartObj.chartcfg["sign-colour"])
+    else:
+        write_housenumOnChart_esc(chartSVG, chartObj.chartcfg["sign-colour"], chartObj.ascendantsign)
     write_planetsOnChart_esc(chartSVG, chartObj.planets)
     if chartObj.chartcfg["aspect-visibility"]:
         write_planetsAspectsOnChart_esc(chartSVG, chartObj.planets)

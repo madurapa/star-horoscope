@@ -101,7 +101,23 @@ def north_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
 
 
 def east_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
-    return _base(doc, varga, lagna_planet, locale, title, chart.EastChart)
+    """East frame, fixed houses (Sri Lankan use): house h always sits in
+    position h, signs rotate. The housenum handed to the library is the
+    one landing on the wanted position under the true ascendant."""
+    lang = LOCALE.get(locale, "english")
+    houses, _, lagna_seat = chart_data(doc, varga, lagna_planet)
+    c = chart.EastChart("", "", language=lang)
+    c.set_birth_details("", "", "")
+    c.set_ascendantsign(MODERN_TO_CLASSICAL[RASIS[lagna_seat - 1]])
+    c.fixed_houses = True
+    for p, const in PLANET_CONST.items():
+        house = _house_of(houses, p)
+        # housenum n from true asc landing on position `house`: the library
+        # maps n onto that position's fixed sign, so slots stay put.
+        n = ((house - lagna_seat) % 12) + 1
+        c.add_planet(const, chart.get_planet_symbol(const, lang), n, colour="black")
+    c.updatechartcfg(show_center_lagna=DIVISIONS[title], **LIGHT)
+    return c.to_svg_string()
 
 
 def south_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
