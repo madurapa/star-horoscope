@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.27.1
+
+- Docs: engine-parity note (dos vs swisseph dasa dates differ
+  legitimately; match the flag when comparing outputs).
+
 ## 2.27.0
 
 - Report section completion: Birth Weekday, Julian Date +

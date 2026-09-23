@@ -154,6 +154,11 @@ PYTHONPATH=/tmp/star-py:console python3.13 console/app.py \
 python3.13 -m pytest console/ -q
 ```
 
+Compare like with like: `--engine dos` reproduces the original
+program's dates, `--engine swisseph` (default everywhere) uses
+clean-math ephemeris — Moon arcminutes move dasa boundaries by
+days, so always match the flag on both sides.
+
 ## Docs
 
 - `docs/quirks.md` — original-program behaviors reproduced on purpose.
