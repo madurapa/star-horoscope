@@ -96,5 +96,6 @@ def gallery(doc, style: str, locale: str) -> str:
     parts = ["<h2>Charts (SVG)</h2>"]
     make = south_svg if style == "south" else east_svg
     for title, varga, lagna_planet in CHART_DEFS:
+        parts.append(f"<h3>{title}</h3>")
         parts.append(make(doc, varga, lagna_planet, locale, title))
     return "\n".join(parts)

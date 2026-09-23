@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.29.1
+
+- HTML gallery labels every chart (was title-less SVGs);
+  SVG placements verified planet-by-planet against the drawn
+  diagonals for both engines.
+
 ## 2.29.0
 
 - HTML export rewritten as semantic markup (real tables,

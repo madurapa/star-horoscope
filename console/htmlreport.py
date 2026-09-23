@@ -114,6 +114,10 @@ def render_report(doc, chart="diamond", dasa=None, gallery="") -> str:
         f"<title>{_esc(doc['name'])} — Horoscope</title>"
         f"<style>{CSS}</style></head><body>",
         f"<h1>{_esc(doc['name'])}</h1>",
+        _kv_table("Selected Options", [
+            ("District", f"{place['city_index']} ({place['city']})"),
+            ("Method", doc["method"]), ("Engine", doc["engine"]),
+            ("Locale", doc["locale"]), ("Chart", chart)], locale),
         _kv_table("Birth Profile", [
             ("Name", doc["name"]),
             ("Born", f"{doc['birth_date']} {doc['birth_time']}"),
@@ -151,10 +155,6 @@ def render_report(doc, chart="diamond", dasa=None, gallery="") -> str:
             ("Paxhi", doc["chakra"]["paxhi"]), ("Gothra", doc["chakra"]["gothra"]),
             ("Rajju", doc["chakra"]["rajju"]), ("Bhutha", doc["chakra"]["bhutha"])],
             locale),
-        _kv_table("Selected Options", [
-            ("District", f"{place['city_index']} ({place['city']})"),
-            ("Method", doc["method"]), ("Engine", doc["engine"]),
-            ("Locale", doc["locale"]), ("Chart", chart)], locale),
         _houses_table(doc, locale),
         _shadvarga_table(doc, locale),
         _shadvarga_table(doc, locale, positions=True),

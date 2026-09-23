@@ -40,6 +40,8 @@ def test_south_english():
 def test_gallery_all_eight():
     g = gallery(DOC, "diamond", "en")
     assert g.count("<svg") == 8
+    for title in ["Lagna Chart", "Navamsa Chart", "Sun Chart", "Moon Chart"]:
+        assert f"<h3>{title}</h3>" in g
     g2 = gallery(DOC, "south", "ta")
     assert g2.count("<svg") == 8 and "லக்னம்" in g2
 
