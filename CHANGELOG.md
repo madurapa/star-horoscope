@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.33.1
+
+- East charts fixed-house throughout: the `fixed_houses`
+  flag (positional numbers, Asc top-center) was set in code
+  but never enabled — placements were right, numbers
+  disagreed. All 72 placements + numbers proven.
+
 ## 2.33.0
 
 - East charts go fixed-house (Sri Lankan use): house h sits in

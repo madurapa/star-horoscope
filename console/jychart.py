@@ -109,6 +109,7 @@ def east_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
     c = chart.EastChart("", "", language=lang)
     c.set_birth_details("", "", "")
     c.set_ascendantsign(MODERN_TO_CLASSICAL[RASIS[lagna_seat - 1]])
+    c.fixed_houses = True  # slots are house-numbered, signs rotate
     c.fixed_houses = True
     for p, const in PLANET_CONST.items():
         house = _house_of(houses, p)
