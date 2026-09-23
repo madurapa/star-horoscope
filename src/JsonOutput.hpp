@@ -103,6 +103,22 @@ inline std::string renderJson(const HoroscopeOwner& owner, const HoroscopeResult
            << "\": " << houseOf(lon, lagnaDec);
     }
     js << "\n  },\n";
+    // Per-planet details mirroring the houses table (nakshatra/pada from
+    // the planet's own longitude, rasi-relative DMS).
+    js << "  \"details\": {\n";
+    first = true;
+    for (int i = 0; i < 13; ++i) {
+        const double lon = h.output.lonOf(static_cast<Planet>(i)).ecliptic.toDecimal();
+        const AngularDegrees rel = h.output.lonOf(static_cast<Planet>(i)).rasiRel;
+        char rlon[32];
+        std::snprintf(rlon, sizeof(rlon), "%d\xC2\xB0%02d'%02d\\\"", rel.deg, rel.min, rel.sec);
+        if (!first) js << ",\n";
+        first = false;
+        js << "    \"" << kPlanetNames[static_cast<std::size_t>(i)] << "\": {\"nakshatra\": \""
+           << nakshatraDisplayName(nakshatraIndex(lon)) << "\", \"pada\": "
+           << nakshatraPadaOf(lon) << ", \"rasi_longitude\": \"" << rlon << "\"}";
+    }
+    js << "\n  },\n";
     // Avastha states (already planet-indexed by the engine; "" if blank).
     js << "  \"avastha\": {\n";
     first = true;

@@ -19,6 +19,10 @@ RASIS = ["Mesha", "Vrishabha", "Mithuna", "Kataka", "Simha", "Kanya",
 BENEFICS = {"Guru", "Sikuru", "Chandra", "Budha"}
 MALEFICS = {"Ravi", "Kuja", "Shani", "Raahu", "Kethu"}
 
+# Modern display spellings (mirror displayPlanet; keep engine keys for logic).
+DISPLAY = {"Sikuru": "Shukra", "Raahu": "Rahu", "Kethu": "Ketu",
+           "Urenus": "Uranus"}
+
 # Diamond rows: (house, x cell) with cell width unit; center gap holds Lagna.
 ROWS = [
     [(1, 2)],
@@ -84,7 +88,7 @@ def render_diamond(houses: dict, lagna_rasi: int, console: Console,
         bl.append((f"{h} · {rasi}".center(inner)[:inner], "dim", hl))
         names = houses.get(h, [])
         for p in names[:3]:
-            bl.append((p.center(inner)[:inner], planet_style(p), hl))
+            bl.append((DISPLAY.get(p, p).center(inner)[:inner], planet_style(p), hl))
         for _ in range(3 - len(names[:3])):
             bl.append((" " * inner, "", hl))
         bl.append(box_bottom(hl))

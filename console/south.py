@@ -7,7 +7,7 @@ DMS strings client-side). Center 2x2 carries the Lagna rasi. The diamond
 from rich.console import Console
 from rich.text import Text
 
-from kendra import RASIS, planet_style
+from kendra import DISPLAY, RASIS, planet_style
 
 # Fixed rasi per grid cell (None = center block).
 GRID = [
@@ -30,7 +30,7 @@ def render_south_from_seats(seats: dict, lagna_rasi: int, console: Console,
         names = planets[:3]
         lines = [(f"{RASIS[rasi - 1]}", "dim" if not hl else "bold yellow", hl)]
         for p in names:
-            lines.append((p.center(inner)[:inner], planet_style(p), hl))
+            lines.append((DISPLAY.get(p, p).center(inner)[:inner], planet_style(p), hl))
         for _ in range(3 - len(names)):
             lines.append((" " * inner, "", hl))
         return lines

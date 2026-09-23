@@ -21,6 +21,11 @@ DOC = {
                ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
                 "Guru", "Shani", "Raahu", "Kethu", "Urenus", "Neptune",
                 "Pluto"]},
+    "details": {p: {"nakshatra": "Asvida", "pada": 1,
+                    "rasi_longitude": " 0:00:00"} for p in
+                ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
+                 "Guru", "Shani", "Raahu", "Kethu", "Urenus", "Neptune",
+                 "Pluto"]},
     "avastha": {p: ("Bhojana" if p == "Chandra" else "") for p in
                 ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
                  "Guru", "Shani", "Raahu", "Kethu", "Urenus", "Neptune",
@@ -57,8 +62,10 @@ def test_renders_all_planets_at_fixed_width():
     out = buf.getvalue()
     assert "Horoscope Profile" in out
     assert "Test User" in out
+    from render import disp
+
     for p in DOC["longitudes"]:
-        assert p in out, p
+        assert disp(p) in out, p
     assert "Ratnapura" in out
     for section in ["Chart Reference", "Time & Solar Metrics", "Panchanga",
                     "Nirayana Table of Houses", "Shadvarga Charts",
@@ -67,6 +74,7 @@ def test_renders_all_planets_at_fixed_width():
     assert "Guru" in out and "2010-06-28" in out
     assert "Thursday" in out and "Asvida" in out
     assert "Bhojana" in out and "Avastha" in out
+    assert "Asvida" in out and "Nakshatra" in out
     assert "Hora" in out and "Kuja" in out
     assert "Chakra" in out and "Ashva" in out and "Patavi" in out
 
@@ -109,19 +117,26 @@ def test_chart_data_sun_moon_lagna():
 
 def test_dasa_drilldown():
     import render as R
+    from datetime import date as _date
 
-    def shot(dasa=None):
+    def shot(dasa="__none__", today=None):
         buf = io.StringIO()
-        R.render_dasa(DOC, Console(file=buf, width=140, color_system=None),
-                      detail=dasa)
+        kw = {} if dasa == "__none__" else {"detail": dasa}
+        if today:
+            kw["today"] = today
+        R.render_dasa(DOC, Console(file=buf, width=140, color_system=None), **kw)
         return buf.getvalue()
 
-    plain = shot()
+    plain = shot("Shani")
     assert "Budha" not in plain and "2001-06-04" not in plain
     guru = shot("Guru")
     assert "Budha" in guru and "2001-06-04" in guru
     assert "Budha" not in shot("Shani")
     assert "Budha" in shot("all")
+    auto = shot(today=_date(2005, 6, 1))
+    assert "Budha" in auto and "2001-06-04" in auto  # current maha expanded
+    auto_none = shot(today=_date(1990, 1, 1))
+    assert "Budha" not in auto_none  # outside all spans: bars only
 
 
 def test_trim_html():
@@ -189,3 +204,10 @@ def test_sinhala_report_translated_titles_keys():
         assert en not in out, en
     # values stay English (data, not UI)
     assert "Ratnapura" in out and "Guru" in out and "2000-08-17" in out
+
+
+def test_disp_lon_clock_form():
+    from render import disp_lon
+
+    assert disp_lon("239:07:08") == "239°07'08\""
+    assert disp_lon(" 44:29:23") == "44°29'23\""

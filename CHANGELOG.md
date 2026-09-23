@@ -4,6 +4,14 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.26.0
+
+- Report data audit vs the native CLI (every houses-table
+  value now verified present): modern planet spellings
+  everywhere, full Nakshatra/Pada/Rasi-longitude columns via
+  a new schema `details` block, dasa lords corrected, current
+  maha auto-expanded, clock-form longitudes.
+
 ## 2.25.0
 
 - Chart center boxes: rising sign + division label only (owner

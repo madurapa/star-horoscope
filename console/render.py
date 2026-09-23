@@ -18,6 +18,16 @@ from south import render_south, render_south_from_seats
 PLANETS = ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja", "Guru",
            "Shani", "Raahu", "Kethu", "Urenus", "Neptune", "Pluto"]
 
+# Modern display spellings (mirror displayPlanet); engine keys stay canonical.
+DISPLAY = {"Sikuru": "Shukra", "Raahu": "Rahu", "Kethu": "Ketu",
+           "Urenus": "Uranus"}
+# Dasa-table spellings to modern display (mirror dasaName).
+DASA_DISPLAY = {"Sikuru": "Shukra", "Sandu": "Chandra", "Rahu": "Rahu"}
+
+
+def disp(planet: str) -> str:
+    return DISPLAY.get(planet, planet)
+
 
 def render_profile(doc, console: Console) -> None:
     born = f"{doc['birth_date']} {doc['birth_time']}"
@@ -33,7 +43,7 @@ def render_longitudes(doc, console: Console) -> None:
     t.add_column("Graha", style="bold")
     t.add_column("Longitude", justify="right")
     for p in PLANETS:
-        t.add_row(p, doc["longitudes"][p])
+        t.add_row(disp(p), disp_lon(doc["longitudes"][p]))
     console.print(t)
 
 
@@ -55,6 +65,12 @@ def _kv(title, rows, locale="en") -> Table:
 
 def rasi_of(dms: str) -> str:
     return RASIS[int(parse_dms(dms) // 30) % 12]
+
+
+def disp_lon(dms: str) -> str:
+    """Schema DMS display-split to CLI clock form (239:07:08 -> 239°07'08")."""
+    d, m, sec = dms.strip().split(":")
+    return f'{int(d)}°{m}\'{sec}"'
 
 
 def trim_html(html: str) -> str:
@@ -110,13 +126,20 @@ def render_houses(doc, console: Console) -> None:
     t = Table(title=tr("Nirayana Table of Houses", doc["locale"]), expand=True)
     t.add_column("Graha", style="bold")
     t.add_column("Longitude", justify="right")
+    t.add_column("Nakshatra")
+    t.add_column("Pada", justify="right")
     t.add_column("Rasi")
+    t.add_column("Rasi Longitude", justify="right")
     t.add_column("House", justify="right")
     t.add_column("Avastha")
+    det = doc.get("details", {})
     for p in PLANETS:
         lon = doc["longitudes"][p]
-        t.add_row(p, lon, rasi_of(lon), str(doc["houses"][p]),
-                  doc["avastha"][p] or "-")
+        d = det.get(p, {})
+        t.add_row(disp(p), disp_lon(lon), d.get("nakshatra", "-"),
+                  str(d.get("pada", "-")), rasi_of(lon),
+                  d.get("rasi_longitude", "-").strip(),
+                  str(doc["houses"][p]), doc["avastha"][p] or "-")
     console.print(t)
 
 
@@ -126,7 +149,7 @@ def render_shadvarga(doc, console: Console) -> None:
     for h in ["Rashi", "Navamsa", "Hora", "Drekkana", "Dvadasamsa", "Trimshamsa"]:
         t.add_column(h)
     for p in PLANETS:
-        t.add_row(p, *doc["shadvarga"][p])
+        t.add_row(disp(p), *doc["shadvarga"][p])
     console.print(t)
 
 
@@ -135,8 +158,19 @@ def _iso(s: str) -> date:
     return date(int(y), int(m), int(d))
 
 
-def render_dasa(doc, console: Console, detail=None) -> None:
-    """detail: None (bars only), "all", or a maha lord name to expand."""
+def _current_maha(doc, today) -> str | None:
+    for s in doc["dasa"]["mahas"]:
+        if _iso(s["from"]) <= today <= _iso(s["to"]):
+            return s["lord"]
+    return None
+
+
+def render_dasa(doc, console: Console, detail=None, today=None) -> None:
+    """detail: None (bars + current maha expanded), "all", or a maha lord."""
+    from datetime import date as _date
+
+    if detail is None:
+        detail = _current_maha(doc, today or _date.today())
     dasa = doc["dasa"]
     spans = dasa["mahas"]
     t0 = _iso(spans[0]["from"])
@@ -152,10 +186,11 @@ def render_dasa(doc, console: Console, detail=None) -> None:
         days = (_iso(s["to"]) - _iso(s["from"])).days
         fill = max(int(days / total * width), 1)
         bar = Text("▉" * fill + "░" * (width - fill), style="yellow")
-        t.add_row(s["lord"], bar, f"{s['from']} → {s['to']}")
-        if detail == "all" or (detail and detail.lower() == s["lord"].lower()):
+        lord = DASA_DISPLAY.get(s["lord"], s["lord"])
+        t.add_row(lord, bar, f"{s['from']} → {s['to']}")
+        if detail == "all" or (detail and detail.lower() in (s["lord"].lower(), lord.lower())):
             for b in s.get("bhuktis", []):
-                t.add_row("  └ " + b["lord"],
+                t.add_row("  └ " + DASA_DISPLAY.get(b["lord"], b["lord"]),
                           Text(f"{b['from']} → {b['to']}", style="dim"),
                           Text(b["age"], style="dim"))
     console.print(t)
@@ -244,7 +279,7 @@ def render_positions(doc, console: Console) -> None:
             seat = RASIS.index(doc["shadvarga"][p][v]) + 1
             lagna_seat = doc["lagna"]["seats"][v]
             row.append(str(((seat - lagna_seat) % 12) + 1))
-        t.add_row(*row)
+        t.add_row(disp(row[0]), *row[1:])
     console.print(t)
 
 

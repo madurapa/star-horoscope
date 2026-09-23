@@ -24,7 +24,7 @@ def test_diamond_places_glyphs_numbers_rasis():
     assert "Sri Lankan diamond" in out
     assert "1 · Vrishchika" in out  # house 1 carries the Lagna rasi
     assert "4 · Kumbha" in out
-    for name in ["Guru", "Chandra", "Budha", "Ravi", "Sikuru"]:
+    for name in ["Guru", "Chandra", "Budha", "Ravi", "Shukra"]:
         assert name in out, name
     assert "✦ Vrishchika Lagna ✦" in out
 

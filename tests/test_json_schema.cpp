@@ -50,6 +50,9 @@ int main() {
     STAR_CHECK(doc.find("\"seats\": [8, ") != std::string::npos, "lagna seats");
     STAR_CHECK(doc.find("\"Kuja\": 9") != std::string::npos, "kuja house");
     STAR_CHECK(doc.find("\"Chandra\": \"Bhojana\"") != std::string::npos, "chandra avastha");
+    STAR_CHECK(doc.find("\"nakshatra\": \"Puvaputupa\"") != std::string::npos, "details nak");
+    STAR_CHECK(doc.find("\"pada\": 2") != std::string::npos, "details pada");
+    STAR_CHECK(doc.find("25\xC2\xB0") != std::string::npos, "details rasi-lon");
     STAR_CHECK(doc.find("\"balance_lord\": \"Guru\"") != std::string::npos, "dasa lord");
     STAR_CHECK(doc.find("\"lord\": \"Guru\", \"from\": \"2000-08-17\"") != std::string::npos,
                "guru maha");
