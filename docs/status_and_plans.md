@@ -2896,3 +2896,59 @@ Gate: ctest 20/20 zero warnings.
   header removal note, test_panchanga provenance comment.
 - Gate: 25/25, zero warnings, VERIFY_ALL_GREEN. Uncommitted
   (6 files incl. this log) — say the word to commit.
+
+### Session 139 — 2026-09-24 (L0: vendored locale generator)
+- Owner: "start L0". New tools/gen_locales.py: single source
+  for console/i18n.py (STRINGS Ui subset + full 363-concept
+  CONCEPTS table) and jyotichart si/ta sign-names, all derived
+  from locale_si/ta.inc + Locale.hpp en table (order-zipped
+  with length + spot-check asserts, loud on mismatch).
+  Repo-relative paths (the /tmp predecessor hardcoded
+  /data/...); --check exits 1 on drift, 2 on missing rows.
+- tools/gen_jylang.py is now a thin delegating wrapper
+  (CLI-compatible; --check covers both artifacts).
+- Two self-caught issues: a regex typo (fixed before first
+  run) and comment-swallowing enum parsing that dropped
+  DistrictBadulla/Gampaha translations (fixed; trailing //
+  stripped, 363 clean concepts).
+- Day-one proof: STRINGS 54/54 byte-identical, languages.py
+  untouched (--check green), i18n import smoke passes.
+- Gate: 25/25 (no C++ changes). Uncommitted.
+
+### Session 140 — 2026-09-24 (L1: unified chart-marker wording)
+- Owner rulings: unify wording / kn-hi out / full concept set.
+- tools/gen_locales.py now also generates the si/ta
+  `ui_labels` "asc" rows (Lagna marker) from UiKendraLagna,
+  under GENERATED markers scoped to the ui_labels dict
+  (planet_symbols glyphs with the same shape untouched).
+  Other chrome keys (birth/chart/inner/...) have no exact
+  core counterpart and stay hand-maintained (documented split;
+  birth-as-noun vs Born-participle deliberately not forced).
+- languages.py diff: exactly 2 value lines + 4 marker lines
+  (si ලග්න→ලග්නය, ta லக்னம்→இலக்கினம்); --check green and
+  idempotent. test_jychart.py 3 assertions updated (pytest
+  unrunnable here — no rich — noted).
+- Self-caught along the way: an edit that ate the SIGNS
+  header (repaired), an unscoped asc regex that would have
+  hit planet_symbols (rescoped to ui_labels), doubled #
+  markers (fixed).
+- Gate: 25/25. Uncommitted.
+
+### Session 141 — 2026-09-24 (L2: drift guard in the gate)
+- Owner: "continue". CMakeLists gains `locales_check`
+  (`python3 tools/gen_locales.py --check`, corpus pattern):
+  console + jyotichart drift now fails ctest. gen_jylang
+  --check stays unwired (delegating wrapper, subsumed).
+- Proof the guard bites: probed drift -> exit 1 with the
+  file named; restored -> exit 0 (restoration byte-exact,
+  check-green).
+- Gate: 26/26 (25 + locales_check), zero warnings,
+  VERIFY_ALL_GREEN. Uncommitted.
+
+### Session 142 — 2026-09-24 (locale change guide in locale_notes.md)
+- Owner: step-by-step guide for correcting spellings / adding
+  strings, then "add this to locale_notes.md". Added §5
+  (fix-English / fix-si-ta / add-new paths with file
+  pointers, regen + gate commands, fidelity/reviewer
+  policies). Language track L0–L2 + guide complete.
+  Uncommitted (8 files).

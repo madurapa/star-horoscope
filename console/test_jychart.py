@@ -13,9 +13,9 @@ def test_east_english():
 
 def test_east_sinhala_tamil():
     si = east_svg(DOC, 0, None, "si", "Lagna Chart")
-    assert "ලග්න" in si and ">Ch<" in si
+    assert "ලග්නය" in si and ">Ch<" in si
     ta = east_svg(DOC, 0, None, "ta", "Lagna Chart")
-    assert "லக்னம்" in ta and ">Ch<" in ta
+    assert "இலக்கினம்" in ta and ">Ch<" in ta
 
 
 def test_east_navamsa_lagna():
@@ -54,7 +54,7 @@ def test_gallery_all_eight():
     for title in ["Lagna Chart", "Navamsa Chart", "Surya Chart", "Chandra Chart"]:
         assert f"<h3>{title}</h3>" in g
     g2 = gallery(spread, "south", "ta")
-    assert g2.count("<svg") == 8 and "லக்னம்" in g2
+    assert g2.count("<svg") == 8 and "இலக்கினம்" in g2
 
 
 def test_outers_skipped():

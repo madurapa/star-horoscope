@@ -103,6 +103,10 @@ add_test(NAME test_cli_config COMMAND test_cli_config WORKING_DIRECTORY ${CMAKE_
 add_star_test(test_modern_display)
 add_test(NAME corpus COMMAND python3 tools/corpus_run.py
          WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+# Generated language tables must match their master store
+# (src/locale_si/ta.inc + Locale.hpp en table); the tool exits 1 on drift.
+add_test(NAME locales_check COMMAND python3 tools/gen_locales.py --check
+         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # Python bindings (nanobind, Phase 4 consumer): strictly optional, off by
 # default so the gate stays dependency-free. Needs Python 3.9+ dev headers

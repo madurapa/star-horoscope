@@ -70,3 +70,51 @@ I fixed only clear errors. These are judgment calls or established Sri Lankan us
 * Every concept has exactly one row per language (363/363, no duplicates), and every row is Draft.
 * Script cells are all non-ASCII, romanized cells are all ASCII, and all three files are valid UTF-8.
 * `*` and `#` markers and prompt leading spaces match the en cells.
+
+## 5. How to change strings (single-source workflow)
+
+Master: `src/locale_si.inc` / `src/locale_ta.inc` + the `en` table in
+`src/Locale.hpp`. Everything else generates from there via
+`tools/gen_locales.py` (`console/i18n.py` STRINGS + full CONCEPTS
+table, jyotichart si/ta sign-names and `asc` rows); `locales_check`
+in ctest fails on drift. Gate after every change: build, `ctest`,
+`--verify`.
+
+### Fix a modern English display string
+1. Change it in `src/ModernRenderer.hpp` (prompts: `src/CLI.cpp`).
+2. Change the matching `en` cell in `Locale.hpp` — `test_locale`
+   pins en==renderer equality and fails otherwise.
+3. Regenerate the glossary (`tools/dump_glossary.cpp` build line
+   in its header; paste into `docs/glossary.md`, fix counts).
+4. Expect `test_swiss_goldens` / `corpus` to fail (pinned text) —
+   re-record deliberately with justification in
+   `docs/status_and_plans.md`, never blindly.
+5. Never "fix" engine DOS-literal strings (`Sandu`, `Rav1`,
+   quirks) — fidelity contract, `docs/quirks.md`.
+
+### Fix a Sinhala/Tamil translation
+1. Edit the row in `src/locale_si.inc` / `src/locale_ta.inc`
+   (exact `{Concept::X, "script", "roman", ReviewStatus::Draft},`
+   shape). Stays `Draft` — only the named reviewer flips to
+   `Reviewed` (policy in `docs/glossary.md`).
+2. Run `python3 tools/gen_locales.py` (`console/i18n.py`, plus
+   jyotichart sign/`asc` rows when touched), then
+   `python3 tools/gen_locales.py --check` (exit 0).
+3. Hand-maintained jyotichart parts (planet glyphs, non-`asc`
+   chrome, kannada/hindi) have no core counterpart — edit
+   `third_party/jyotichart/support/languages.py` directly,
+   outside the GENERATED markers.
+
+### Add a new translatable string
+1. Append the `Concept` at the end of the enum (before `Count`)
+   — existing indices must not shift (`test_locale` uses
+   hardcoded offsets).
+2. Append its `en` cell at the end of the `conceptText` table
+   (same order), and add it to the `conceptForEn` list if it
+   must translate through the `localizeKey` chokepoint.
+3. Use `localeText(Concept::X, locale)` (prompts/values) or
+   route the literal through `localizeKey` (titles/keys).
+4. Add si/ta `.inc` rows (or omit for clean English fallback).
+5. Regenerate + `--check`; extend `ITEMS` in `gen_locales.py`
+   if `render.py` looks the key up. Update goldens/corpus on
+   output-text change; log a session entry.

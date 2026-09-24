@@ -190,7 +190,9 @@ ui_labels = {
         "outerbirthplace": "बाहर जन्मस्थान"
     },
     "sinhala": {
-        "asc"         : "ලග්න",
+        # BEGIN GENERATED ui-asc sinhala
+        "asc"         : "ලග්නය",
+        # END GENERATED
         "birth"       : "උපත",
         "birthplace"  : "උපන් ස්ථානය",
         "chart"       : "කේන්දරය",
@@ -201,7 +203,9 @@ ui_labels = {
         "outerbirthplace": "පිටත උපන් ස්ථානය"
     },
     "tamil": {
-        "asc"         : "லக்னம்",
+        # BEGIN GENERATED ui-asc tamil
+        "asc"         : "இலக்கினம்",
+        # END GENERATED
         "birth"       : "பிறப்பு",
         "birthplace"  : "பிறந்த இடம்",
         "chart"       : "ஜாதகம்",
