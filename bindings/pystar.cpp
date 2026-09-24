@@ -18,7 +18,7 @@ using namespace star;
 
 static std::string horoscopeJson(const std::string& name, int year, int month, int day,
                                  int hour, int minute, int city, bool nirayana,
-                                 const std::string& engine, const std::string& display,
+                                 const std::string& engine,
                                  const std::string& locale) {
     std::string err;
     if (!(err = CLI::validateName(name)).empty()) throw nb::value_error(err.c_str());
@@ -33,8 +33,6 @@ static std::string horoscopeJson(const std::string& name, int year, int month, i
         kind = EngineKind::Dos;
     else if (engine != "swisseph")
         throw nb::value_error("engine wants dos|swisseph");
-    if (display != "modern" && display != "legacy")
-        throw nb::value_error("display wants modern|legacy");
     Locale loc = Locale::En;
     if (!parseLocale(locale, loc)) throw nb::value_error("locale wants en|si|ta");
     const HoroscopeOwner owner{name, year, month, day, hour, minute};
@@ -44,7 +42,6 @@ static std::string horoscopeJson(const std::string& name, int year, int month, i
     const double birthFrac = fracYear(year, month, day);
     const DasaBalance bal = dasaBalance(h.moonNirayanaDeg);
     modern::JsonProvenance prov;
-    prov.display = display.c_str();
     prov.nirayana = nirayana;
     prov.locale = loc;
     prov.cityIndex = city;
@@ -59,6 +56,6 @@ NB_MODULE(pystar, m) {
     m.def("horoscope", &horoscopeJson, nb::arg("name"), nb::arg("year"), nb::arg("month"),
           nb::arg("day"), nb::arg("hour"), nb::arg("minute"), nb::arg("city"),
           nb::arg("nirayana") = true, nb::arg("engine") = "swisseph",
-          nb::arg("display") = "modern", nb::arg("locale") = "en",
+          nb::arg("locale") = "en",
           "Compute a horoscope; returns a star-horoscope/1 JSON document.");
 }

@@ -59,7 +59,7 @@ def render_longitudes(doc, console: Console) -> None:
 def render_provenance(doc, console: Console) -> None:
     console.print(
         f"[dim]schema {doc['schema']} | v{doc['version']} | {doc['engine']} | "
-        f"{doc['display']} | {doc['locale']} | JD {doc['julian_date']} | "
+        f"{doc['locale']} | JD {doc['julian_date']} | "
         f"ayanamsa {doc['ayanamsa_deg']}[/dim]")
 
 

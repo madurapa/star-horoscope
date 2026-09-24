@@ -9,7 +9,7 @@ DOC = {
     "schema": "star-horoscope/1", "version": "x", "name": "Test User",
     "birth_date": "2000-08-17", "birth_time": "14:05",
     "place": {"city_index": 7, "city": "Ratnapura"},
-    "method": "nirayana", "engine": "dos", "display": "modern",
+    "method": "nirayana", "engine": "dos",
     "locale": "en", "julian_date": 2451773.857639, "ayanamsa_deg": 23.83364,
     "longitudes": {p: "0:0:0" for p in
                    ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",

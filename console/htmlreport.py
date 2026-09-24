@@ -163,7 +163,7 @@ def render_report(doc, chart="diamond", dasa=None, gallery="") -> str:
         gallery,
         _dasa_table(doc, locale, dasa if dasa else "all"),
         (f"<p class=\"provenance\">schema {doc['schema']} | v{doc['version']} | "
-         f"{doc['engine']} | {doc['display']} | {doc['locale']} | "
+         f"{doc['engine']} | {doc['locale']} | "
          f"JD {doc['julian_date']} | ayanamsa {doc['ayanamsa_deg']}</p>"),
         "</body></html>",
     ]

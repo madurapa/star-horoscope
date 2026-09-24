@@ -16,34 +16,41 @@ original source, no authorship claimed over it, not a commercial product.
 
 ## Architecture (do not fork it)
 
-- **One engine** (`src/Engine.hpp` → `HoroscopeResult`): frozen DOS-faithful
-  math. All quirks reproduce deliberately (non-carry seconds display,
-  truncation splits, half-odd JD ties, 30-day date borrowing, the 23|24
-  balance razor, city-13 label/coords mismatch). Never "fix" these —
-  they are the fidelity contract, documented across source comments.
-- **Two displays**: `--display modern` (default: corrected spellings per
+- **Two engines** (`src/Engine.hpp` → `HoroscopeResult`, `--engine
+  dos|swisseph`, default swisseph): `Dos` is the frozen DOS-faithful
+  reconstruction (reference backend). All quirks reproduce deliberately
+  there (non-carry seconds display, truncation splits, half-odd JD ties,
+  30-day date borrowing, the 23|24 balance razor, city-13 label/coords
+  mismatch). Never "fix" these — they are the fidelity contract,
+  documented across source comments. `Swiss` (Swiss Ephemeris backend)
+  is the product default; Session 127 of `docs/status_and_plans.md`
+  records the measured deltas (all longitudes move ~2', dasa +15d).
+- **One display**: modern only (corrected spellings per
   `docs/glossary.md`, responsive 80/90-col layout, central `Theme`
-  palette) and `--display legacy` (byte-exact original, verification
-  runs only).
+  palette). The byte-exact legacy display was removed (remove_legacy
+  R1–R3); JSON carries no display key.
 - **Interactive CLI**: no defaults anywhere; every field validated
   (day-vs-month incl. leap-year Feb 29, hour/minute, city list + manual
   geo, S/N choices). Batch flags exist for scripting/tests.
-- **Layout**: `src/` engine + CLI, `tests/` code + fixtures (`screens/`,
-  `screen_test/`, `corpus/`), `tools/` harness scripts, `docs/`,
-  `legacy/` frozen reverse-engineering archive (never built, never
-  re-linked — see its README).
+- **Layout**: `src/` engine + CLI, `tests/` code + fixtures (`corpus/`
+  modern/Swiss expects, `swiss_goldens/`, engine suites; `screens/` and
+  DOS captures removed), `tools/` harness scripts, `docs/`.
+  (`legacy/` reverse-engineering archive removed, R7; frozen on the
+  `origin/legacy` branch — see `NOTICE.md`.)
 
 ## The oracle doctrine (the one rule that matters)
 
-- `tests/screens/`, `tests/corpus/`, `tests/screen_test/` are the
+- `tests/corpus/` and `tests/swiss_goldens/` are the
   **contract**, not fixtures of convenience. Golden files change only by
   explicit re-baselining with recorded justification — never edit
-  expectations to match new code.
+  expectations to match new code. (`tests/screens/` and DOS captures
+  were removed; DOS-value pins live on in the verifier's DOS block.)
 - Numeric parity: modern display changes words/layout only; every number
-  proven equal to legacy (`test_modern_display`).
-- `legacy/` is the court of last resort (arbitration, new ground truth),
-  not a dependency: nothing in the build runs it except
-  `tools/check_extraction.py` (reads the asm text).
+  comes straight from the engine (pinned by the dual-engine verifier,
+  `test_modern_display`, and `test_swiss_goldens`).
+- `origin/legacy` (frozen pre-removal tree) is the court of last
+  resort (arbitration, new ground truth), not a dependency: nothing
+  in the build reads it.
 - Reverse-engineering track is **closed**. No disassembler is needed for
   any current workflow. If disassembly is ever needed again, use free
   tooling (Ghidra/radare2) — proprietary tools have no place in this
@@ -57,8 +64,9 @@ ctest --test-dir /tmp/star-build
 ./modern_star --verify   # checkpoint gate, must end VERIFY_ALL_GREEN
 ```
 
-Quick app-only build:
-`g++ -std=c++20 -O2 -Wall -Wextra -Isrc src/main.cpp src/CLI.cpp src/VargaEngine.cpp -o modern_star`
+Quick app-only build (same sources CMake compiles; third-party warns
+upstream-only there, built `-w` under CMake):
+`g++ -std=c++20 -O2 -Wall -Wextra -Isrc -Ithird_party/swisseph src/main.cpp src/CLI.cpp src/VargaEngine.cpp src/SwissFeed.cpp third_party/swisseph/swe*.c -o modern_star -lm -ldl`
 
 A step that reduces passing tests is a bug in that step — revert and
 re-approach. Zero warnings (`-Wall -Wextra`) is required, not aspirational.
@@ -73,8 +81,9 @@ re-approach. Zero warnings (`-Wall -Wextra`) is required, not aspirational.
   faint/subtle/err/warn); codes wrap visible text, never padding;
   plain fallback byte-identical; `--color auto|always|never` + `NO_COLOR`;
   never into pipes/files; TTY stderr may use red.
-- **Config**: `--display modern|legacy`, `--color`, `--screen 1-14`,
-  `--output`, `--format`, `--verify`, `--config`, `--help`. No defaults
+- **Config**: `--engine dos|swisseph` (default swisseph), `--color`,
+  `--screen 1-14`, `--output`, `--format`, `--verify`, `--config`,
+  `--locale`, `--thathkala`, `--help`. No defaults
   for birth/city/method fields, ever.
 - **Versions**: patch = fixes/docs, minor = features (`kAppVersion` in
   `ModernRenderer.hpp` is authoritative; tests pin the constant, never
@@ -106,6 +115,9 @@ dos|swisseph`, display×engine independent, differential + independent
 anchors, modern-default only after L0+L1+L2 green), Phase 3 localization
 (glossary seed exists), Phase 4 tri-target JSON consumers, Phase 5
 India mode (Bhava/quadrant systems live there, not in v1).
+State 2026-09-24: Swiss default is live, the verifier is dual-engine,
+and `docs/remove_legacy.md` R1–R5 removed the legacy display, goldens,
+renderers, DOS-pinned tests, and DOS tooling (R6 docs underway).
 
 ## Baseline checkpoints (what "correct" means)
 
@@ -117,6 +129,9 @@ Ayanamsa 23°50'1". Balance Guru 9-10-11 (screen agrees 9-10-11).
 Guru Maha 2000-08-17→2010-06-28;
 Budha →2001-06-04, Kethu →2002-05-10, Sikuru →2005-01-10.
 Full assertions live in `tests/verifier.cpp` — this list is the summary.
+Swiss block (same profile): ayanamsa 23°51'57", balance Guru 9-10-26,
+Guru Maha 2000-08-17→2010-07-13; Kuja 106:38:30 (Navamsa flips to the
+Wrschika seat, avastha Gamana).
 
 ## Skills (load deterministically — auto-loading is unreliable)
 

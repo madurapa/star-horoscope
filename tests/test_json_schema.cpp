@@ -28,7 +28,6 @@ int main() {
     const double birthFrac = fracYear(2000, 8, 17);
     const DasaBalance bal = dasaBalance(h.moonNirayanaDeg);
     modern::JsonProvenance prov;
-    prov.display = "modern";
     prov.nirayana = true;
     prov.locale = Locale::En;
     prov.cityIndex = 7;
@@ -40,8 +39,8 @@ int main() {
          {"\"schema\": \"star-horoscope/1\"", "\"version\": \"", "\"name\": ",
           "\"birth_date\": \"2000-08-17\"", "\"birth_time\": \"14:05\"",
           "\"place\": {\"city_index\": 7, \"city\": \"Ratnapura\"}",
-          "\"method\": \"nirayana\"", "\"engine\": \"dos\"", "\"display\": \"modern\"",
-          "\"locale\": \"en\"", "\"julian_date\": ", "\"ayanamsa_deg\": ",
+           "\"method\": \"nirayana\"", "\"engine\": \"dos\"",
+           "\"locale\": \"en\"", "\"julian_date\": ", "\"ayanamsa_deg\": ",
           "\"longitudes\": {", "\"lagna\": {", "\"houses\": {", "\"shadvarga\": {",
           "\"panchanga\": {", "\"times\": {", "\"dasa\": {"})
         STAR_CHECK(doc.find(k) != std::string::npos, "has %s", k);
@@ -87,15 +86,14 @@ int main() {
                        tail == '"',
                    "dms %s", want[i]);
     }
-    // Provenance follows flags (sayana + legacy + si render through one path).
+    // Provenance follows flags (sayana + si render through one path).
     modern::JsonProvenance p2 = prov;
-    p2.display = "legacy";
     p2.nirayana = false;
     p2.locale = Locale::Ta;
     const std::string doc2 =
         modern::renderJson(owner, h, EngineKind::Swiss, p2, birth, birthFrac, bal);
     for (const char* k : {"\"method\": \"sayana\"", "\"engine\": \"swisseph\"",
-                          "\"display\": \"legacy\"", "\"locale\": \"ta\""})
+                          "\"locale\": \"ta\""})
         STAR_CHECK(doc2.find(k) != std::string::npos, "prov %s", k);
     if (::startest::g_fail == 0) std::printf("JSON_SCHEMA_ALL_GREEN\n");
     return ::startest::exitCode();

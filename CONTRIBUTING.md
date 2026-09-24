@@ -20,15 +20,16 @@ skill (`.agents/skills/star-fidelity-gate/`) and follow it.
 
 ## Golden files are frozen
 
-`tests/screens/`, `tests/corpus/`, `tests/screen_test/` are the
+`tests/corpus/` and `tests/swiss_goldens/` are the
 contract. They change only by explicit re-baselining with a recorded
 justification — never edit expectations to match new code.
+(DOS-value pins live on in the verifier's DOS block.)
 
 ## Numeric parity
 
-Display, palette, and layout work must prove every number equal to
-`--display legacy` output (the `test_modern_display` pattern: strip
-words, diff numbers). Modern display changes words/layout only.
+Display, palette, and layout work must not change numbers: every
+number comes straight from the engine (dual-engine verifier,
+`test_modern_display`, and `test_swiss_goldens` pin them).
 
 ## Quirks are load-bearing
 

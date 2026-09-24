@@ -61,8 +61,6 @@ void printHelp() {
               << "                         interactive runs unless requested)\n"
               << "  --output <file>        Append output to file (default: stdout)\n"
               << "  --format <text|json>   Output format (default: text)\n"
-              << "  --display <modern|legacy>  Corrected redesign (default) vs\n"
-              << "                         byte-exact original (verification runs)\n"
               << "  --color <auto|always|never>  Headings color (default: auto)\n"
               << "  --verify               Run checkpoint verification, exit non-zero on fail\n"
               << "  --config <file>        Load key=value config file first\n"
@@ -169,11 +167,6 @@ int main(int argc, char* argv[]) {
                 config.output_format = argv[++i];
                 if (config.output_format != "text" && config.output_format != "json") {
                     return star::cliFail("Error: --format wants text|json");
-                }
-            } else if (arg == "--display" && i + 1 < argc) {
-                config.display = argv[++i];
-                if (config.display != "modern" && config.display != "legacy") {
-                    return star::cliFail("Error: --display wants modern|legacy");
                 }
             } else if (arg == "--color" && i + 1 < argc) {
                 config.color = argv[++i];

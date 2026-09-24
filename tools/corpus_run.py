@@ -73,8 +73,9 @@ def main():
                 flags += ["--nirayana"] if v in ("true", "1", "yes") else ["--sayana"]
             elif k == "thathkala" and v in ("true", "1", "yes"):
                 flags += ["--thathkala"]
-        # Fidelity corpus runs the byte-exact legacy layer.
-        cmd = [binary] + flags + ["--screen", scr, "--display", "legacy"]
+        # R1: legacy display removed; corpus runs the modern layer until R3
+        # rewrites the golden expects (legacy literals no longer emitted).
+        cmd = [binary] + flags + ["--screen", scr]
         r = subprocess.run(cmd, capture_output=True, text=True)
         out = r.stdout + r.stderr
         cur_fail = 0

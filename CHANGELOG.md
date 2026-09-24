@@ -4,6 +4,23 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 3.0.0
+
+- Legacy display removed: no `--display` flag, no `renderScreen*`
+  renderers, no `tests/screens/` or DOS-capture goldens.
+- Corpus and Swiss goldens (`tests/corpus/`,
+  `tests/swiss_goldens/`) are the product gate; the verifier
+  asserts both engines (Swiss: all longitudes move ~2',
+  dasa +15d).
+- JSON schema drops the `"display"` key (still versioned
+  `star-horoscope/1`; version decision rides with R8).
+- DOS tooling retired: extraction check, capture/compare/fuzz
+  scripts, screen_test entries and memdumps. L1
+  `diff_engines.py` and the `gen_fuzz.py` range matrix stay.
+- `legacy/` directory deleted (frozen on the `legacy` branch).
+- Docs: glossary is modern-vocabulary-only (Old table in the
+  `legacy` branch); quirks archived as the DOS-engine record.
+
 ## 2.35.0
 
 - Sun displays as Surya everywhere modern (tables, dasa,

@@ -1,7 +1,7 @@
 #pragma once
 // Phase-4 JSON output (schema v1, frozen: docs/json_schema.md).
 // Provenance-bearing machine output for pure consumers (Python/TS later):
-// every document says which engine, display, method, locale, and app
+// every document says which engine, method, locale, and app
 // version produced it. Hand-rolled (no third-party JSON dep by design);
 // strings are escaped, doubles are finite-checked by the caller contract
 // (engine outputs are always finite — see test_json_schema).
@@ -41,7 +41,6 @@ inline std::string jsonEscape(std::string_view s) {
 
 // Provenance captured at render time (CLI fills from its config).
 struct JsonProvenance {
-    const char* display = "modern";  // modern|legacy
     bool nirayana = true;
     Locale locale = Locale::En;
     int cityIndex = 0;      // <=0 = manual/unknown
@@ -66,7 +65,6 @@ inline std::string renderJson(const HoroscopeOwner& owner, const HoroscopeResult
        << jsonEscape(prov.city) << "\"},\n";
     js << "  \"method\": \"" << (prov.nirayana ? "nirayana" : "sayana") << "\",\n";
     js << "  \"engine\": \"" << (kind == EngineKind::Swiss ? "swisseph" : "dos") << "\",\n";
-    js << "  \"display\": \"" << jsonEscape(prov.display) << "\",\n";
     js << "  \"locale\": \"" << localeName(prov.locale) << "\",\n";
     js << "  \"julian_date\": " << std::fixed << std::setprecision(6) << h.jd << ",\n";
     js << "  \"ayanamsa_deg\": " << h.ayanamsaDeg << ",\n";

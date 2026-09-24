@@ -35,20 +35,6 @@ std::string readLine() {
     return s;
 }
 
-bool readYN(const char* prompt, bool& out) {
-    for (;;) {
-        std::cout << prompt << std::flush;
-        if (std::cin.eof()) return false;
-        std::string s = readLine();
-        if (std::cin.eof() && s.empty() && std::cin.fail()) return false;
-        s = CLI::trim(s);
-        if (s.size() == 1 && (s[0] == 'Y' || s[0] == 'y')) { out = true; return true; }
-        if (s.size() == 1 && (s[0] == 'N' || s[0] == 'n')) { out = false; return true; }
-        std::cout << "Please answer Y or N.\n";
-        if (std::cin.eof()) return false;
-    }
-}
-
 bool readInts(const char* prompt, int want, int* vals, bool modernMsg = false,
             const char* hint = nullptr, bool color = false) {
     for (;;) {
@@ -347,130 +333,8 @@ bool CLI::promptModern() {
 }
 
 bool CLI::promptMissing() {
-    if (config_.display != "legacy") return promptModern();
-    // Screen 01 window.
-    std::time_t now = std::time(nullptr);
-    std::tm local{};
-#if defined(_WIN32)
-    localtime_s(&local, &now);
-#else
-    localtime_r(&now, &local);
-#endif
-    std::cout << "YOUR STARS\n\n"
-              << "Today is:             " << (local.tm_year + 1900) << "- "
-              << (local.tm_mon + 1) << "-" << local.tm_mday << "\n\n\n";
-    bool thathkala = false;
-    if (!config_.thathkala) {
-        if (!readYN("\"Thathkala Kendra\"   ?  (Y/N) ", thathkala)) return false;
-        config_.thathkala = thathkala;
-    }
-    if (config_.thathkala) {
-        if (!config_.nirayana.has_value()) {
-            bool nrayana = true;
-            for (;;) {
-                std::cout << "\"SAYANA\"  method  or \"NRAYANA\"  method (S/N) ?"
-                          << std::flush;
-                if (std::cin.eof()) return false;
-                std::string s = trim(readLine());
-                if (std::cin.eof()) return false;
-                if (s.size() == 1 && (s[0] == 'N' || s[0] == 'n')) { nrayana = true; break; }
-                if (s.size() == 1 && (s[0] == 'S' || s[0] == 's')) { nrayana = false; break; }
-                std::cout << "Please answer S or N.\n";
-            }
-            config_.nirayana = nrayana;
-        }
-        return true;
-    }
-
-    // Owner details window.
-    std::cout << "\n HOROSCOPE  OWNER\"S   DEATALS \n"
-              << " ****************************\n\n";
-    if (trim(config_.name).empty()) {
-        for (;;) {
-            std::cout << "Name ? " << std::flush;
-            if (std::cin.eof()) return false;
-            std::string s = readLine();
-            if (std::cin.eof()) return false;
-            const std::string err = validateName(s);
-            if (err.empty()) { config_.name = trim(s); break; }
-            std::cout << err << "\n";
-        }
-    }
-    if (!validateDate(config_.birth_year, config_.birth_month, config_.birth_day).empty()) {
-        for (;;) {
-            int v[3] = {config_.birth_year, config_.birth_month, config_.birth_day};
-            if (!readInts("Birth date - Year Month Day  ? ", 3, v)) return false;
-            const std::string err = validateDate(v[0], v[1], v[2]);
-            if (err.empty()) {
-                config_.birth_year = v[0];
-                config_.birth_month = v[1];
-                config_.birth_day = v[2];
-                break;
-            }
-            std::cout << err << "\n";
-        }
-    }
-    if (!validateTime(config_.birth_hour, config_.birth_minute).empty()) {
-        for (;;) {
-            int v[2] = {config_.birth_hour, config_.birth_minute};
-            if (!readInts("Birth time - Hr Min [24Hrs]  ? ", 2, v)) return false;
-            const std::string err = validateTime(v[0], v[1]);
-            if (err.empty()) {
-                config_.birth_hour = v[0];
-                config_.birth_minute = v[1];
-                break;
-            }
-            std::cout << err << "\n";
-        }
-    }
-
-    // City list window.
-    if (!validateCity(config_.city_index).empty()) {
-        std::cout << "\n" << renderScreen04() << "\n";
-        for (;;) {
-            int v[1] = {0};
-            if (!readInts("Closest city ? ", 1, v)) return false;
-            const std::string err = validateCity(v[0]);
-            if (err.empty()) { config_.city_index = v[0]; break; }
-            std::cout << err << "\n";
-        }
-    }
-    if (config_.city_index > kCityCount && !config_.manual_geo_set) {
-        for (;;) {
-            int v[2] = {0, 0};
-            if (!readInts("Geocentric latitude  (Deg  Min) ? ", 2, v)) return false;
-            int w[2] = {0, 0};
-            if (!readInts("Geocentric longitude (Deg  Min) ? ", 2, w)) return false;
-            const std::string err = validateGeo(v[0], v[1], w[0], w[1]);
-            if (err.empty()) {
-                config_.manual_geo = GeoCoord{v[0], v[1], w[0], w[1]};
-                config_.manual_geo_set = true;
-                break;
-            }
-            std::cout << err << "\n";
-        }
-    }
-
-    // Method window.
-    if (!config_.nirayana.has_value()) {
-        for (;;) {
-            std::cout << "\"SAYANA\"  method  or \"NRAYANA\"  method (S/N) ?"
-                      << std::flush;
-            if (std::cin.eof()) return false;
-            std::string s = trim(readLine());
-            if (std::cin.eof()) return false;
-            if (s.size() == 1 && (s[0] == 'N' || s[0] == 'n')) {
-                config_.nirayana = true;
-                break;
-            }
-            if (s.size() == 1 && (s[0] == 'S' || s[0] == 's')) {
-                config_.nirayana = false;
-                break;
-            }
-            std::cout << "Please answer S or N.\n";
-        }
-    }
-    return true;
+    // Modern-only (legacy prompt path removed per docs/remove_legacy.md R1).
+    return promptModern();
 }
 
 void CLI::runInteractive() {
@@ -524,7 +388,6 @@ bool CLI::colorOn() const {
 static modern::JsonProvenance jsonProv(const CLIConfig& config, bool nirayana,
                                          const std::string& city) {
     modern::JsonProvenance prov;
-    prov.display = config.display.c_str();
     prov.nirayana = nirayana;
     prov.locale = config.locale;
     prov.cityIndex = config.thathkala ? 1 : config.city_index;
@@ -533,7 +396,7 @@ static modern::JsonProvenance jsonProv(const CLIConfig& config, bool nirayana,
 }
 
 int CLI::runBaseline() const {
-    if (config_.display == "legacy") return runBaselineLegacy();
+    // Modern-only (legacy renderer removed per docs/remove_legacy.md R1).
     return runBaselineModern();
 }
 
@@ -653,149 +516,6 @@ int CLI::runBaselineModern() const {
         emit(modern::renderDasa(birth, birthFrac, bal, h.moonNirayanaDeg, W, col,
                                 config_.locale));
     if (config_.show_all_screens) emit(modern::renderFooter(W));
-    return 0;
-}
-
-int CLI::runBaselineLegacy() const {
-    const bool nirayana = config_.nirayana.value_or(true);
-    const GeoCoord geo = config_.thathkala ? kColomboFallback : resolveGeo(config_);
-    const HoroscopeOwner owner = ownerFromConfig(config_);
-    // Explicit engine kind (Swiss default per §4.5 flip; --engine dos
-    // selects the frozen reconstruction; see docs/phase2_design.md).
-    const EngineKind kind = config_.engine.value_or(EngineKind::Swiss);
-    const HoroscopeResult h = computeHoroscope(owner, geo, nirayana, kind);
-    if (!h.engineOk) {
-        return cliFail(std::string("Error: swiss engine failed: ") + h.engineError);
-    }
-
-    const YMD birth{owner.birth_year, owner.birth_month, owner.birth_day};
-    const double birthFrac = fracYear(owner.birth_year, owner.birth_month, owner.birth_day);
-    const DasaBalance bal = dasaBalance(h.moonNirayanaDeg);
-    const double riseH = h.riseH;
-    const double setH = h.setH;
-    // All output streams continuously (no paging): interactive and batch
-    // modes show the same full data.
-    auto emit = [&](const std::string& s) {
-        writeOutput(s);
-        if (!s.empty() && s.back() != '\n') writeOutput("\n");
-    };
-
-    auto show = [&](int n) {
-        if (!config_.show_all_screens) {
-            bool want = false;
-            for (int f : config_.screen_filter)
-                if (f == n) want = true;
-            if (!want) return false;
-        }
-        return true;
-    };
-
-    if (config_.output_format == "json") {
-        const std::string city =
-            config_.thathkala ? "Colombo (Thathkala default)"
-                              : (config_.city_index > kCityCount
-                                     ? "Manual entry"
-                                     : modern::cityLabel(config_.city_index));
-        emit(modern::renderJson(owner, h, kind, jsonProv(config_, nirayana, city), birth,
-                                birthFrac, bal));
-        return 0;
-    }
-
-    if (show(1)) emit(renderScreen01(config_.thathkala) + "\n");
-    if (show(2)) emit(renderScreen0203(owner) + "\n");
-    if (show(3)) emit(renderScreen04() + "\n");
-    if (show(4)) {
-        if (!config_.thathkala) {
-            if (config_.city_index > kCityCount) {
-                std::ostringstream os;
-                os << "Closest city ? " << config_.city_index << "\n"
-                   << "Geocentric latitude  (Deg  Min) ? " << geo.lat_deg << " "
-                   << geo.lat_min << "\n"
-                   << "Geocentric longitude (Deg  Min) ? " << geo.lon_deg << " "
-                   << geo.lon_min << "\n";
-                emit(os.str());
-            } else {
-                std::ostringstream os;
-                os << "Closest city ? " << config_.city_index << "\n";
-                emit(os.str());
-            }
-        }
-        emit(renderScreen05() + renderScreen06() + "\n");
-    }
-    if (show(5)) emit(renderScreen07(h.output, nirayana) + "\n");
-    if (show(6)) emit(renderScreen08(h.output) + "\n");
-    if (show(7)) emit(renderScreen0914(h.output) + "\n");
-
-    // Phase-1 array read (pmap resolves the legacy string keys).
-    auto seats = [&](Planet p, int varga) {
-        return VargaEngine::GetShadvarga(
-            h.output.lonOf(p).ecliptic.toDecimal())[static_cast<size_t>(varga)];
-    };
-    const std::vector<std::string> keys = {"Chandra", "Ravi",   "Budha", "Sikuru", "Kuja",
-                                           "Guru",    "Shani",  "Raahu", "Kethu"};
-    const std::map<std::string, Planet> pmap = {{"Chandra", Planet::Chandra},
-                                                {"Ravi", Planet::Ravi},
-                                                {"Budha", Planet::Budha},
-                                                {"Sikuru", Planet::Sikuru},
-                                                {"Kuja", Planet::Kuja},
-                                                {"Guru", Planet::Guru},
-                                                {"Shani", Planet::Shani},
-                                                {"Raahu", Planet::Raahu},
-                                                {"Kethu", Planet::Kethu}};
-    auto planetSeats = [&](int varga) {
-        std::vector<std::pair<std::string, int>> ps;
-        for (const auto& k : keys) ps.push_back({kendraGlyph(pmap.at(k)), seats(pmap.at(k), varga)});
-        return ps;
-    };
-    const int lagRashi = seats(Planet::Lagna, 0);
-    if (show(8))
-        emit(renderKendraPair(makeKendra(lagRashi, rasiName(lagRashi), "LAGNA", planetSeats(0)),
-                              "LAGNA   KENDRAYA",
-                              makeKendra(seats(Planet::Lagna, 1), rasiName(seats(Planet::Lagna, 1)),
-                                         "NAVAMSAKA", planetSeats(1)),
-                              "NAVAMSAKA   KENDRAYA") +
-             "\n");
-    if (show(9))
-        emit(renderKendraPair(makeKendra(seats(Planet::Lagna, 2), rasiName(seats(Planet::Lagna, 2)), "HORA",
-                                         planetSeats(2)),
-                              "HORA   KENDRAYA",
-                              makeKendra(seats(Planet::Lagna, 3), rasiName(seats(Planet::Lagna, 3)),
-                                         "DESHKANA", planetSeats(3)),
-                              "DESHKANA   KENDRAYA") +
-             "\n");
-    if (show(10))
-        emit(renderKendraPair(makeKendra(seats(Planet::Lagna, 4), rasiName(seats(Planet::Lagna, 4)),
-                                         "DVADASANSA", planetSeats(4)),
-                              "DVADASHANSAKA   KENDRAYA",
-                              makeKendra(seats(Planet::Lagna, 5), rasiName(seats(Planet::Lagna, 5)),
-                                         "TRISANSAKA", planetSeats(5)),
-                              "TRISANSAKA   KENDRAYA") +
-             "\n");
-    if (show(11))
-        emit(renderKendraPair(makeKendra(seats(Planet::Ravi, 0), rasiName(seats(Planet::Ravi, 0)),
-                                         "SOORYARASI", planetSeats(0)),
-                              "SOORYA   KENDRAYA",
-                              makeKendra(seats(Planet::Chandra, 0), rasiName(seats(Planet::Chandra, 0)),
-                                         "SANDURASI", planetSeats(0)),
-                              "CHANDRA   KENDRAYA") +
-             "\n");
-    if (show(12)) {
-        emit(renderScreen12(owner, geo, h.output, h.birthDecHours, h.lmstHours, h.panchanga, bal,
-                            riseH, setH) +
-             "\n");
-    }
-    if (show(13)) {
-        const HoraTriple ht =
-            horaChain(weekdayIndex(h.jdn0), sinhalaGhati(h.birthDecHours, riseH));
-        emit(renderScreen13(h.panchanga.nakIndex, ht.kala, ht.pancha, ht.sukshama) + "\n");
-    }
-    if (show(14)) {
-        std::ostringstream os;
-        os << "ALL MAHA AND ATHURU DASAS DURING PARAMAUSHA OF: " << owner.name << "\n"
-           << "===============================================\n";
-        os << renderDasaTables(birth, birthFrac, bal, h.moonNirayanaDeg);
-        emit(os.str());
-    }
     return 0;
 }
 
@@ -980,7 +700,6 @@ CLIConfig CLI::parseConfigFile(const std::string& content) {
         }
         else if (key == "output_file") config.output_file = value;
         else if (key == "output_format") config.output_format = value;
-        else if (key == "display") config.display = value;
         else if (key == "color") config.color = value;
         else if (key == "verify_mode") config.verify_mode = (value == "true" || value == "1" || value == "yes");
 

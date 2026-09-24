@@ -1,17 +1,14 @@
-// STAR.EXE Phase 5 — Automated Verification Harness
-// Compares the native engine (src/Engine.hpp, single source of truth shared
-// with the CLI) against the AGENTS.md checkpoints 1-4 ground truth:
-//   screen05 longitudes, screen06/07 shadvarga seats, screen12 JD/UT/ayanamsa,
-//   screen14-16 dasa dates.
-// Also diffs the rendered screen07/08/09 tables structurally.
+// Engine verification harness (docs/remove_legacy.md R3+R4).
+// Dual-engine since R4: the DOS block pins reconstruction values
+// (AGENTS.md checkpoints) while the SWISS block pins swisseph values
+// recorded in Session 127. Legacy screen renders and golden files are
+// removed; shared engine-identical limbs (panchanga, houses, hora,
+// chakra, JD, sunrise) are asserted once via the DOS block.
 // Build: g++ -std=c++20 -Wall -Wextra -O2 -Isrc tests/verifier.cpp src/VargaEngine.cpp -o verifier
-// Usage: ./verifier [--screens DIR]  (DIR only used for the optional text diff)
+// Usage: ./verifier
 
 #include <cmath>
 #include <cstdio>
-#include <cstring>
-#include <fstream>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -19,7 +16,8 @@
 #include "AstroTime.hpp"
 #include "Ayanamsa.hpp"
 #include "Engine.hpp"
-#include "Hora.hpp"
+// R2 TODO: verifier needs only rasiName/findLongitude from here; relocate
+// those engine-access helpers out of the legacy renderer header, then drop.
 #include "ScreenRenderer.hpp"
 #include "SunriseSunset.hpp"
 #include "Vimshottari.hpp"
@@ -70,11 +68,7 @@ static void checkInt(const char* tag, int got, int want) {
     }
 }
 
-int main(int argc, char* argv[]) {
-    const char* screensDir = ".";
-    for (int i = 1; i + 1 < argc; ++i)
-        if (std::strcmp(argv[i], "--screens") == 0) screensDir = argv[i + 1];
-
+int main() {
     // Baseline scenario (AGENTS.md): Test User, 2000-08-17 14:05,
     // Ratnapura (7), Nirayana.
     const HoroscopeOwner owner{"Test User", 2000, 8, 17, 14, 5};
@@ -177,23 +171,7 @@ int main(int argc, char* argv[]) {
     checkYmd("Kuja-Ravi", kb[7].to, 2095, 11, 28);
     checkYmd("Kuja-Sandu", kb[8].to, 2096, 6, 28);
 
-    std::printf("=== RENDERED TABLES (structural) ===\n");
-    const std::string t07 = renderScreen07(h.output, true);
-    const std::string t08 = renderScreen08(h.output);
-    const std::string t09 = renderScreen0914(h.output);
-    for (const char* name : {"Lagna", "Sandu", "Ravi", "Budha", "Sikuru", "Kuja",
-                             "Guru", "Shani", "Raahu", "Kethu"}) {
-        if (t07.find(name) == std::string::npos) {
-            ++g_fail;
-            std::printf("FAIL render07   missing '%s'\n", name);
-        } else {
-            ++g_pass;
-        }
-    }
-    std::printf("render07 bytes=%zu render08 bytes=%zu render09 bytes=%zu\n",
-                t07.size(), t08.size(), t09.size());
-
-    // ---- Baseline AVASTHA column (screen05, exact strings) ----
+    // ---- Baseline AVASTHA column (exact engine states) ----
     std::printf("=== AVASTHA (screen05) ===\n");
     const std::vector<std::pair<std::string, const char*>> avExp = {
         {"Chandra", "Bhojana"}, {"Ravi", "Nethrapani"}, {"Budha", "Gamana"},
@@ -352,75 +330,91 @@ int main(int argc, char* argv[]) {
         checkStr("T4-karanaya", h4b.panchanga.karana, "Baalava");
     }
 
-    // ---- TRANSCRI3/4 screen13 blocks (Hora lines + attribute rows) ----
-    // Sunrise comes from the NATIVE mechanism (no tables): T3/T4 Hora below
-    // validates it end-to-end (Kala/Pancha/Sukshama all derive from riseH).
+    // ---- Native sunrise mechanism (no tables): must reproduce the DOS
+    // 2026-09-12 Colombo sunrise display (rise 6:01:28, set 5:58:32). ----
     {
-        auto horaLine = [](const HoroscopeResult& hh, double riseH) {
-            const HoraTriple ht = horaChain(weekdayIndex(hh.jdn0),
-                                            sinhalaGhati(hh.birthDecHours, riseH));
-            char buf[256];
-            std::snprintf(buf, sizeof(buf),
-                          "KALA HORAVA : %-10sPANCHAMA HORAVA : %-9sSUKSHAMA HORAVA : %s",
-                          ht.kala.c_str(), ht.pancha.c_str(), ht.sukshama.c_str());
-            return std::string(buf);
-        };
-        double r3 = 0.0, s3 = 0.0;
-        {
-            // Native mechanism must reproduce the DOS 2026-09-12 Colombo
-            // sunrise display (rise 6:01:28, set printed 5:58:32); the Hora
-            // assertions below then pin Sinhala/Hora through the mechanism.
-            const NativeSun t3sun = nativeSunrise(2026, 9, 12, 16.0 + 54.0 / 60.0,
-                                                  kColomboFallback.decimalLat(),
-                                                  kColomboFallback.decimalLon());
-            r3 = t3sun.riseH;
-            s3 = 24.0 - t3sun.riseH;
-            const HMS rr = displayHms(r3);
-            HMS ss = displayHms(s3);
-            ss.h %= 12;
-            checkInt("T3-rise-h", rr.h, 6);
-            checkInt("T3-rise-m", rr.m, 1);
-            checkInt("T3-rise-s", rr.s, 28);
-            checkInt("T3-set-h", ss.h, 5);
-            checkInt("T3-set-m", ss.m, 58);
-            checkInt("T3-set-s", ss.s, 32);
-        }
-        const HoroscopeOwner o3b{"Thatkala Kendra", 2026, 9, 12, 16, 54};
-        const HoroscopeResult h3b =
-            computeHoroscope(o3b, kColomboFallback, true, EngineKind::Dos);
-        const HoroscopeOwner o4c{"Thatkala Kendra", 2026, 9, 12, 16, 57};
-        const HoroscopeResult h4c =
-            computeHoroscope(o4c, kColomboFallback, false, EngineKind::Dos);
-        checkStr("T3-hora",
-                 horaLine(h3b, r3).c_str(),
-                 "KALA HORAVA : Ravi      PANCHAMA HORAVA : Guru     SUKSHAMA HORAVA : Kuja");
-        checkStr("T4-hora",
-                 horaLine(h4c, r3).c_str(),
-                 "KALA HORAVA : Ravi      PANCHAMA HORAVA : Guru     SUKSHAMA HORAVA : Kuja");
-        const HoraTriple t3t = horaChain(weekdayIndex(h3b.jdn0),
-                                         sinhalaGhati(h3b.birthDecHours, h3b.riseH));
-        const std::string g3 = renderScreen13(
-            h3b.panchanga.nakIndex, t3t.kala, t3t.pancha, t3t.sukshama);
-        checkStr("T3-gana-row",
-                 g3.substr(g3.find("GANA"), 74).c_str(),
-                 "GANA  :           Deva    YONI :        Meedena     RUXHA :         Dimbul");
-        const HoraTriple t4t = horaChain(weekdayIndex(h4c.jdn0),
-                                         sinhalaGhati(h4c.birthDecHours, h4c.riseH));
-        const std::string g4 = renderScreen13(
-            h4c.panchanga.nakIndex, t4t.kala, t4t.pancha, t4t.sukshama);
-        checkStr("T4-gana-row",
-                 g4.substr(g4.find("GANA"), 74).c_str(),
-                 "GANA  :          Raxha    YONI :         Vyagra     RUXHA :           Beli");
+        // Native mechanism must reproduce the DOS 2026-09-12 Colombo
+        // sunrise display (rise 6:01:28, set printed 5:58:32).
+        const NativeSun t3sun = nativeSunrise(2026, 9, 12, 16.0 + 54.0 / 60.0,
+                                              kColomboFallback.decimalLat(),
+                                              kColomboFallback.decimalLon());
+        const double riseH = t3sun.riseH;
+        const double setH = 24.0 - t3sun.riseH;
+        const HMS rr = displayHms(riseH);
+        HMS ss = displayHms(setH);
+        ss.h %= 12;
+        checkInt("T3-rise-h", rr.h, 6);
+        checkInt("T3-rise-m", rr.m, 1);
+        checkInt("T3-rise-s", rr.s, 28);
+        checkInt("T3-set-h", ss.h, 5);
+        checkInt("T3-set-m", ss.m, 58);
+        checkInt("T3-set-s", ss.s, 32);
     }
 
-    // Optional: confirm the ground-truth screen files exist alongside.
-    for (int n = 1; n <= 19; ++n) {
-        char path[256];
-        std::snprintf(path, sizeof(path), "%s/screen%02d.txt", screensDir, n);
-        std::ifstream f(path);
-        if (!f) {
-            std::printf("note: ground-truth file missing: %s\n", path);
+    // ---- SWISS ENGINE (dual block, R4 ruling 2026-09-24) ----
+    // Same baseline profile through the Swiss backend. Expectations were
+    // recorded from swisseph output (Session 127 probe) and frozen here;
+    // the DOS block above stays as the reconstruction reference. Panchanga,
+    // houses, hora, chakra, JD and sunrise are engine-identical (probe) and
+    // are not duplicated; full Swiss text is pinned by test_swiss_goldens.
+    std::printf("=== SWISS ENGINE (dual block) ===\n");
+    const HoroscopeResult hs = computeHoroscope(owner, geo, true, EngineKind::Swiss);
+    if (!hs.engineOk) {
+        ++g_fail;
+        std::printf("FAIL Swiss-engine %s\n", hs.engineError.c_str());
+    } else {
+        const auto slon = [&](const char* k) {
+            return findLongitude(hs.output, k)->ecliptic.toDecimal();
+        };
+        checkDms("S-Lagna", slon("Lagna"), 239, 5, 18, 2.0);
+        checkDms("S-Chandra", slon("Chandra"), 325, 4, 41, 2.0);
+        checkDms("S-Ravi", slon("Ravi"), 120, 52, 33, 2.0);
+        checkDms("S-Budha", slon("Budha"), 115, 56, 20, 2.0);
+        checkDms("S-Sikuru", slon("Sikuru"), 139, 12, 1, 2.0);
+        checkDms("S-Kuja", slon("Kuja"), 106, 38, 30, 2.0);
+        checkDms("S-Guru", slon("Guru"), 44, 27, 36, 2.0);
+        checkDms("S-Shani", slon("Shani"), 36, 30, 39, 2.0);
+        checkDms("S-Raahu", slon("Raahu"), 89, 3, 35, 2.0);
+        checkDms("S-Kethu", slon("Kethu"), 269, 3, 35, 2.0);
+        checkDms("S-Urenus", slon("Urenus"), 294, 44, 26, 2.0);
+        checkDms("S-Neptune", slon("Neptune"), 280, 46, 37, 2.0);
+        checkDms("S-Pluto", slon("Pluto"), 226, 17, 38, 2.0);
+        // Ayanamsa: Swiss Lahiri 23°51'57" vs DOS fitted 23°50'01".
+        const AngularDegrees say = AngularDegrees::fromDecimal(hs.ayanamsaDeg);
+        if (say.deg != 23 || say.min != 51 || say.sec != 57) {
+            ++g_fail;
+            std::printf("FAIL S-Ayanamsa  got %d:%d:%d want 23:51:57\n",
+                        say.deg, say.min, say.sec);
+        } else {
+            ++g_pass;
+            std::printf("ok   S-Ayanamsa  23:51:57\n");
         }
+        // Documented flips vs DOS: Kuja Navamsa Dhanu->Wrschika seat
+        // (modern display renders "Vrishchika"), Kuja avastha
+        // AAgama->Gamana. DOS-literal spellings pin the seat index.
+        const double kujaDec =
+            findLongitude(hs.output, "Kuja")->ecliptic.toDecimal();
+        checkStr("S-Kuja-Navamsa",
+                 rasiName(VargaEngine::GetShadvarga(kujaDec)[1]), "Wrschika");
+        checkStr("S-Kuja-Av",
+                 hs.output.avastha[static_cast<std::size_t>(Planet::Kuja)].c_str(),
+                 "Gamana");
+        // Dasa: balance 9-10-26 (DOS 9-10-11); maha boundaries +15d.
+        const DasaBalance sbal = dasaBalance(hs.moonNirayanaDeg);
+        if (std::string(kDasaCycle[sbal.lordCycleIdx].name) != "Guru" ||
+            sbal.ymd.y != 9 || sbal.ymd.m != 10 || sbal.ymd.d != 26) {
+            ++g_fail;
+            std::printf("FAIL S-balance   got %s %d-%d-%d want Guru 9-10-26\n",
+                        kDasaCycle[sbal.lordCycleIdx].name,
+                        sbal.ymd.y, sbal.ymd.m, sbal.ymd.d);
+        } else {
+            ++g_pass;
+            std::printf("ok   S-balance   Guru 9-10-26\n");
+        }
+        const std::vector<DasaSpan> smahas = mahaTimeline(birth, r0, sbal);
+        checkYmd("S-Guru-end", smahas[0].to, 2010, 7, 13);
+        checkYmd("S-Kuja-start", smahas[7].from, 2089, 7, 13);
+        checkYmd("S-Kuja-end", smahas[7].to, 2096, 7, 13);
     }
 
     std::printf("\n=== VERIFICATION SUMMARY ===\nPassed: %d\nFailed: %d\n",

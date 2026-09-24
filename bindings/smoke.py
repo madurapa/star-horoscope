@@ -10,7 +10,6 @@ doc = json.loads(
 assert doc["schema"] == "star-horoscope/1", doc.get("schema")
 assert doc["engine"] == "dos", doc.get("engine")
 assert doc["method"] == "nirayana", doc.get("method")
-assert doc["display"] == "modern", doc.get("display")
 assert doc["locale"] == "en", doc.get("locale")
 assert doc["place"] == {"city_index": 7, "city": "Ratnapura"}, doc.get("place")
 assert len(doc["longitudes"]) == 13, len(doc["longitudes"])

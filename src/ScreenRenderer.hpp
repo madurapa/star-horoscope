@@ -1,11 +1,12 @@
 #pragma once
-// STAR.EXE Phase 5 — Screen Rendering Pipeline
-// Reproduces ASCII layouts from the original STAR.EXE screens 1-19.
-// Longitude columns (ecliptic + rasi-relative DMS, rasi names) are computed
-// from the engine output; Neketh/Pada/Avastha are display-onlyderivatives
-// (standard 27-nakshatra table, pada from remainder) and are NOT part of the
-// zero-variance gate (which covers longitudes, varga seats, JD/UT/ayanamsa
-// and dasa dates per AGENTS.md checkpoints 1-4).
+// Shared legacy-table + kendra-geometry helpers (docs/remove_legacy.md R2).
+// The byte-exact screen renderers (renderScreen*) left with the golden
+// files; what remains is used by the modern display, the JSON output, or
+// the engine-vocabulary tests: DOS-literal name tables (rasiName and
+// friends — the engine stays byte-faithful, the modern display corrects
+// per docs/glossary.md), per-slot display mappers (test_slot_names),
+// findLongitude, DMS/date formatting, the YONI truncation rule, and the
+// kendra chart geometry feeding modern charts.
 
 #include <string>
 #include <string_view>
@@ -23,38 +24,6 @@
 #include "Hora.hpp"
 
 namespace star {
-
-// Field width constants matching original STAR.EXE layouts.
-// PROVENANCE: FITTED (widths measured from original screen layouts).
-struct LayoutConstants {
-    static constexpr int SCREEN_WIDTH = 80;
-    static constexpr int LABEL_WIDTH = 18;
-    static constexpr int VALUE_WIDTH = 12;
-    static constexpr int LONGITUDE_WIDTH = 18;
-    static constexpr int BORDER_WIDTH = 76;
-};
-
-// Text alignment utilities.
-inline std::string padRight(const std::string& s, int width) {
-    return s + std::string(std::max(0, width - static_cast<int>(s.size())), ' ');
-}
-
-inline std::string padLeft(const std::string& s, int width) {
-    return std::string(std::max(0, width - static_cast<int>(s.size())), ' ') + s;
-}
-
-inline std::string center(const std::string& s, int width) {
-    int pad = width - static_cast<int>(s.size());
-    if (pad <= 0) return s;
-    int left = pad / 2;
-    int right = pad - left;
-    return std::string(static_cast<size_t>(left), ' ') + s +
-           std::string(static_cast<size_t>(right), ' ');
-}
-
-inline std::string borderLine(char c = '-', int width = 76) {
-    return std::string(static_cast<size_t>(width), c);
-}
 
 // Angular formatting: "DDD:MM:SS".
 inline std::string formatDMS(const AngularDegrees& ad) {
@@ -97,15 +66,6 @@ inline const char* rasiName(int idx) {
     return "**";
 }
 
-// Planet name from enum.
-inline const char* planetName(Planet p) {
-    static const char* names[13] = {
-        "Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja",
-        "Guru", "Shani", "Raahu", "Kethu", "Urenus", "Neptune", "Pluto"
-    };
-    return names[static_cast<int>(p)];
-}
-
 // Varga name from enum.
 inline const char* vargaName(Varga v) {
     static const char* names[6] = {
@@ -118,73 +78,6 @@ inline const char* vargaName(Varga v) {
 // screen05 where known). Display-only, not gated.
 inline const char* nakshatraName(int idx0based) {
     return nakshatraDisplayName(idx0based);
-}
-
-// Rasi-relative DMS for a full ecliptic longitude (screen05 RASI LONGITUDE).
-[[nodiscard]] inline AngularDegrees rasiRelative(AngularDegrees ecl) {
-    const long total = ecl.totalArcSec();
-    const int rasi = VargaEngine::GetRashiIndex(ecl.toDecimal());
-    const long rel = total - static_cast<long>(rasi - 1) * 30L * 3600L;
-    const long d = rel / 3600L;
-    const long m = (rel % 3600L) / 60L;
-    const long s = rel % 60L;
-    return {static_cast<int>(d), static_cast<int>(m), static_cast<int>(s)};
-}
-
-// Screen 1: Title. The binary spells the method "NRAYANA" (= Nirayana
-// sidereal; NOT Narayana Dasa — the dasa engine here is Vimshottari).
-inline std::string renderScreen01(bool thathkala) {
-    char buf[256];
-    std::snprintf(buf, sizeof(buf),
-        "YOUR STARS\n\n"
-        "0.0 %% Of Disk B: Is Full\n\n"
-        "Today is:             2026- 9-12\n\n\n"
-        "\"Thathkala Kendra\"   ?  (Y/N) %c\n",
-        thathkala ? 'Y' : 'N');
-    return std::string(buf);
-}
-
-// Screen 2-3: Owner details.
-inline std::string renderScreen0203(const HoroscopeOwner& owner) {
-    char buf[512];
-    std::snprintf(buf, sizeof(buf),
-        " HOROSCOPE  OWNER\"S   DEATALS \n"
-        " ****************************\n\n"
-        "Name ? %s\n\n"
-        "Birth date - Year Month Day  ? %d %d %d\n\n"
-        "Birth time - Hr Min [24Hrs]  ? %d %d\n",
-        owner.name.c_str(),
-        owner.birth_year, owner.birth_month, owner.birth_day,
-        owner.birth_hour, owner.birth_minute);
-    return std::string(buf);
-}
-
-// Screen 3/4: City list (rows 1..15 byte-exact DOS; 16..26 appended in the
-// same 5-per-row style for the product city table in AstroStructures.hpp).
-inline std::string renderScreen04() {
-    return "          LIST  OF  CITIES    \n"
-           "          ----------------    \n\n"
-           " 1. CLOMBO     2. GALLE     3. MATHARA    4. KANDY     5. HAMBANTOTA \n\n"
-           " 6. KALUTHARA  7. RATNAPURA 8. PUTTLAM    9. A\"PURA   10. POLONARU \n\n"
-           "11. JAFFNA    12. TRINCO   13. MATHARA   14.BADULLA   15. K\"GALA     \n\n"
-           "16. AMPARA    17. BATTICALOA 18. GAMPAHA   19. KILINOCHCHI 20. KURUNEGALA \n\n"
-           "21. MANNAR    22. MATALE    23. MONARAGALA 24. MULLAITIVU 25. NUWARA ELIYA \n\n"
-           "26. VAVUNIYA \n\n"
-           "Closest city ? \n\n"
-           "|------------------------------------------|\n"
-           "| ENTER A NUMBER > 26 FOR CITIES NOT GIVEN |\n"
-           "|------------------------------------------|\n";
-}
-
-// Screen 5 (input echo): coordinates prompt.
-inline std::string renderScreen05() {
-    return "Geocentric latitude  (Deg  Min) ?   \n"
-           "Geocentric longitude (Deg  Min) ?   \n";
-}
-
-// Screen 6 (input echo): Sayana/Nirayana choice.
-inline std::string renderScreen06() {
-    return "\"SAYANA\"  method  or \"NRAYANA\"  method (S/N) ?N";
 }
 
 // (houseTableOrder removed slice C: Planet order + kPlanetNames carry the
@@ -208,79 +101,9 @@ inline const PlanetLongitude* findLongitude(const AstroEngineOutput& output,
     return nullptr;
 }
 
-// Screen 7 (screen05.txt content): Nirayana Table of Houses with real longitudes.
-// Byte-exact column laws (0-based, measured from screen05):
-// planet %-8s | D %3d | 3sp | M %2d | 5sp | S %2d | 2sp | NEKETH %-10s | sp |
-// PADA %d | sp | RASI %-11s | rasi-rel D %2d (RIGHT-aligned) | 3sp | M %2d |
-// 5sp | S %2d | 3sp | AVASTHA. A blank line follows the Lagna row; rows with
-// empty AVASTHA carry no trailing spaces.
-// Out-of-range longitudes (raw quotient outside [0,11], e.g. Lagna 591 from
-// birth 45:80): longitude + RASI print, but NEKETH/PADA/RASI-rel are BLANK
-// (finder loop bounds), exactly as observed. The AVASTHA column reproduces
-// observed cells via Avastha.hpp (blank where unobserved, as Lagna/outers).
-// House-table RASI column spells Gemini "Mithuna" (6/6 machine captures);
-// Shadvarga/kendra keep "Mituna" (see spellings doc).
-// PROVENANCE: FITTED (6/6 machine captures: house-table Gemini is "Mithuna").
-inline std::string displayRasiHouse(int idx) {
-    if (idx == 3) return "Mithuna";
-    return rasiName(idx);
-}
-
-inline std::string renderScreen07(const AstroEngineOutput& output, bool /*nirayana*/) {
-    std::string out =
-        "                            NIRAYANA  TABLE  OF HOUSES\n\n"
-        "PLANET      LONGITUDE    NEKETH   PADA RASI      RASI LONGITUDE   AVASTHA\n"
-        "____________________________________________________________________________\n";
-    // Phase-1 array read: canonical Planet order == houseTableOrder keys;
-    // planetSlotName(House) == displayPlanetName (see test_slot_names).
-    for (int i = 0; i < 13; ++i) {
-        const Planet p = static_cast<Planet>(i);
-        const PlanetLongitude& pl = output.lonOf(p);
-        const char* disp = planetSlotName(p, NameSlot::House);
-        const double dec = pl.ecliptic.toDecimal();
-        const double vUp = VargaEngine::normUp(dec);
-        // Finder-loop bounds: rasi blocks match w in [0,360] (Meena jbe-360);
-        // whole tail blank when out of range (Invalid_Time Lagna-591).
-        const bool outOfRange = (vUp > 360.0);
-        const int rasiIdx = VargaEngine::GetRashiIndex(dec);
-        char row[256];
-        if (outOfRange) {
-            // Finder-loop bounds: whole tail (NEKETH/PADA/RASI/rel/AVASTHA)
-            // blank; observed Invalid_Time Lagna-591 prints DMS only.
-            std::snprintf(row, sizeof(row), "%-8s%3d   %2d     %2d",
-                disp,
-                pl.ecliptic.deg, pl.ecliptic.min, pl.ecliptic.sec);
-            out += std::string(row) + "\n";
-            if (p == Planet::Lagna) out += "\n";
-            continue;
-        }
-        int nak0 = static_cast<int>(dec / 13.333333333333334);
-        if (nak0 < 0) nak0 = 0;
-        if (nak0 > 26) nak0 = 26;
-        const int pada = nakshatraPada(dec);
-        const AngularDegrees& rel = pl.rasiRel;  // raw split, no carry
-        const char* avastha = output.avastha[static_cast<std::size_t>(i)].c_str();
-        std::snprintf(row, sizeof(row), "%-8s%3d   %2d     %2d  %-10s %d %-11s%2d   %2d     %2d   %s",
-            disp,
-            pl.ecliptic.deg, pl.ecliptic.min, pl.ecliptic.sec,
-            nakshatraName(nak0), pada, displayRasiHouse(rasiIdx).c_str(),
-            rel.deg, rel.min, rel.sec, avastha);
-        std::string line(row);
-        while (!line.empty() && (line.back() == ' ' || line.back() == '\t'))
-            line.pop_back();
-        out += line + "\n";
-        if (p == Planet::Lagna) out += "\n";
-    }
-    out += "____________________________________________________________________________\n";
-    return out;
-}
-
-// Screen 8 (screen06.txt content): Shadvarga name matrix, computed per planet.
-// Screen 8 (screen06.txt content): Shadvarga name matrix, computed per planet.
-// Planet spellings reproduce screen06 LITERALLY, quirks included: "Rav1"
-// (digit one), "Urenes", "Neptun"->"Neptune" (screen06 spells it WITH the e,
-// unlike screen05's "Neptun"), "Pluuto", and "Chandra" (screen06 does NOT use
-// screen05's "Sandu"). See AGENTS.md zero-variance mandate.
+// Shadvarga name mapping (DOS-literal spellings, quirks included): "Rav1"
+// (digit one), "Urenes", "Neptune" (with the e), "Pluuto", and "Chandra".
+// Pinned by test_slot_names; the modern display corrects per glossary.
 // PROVENANCE: FITTED (screen06 planet cells reproduced literally, quirks included).
 inline std::string displayShadvargaName(std::string_view key) {
     if (key == "Chandra" || key == "Sandu") return "Chandra";
@@ -289,127 +112,6 @@ inline std::string displayShadvargaName(std::string_view key) {
     if (key == "Neptune" || key == "Neptun") return "Neptune";
     if (key == "Pluto") return "Pluuto";
     return std::string(key);
-}
-
-inline std::string renderScreen08(const AstroEngineOutput& output) {
-    std::string out =
-        "SHAD VARGA OF Test User\n\n"
-        "GRHAYA    RASHI    NAVAMSAKA    HORA    DESHKANA   DVADASANSAKA TRISHANSAKA\n"
-        "---------------------------------------------------------------------------\n";
-    // Phase-1 array read (see renderScreen07 note).
-    for (int i = 0; i < 13; ++i) {
-        const Planet p = static_cast<Planet>(i);
-        const PlanetLongitude& pl = output.lonOf(p);
-        const std::array<int, 6> sv =
-            VargaEngine::GetShadvarga(pl.ecliptic.toDecimal());
-        // GetShadvarga order: {Rashi, Navamsa, Hora, Deshkana, Dvadasansa, Trishansa}.
-        // Row grid mirrors screen06: 8-char name, then five 11-char varga
-        // columns plus the trailing sign (no padding). EXCEPTION (Invalid_Time
-        // Lagna-591, the only observed ** case): invalid Hora/Deshkana/
-        // Dvadasansa cells ("**") occupy widths 10/9/14 (not 11/11/11), so
-        // subsequent columns start at 42/51 with Trishansa realigned at 65.
-        // Total stays 33 (10+9+14); mechanism undisclosed, reproduced literally.
-        // PROVENANCE: UNOBSERVED (only observed ** case is Invalid_Time Lagna-591; widths 10/9/14 reproduced literally).
-        auto cell = [](int idx, int wValid, int wStar) -> std::string {
-            const char* s = rasiName(idx);
-            char b[32];
-            if (idx < 1 || idx > 12)
-                std::snprintf(b, sizeof(b), "%-*s", wStar, s);
-            else
-                std::snprintf(b, sizeof(b), "%-*s", wValid, s);
-            return std::string(b);
-        };
-        char head[64];
-        std::snprintf(head, sizeof(head), "%-8s| %-11s%-11s", planetSlotName(p, NameSlot::Shadvarga),
-                      rasiName(sv[0]), rasiName(sv[1]));
-        out += std::string(head) + cell(sv[2], 11, 10) + cell(sv[3], 11, 9) +
-               cell(sv[4], 11, 14) + rasiName(sv[5]) + "\n";
-    }
-    return out;
-}
-
-// Screen 9 (screen07.txt content): house numbers from Lagna's varga seats.
-inline std::string renderScreen0914(const AstroEngineOutput& output) {
-    // Array read; the old null-fallback was dead (Engine always provides
-    // Lagna — Invalid_Time Lagna-591 flows through GetShadvarga below, and
-    // the {12,5,4,12,1,6} screen06-Lagna-row fallback survives in ModernRenderer).
-    const std::array<int, 6> lagSv =
-        VargaEngine::GetShadvarga(output.lonOf(Planet::Lagna).ecliptic.toDecimal());
-
-    std::string out =
-        "GRAHA  POSITIONS  IN  SHAD  VARGA\n\n"
-        "GRHAYA        RASHI  NAVAMSAKA HORA DESHKANA DVADASANSA TRISHANSA\n"
-        "-----------------------------------------------------------------\n";
-    for (int i = 0; i < 13; ++i) {
-        const Planet p = static_cast<Planet>(i);
-        if (p == Planet::Lagna) continue;
-        const PlanetLongitude& pl = output.lonOf(p);
-        const std::array<int, 6> sv =
-            VargaEngine::GetShadvarga(pl.ecliptic.toDecimal());
-        // Lagna-relative house ((sv-lag+12)%12)+1, except when the Lagna seat
-        // is invalid (gated -1, e.g. Invalid_Time Lagna-591 Hora/Deshkana/
-        // Dvadasansa): the binary then shows the ABSOLUTE seat (proven on
-        // ITime numbers rows: Chandra Hora 4 abs, not 6 = relative-to-(-1)).
-        auto rel = [](int s, int l) {
-            if (l < 1 || l > 12) return s;
-            return ((s - l + 12) % 12) + 1;
-        };
-        char row[160];
-        std::snprintf(row, sizeof(row), "%-12s|%5d  %8d  %5d  %5d  %6d  %7d\n",
-            planetSlotName(p, NameSlot::House),
-            rel(sv[0], lagSv[0]), rel(sv[1], lagSv[1]), rel(sv[2], lagSv[2]),
-            rel(sv[3], lagSv[3]), rel(sv[4], lagSv[4]), rel(sv[5], lagSv[5]));
-        out += row;
-    }
-    out += "-----------------------------------------------------------------\n";
-    return out;
-}
-
-// Dasa tables (screens 14-18): full 120-year maha + bhukti listing.
-// moonNirayanaDeg is the Nirayana Moon longitude (for the balance-maha tail).
-inline std::string renderDasaTables(const YMD& birth, double birthFrac,
-                                    const DasaBalance& bal, double moonNirayanaDeg) {
-    const std::vector<DasaSpan> mahas = mahaTimeline(birth, birthFrac, bal);
-    std::string out;
-    for (const DasaSpan& m : mahas) {
-        const int lordIdx = [&] {
-            for (size_t i = 0; i < kDasaCycle.size(); ++i)
-                if (m.lord == kDasaCycle[i].name) return static_cast<int>(i);
-            return 0;
-        }();
-        char head[256];
-        std::snprintf(head, sizeof(head),
-            "%-6s Maha   dasava from %4d-%2d-%2d to %4d-%2d-%2d  Age %3d-%2d-%2d to %3d-%2d-%2d\n"
-            "-------------------------------------------------------------------------------\n",
-            m.lord.c_str(),
-            m.from.y, m.from.m, m.from.d, m.to.y, m.to.m, m.to.d,
-            m.ageFrom.y, m.ageFrom.m, m.ageFrom.d, m.ageTo.y, m.ageTo.m, m.ageTo.d);
-        out += head;
-        const bool isFirst = (&m == &mahas.front());
-        std::vector<DasaSpan> bh;
-        if (isFirst) {
-            bh = bhuktiTimeline(birth, birthFrac, lordIdx, bal.years,
-                                balanceElapsedUnits(moonNirayanaDeg),
-                                static_cast<double>(kDasaCycle[lordIdx].years));
-        } else {
-            const double span = m.to.y != 0
-                ? (fracYear(m.to.y, m.to.m, m.to.d) - fracYear(m.from.y, m.from.m, m.from.d))
-                : static_cast<double>(kDasaCycle[lordIdx].years);
-            bh = bhuktiTimeline(birth, fracYear(m.from.y, m.from.m, m.from.d),
-                                lordIdx, span);
-        }
-        for (const DasaSpan& b : bh) {
-            char row[256];
-            std::snprintf(row, sizeof(row),
-                "%-6s Athuru dasava from %4d-%2d-%2d to %4d-%2d-%2d  Age %3d-%2d-%2d to %3d-%2d-%2d\n",
-                b.lord.c_str(),
-                b.from.y, b.from.m, b.from.d, b.to.y, b.to.m, b.to.d,
-                b.ageFrom.y, b.ageFrom.m, b.ageFrom.d, b.ageTo.y, b.ageTo.m, b.ageTo.d);
-            out += row;
-        }
-        out += "\n";
-    }
-    return out;
 }
 
 // ---------------------------------------------------------------------------
@@ -789,115 +491,20 @@ inline std::string balanceLordDisplay(std::string_view dasaLord) {
     return std::string(dasaLord);
 }
 
-// Screen 12 block (screen12.txt content), byte-exact per measured columns:
-// LAGNA "(%5d   %2d     %2d)" + 8sp + NAVAMSAKA; DAY %-21s / NEKATHA %-17s;
-// THITIYA %-19s + 2sp + YOGAYA + yoga %-17s; TIMES rows "%-30s-    %2d   %2d
-//     %2d" under a 35-space "Hrs   Min   Sec" header ("Siderial" sic);
-// sunset hour shown mod 12 ("5 51 45"); balance lord in planet spelling.
-inline std::string renderScreen12(const HoroscopeOwner& owner, const GeoCoord& geo,
-                                  const AstroEngineOutput& output, double birthDecHours,
-                                  double lmstHours, const PanchangaInfo& pg,
-                                  const DasaBalance& bal, double riseH, double setH) {
-    // Clock values are NOT wrapped mod 24 (DOS evidence: Invalid_Time prints
-    // UT 40:50:00, LMST 32:52:45 raw). displayHms splits raw values directly.
-    const HMS birthHms = displayHms(birthDecHours);
-    const HMS utHms = displayHms(birthDecHours - kTzHours);
-    const HMS tlmHms = displayHms(trueLocalMeanHours(birthDecHours, geo.decimalLon()));
-    const HMS lmstHms = displayHms(lmstHours);
-    const HMS ulstHms = displayHms(printedUniversalSiderealHours(lmstHours));
-    const HMS sinhalaHms = displayHms(sinhalaGhati(birthDecHours, riseH));
-    const HMS riseHms = displayHms(riseH);
-    HMS setHms = displayHms(setH);
-    setHms.h %= 12;  // 12-hour clock as printed ("5 51 45" for 17:51:45)
-
-    // Array read; Engine always provides Lagna (see renderScreen07 note).
-    const double lagnaDec = output.lonOf(Planet::Lagna).ecliptic.toDecimal();
-    const AngularDegrees lagnaRel = output.lonOf(Planet::Lagna).rasiRel;  // raw split, no carry
-    const int lagnaRasi = VargaEngine::GetRashiIndex(lagnaDec);
-    const int lagnaNav = VargaEngine::GetNavamshaIndex(lagnaDec);
-    const std::string dasaLord = balanceLordDisplay(kDasaCycle[bal.lordCycleIdx].name);
-
-    char buf[4096];
-    std::snprintf(buf, sizeof(buf),
-        "NAME  : %s\n\n"
-        "DATE OF BIRTH: %d-%d-%d at Latitude  %d %d N Longitude %d %d E (Geocentric)\n"
-        "JULIAN DATE  : %s\n\n"
-        "LAGNA : %-8s(%5d   %2d     %2d)%8sNAVAMSAKA  : %s\n\n"
-        "PANCHANGAYA\n"
-        "DAY    : %-21sNEKATHA : %-17sPADAYA  :  %d\n"
-        "THITIYA: %-19s  YOGAYA  : %-17sKARANAYA:  %s\n\n"
-        "TIMES\n"
-        "                                   Hrs   Min   Sec\n"
-        "%-30s-    %2d   %2d     %2d\n"
-        "%-30s-    %2d   %2d     %2d\n"
-        "%-30s-    %2d   %2d     %2d\n"
-        "%-30s-    %2d   %2d     %2d\n"
-        "%-30s-    %2d   %2d     %2d\n"
-        "%-30s-    %2d   %2d     %2d\n"
-        "%-30s-    %2d   %2d     %2d\n"
-        "%-30s-    %2d   %2d     %2d\n\n"
-        "DASA BALANCE     :   %-8s%d Years  %d Months  %d Days  From Birth Onwards\n"
-        "AYANAMSA(Arc-Ray):   %d   %d     %d\n",
-        owner.name.c_str(),
-        owner.birth_year, owner.birth_month, owner.birth_day,
-        geo.lat_deg, geo.lat_min, geo.lon_deg, geo.lon_min,
-        formatJulianDate(output.julianDate).c_str(),
-        rasiName(lagnaRasi), lagnaRel.deg, lagnaRel.min, lagnaRel.sec,
-        "", rasiName(lagnaNav),
-        pg.weekday.c_str(), pg.nakshatra.c_str(), pg.pada,
-        pg.tithiText.c_str(), pg.yoga.c_str(), pg.karana.c_str(),
-        "Birth   time", birthHms.h, birthHms.m, birthHms.s,
-        "Sinhala time", sinhalaHms.h, sinhalaHms.m, sinhalaHms.s,
-        "True local mean time", tlmHms.h, tlmHms.m, tlmHms.s,
-        "Universal  time", utHms.h, utHms.m, utHms.s,
-        "Universal  Siderial     time", ulstHms.h, ulstHms.m, ulstHms.s,
-        "Local  mean   siderial   time", lmstHms.h, lmstHms.m, lmstHms.s,
-        "Sun rise time", riseHms.h, riseHms.m, riseHms.s,
-        "Sun set time", setHms.h, setHms.m, setHms.s,
-        dasaLord.c_str(), bal.ymd.y, bal.ymd.m, bal.ymd.d,
-        output.ayanamsa.deg, output.ayanamsa.min, output.ayanamsa.sec);
-    return std::string(buf);
-}
-
 // Binary YONI display width is 10 chars (field-width truncation, NOT the
-// stored string): stored 'Mushikadena*' (12) prints 'Mushikaden' (Test User D +
-// 2 fuzz rows), stored 'Sinha       ' (12) prints 'Sinha     ' (10).
+// stored string): stored 'Mushikadena*' (12) prints 'Mushikaden', stored
+// 'Sinha       ' (12) prints 'Sinha     ' (10).
 // yoniFor() keeps the binary-literal table; truncation lives here on the
 // display path (same policy as the 213:52:60 non-carry: store truthfully,
 // render literally).
-// PROVENANCE: FITTED (Test User D + 2 fuzz rows; storage itself is DECODED binary-literal).
+// PROVENANCE: FITTED (machine captures; storage itself is DECODED binary-literal).
 inline std::string displayYoni(const char* stored) {
     std::string s(stored ? stored : "");
     if (s.size() > 10) s.resize(10);
     return s;
 }
 
-// Screen 13 block (screen13.txt content), byte-exact per measured columns:
-// Hora lords %-10s/%-9s; GANA/YONI/RUXHA values right-aligned ending cols
-// 21/46/73; LINGA/NAADI/PAXHI ending 21/46/73 (labels NAADI:/GOTHRA:/VARNA:/
-// BHUTHA: sic, no space before colon); GOTHRA/VARNA/RAJJU ending 21/46/73;
-// BHUTHA value right-aligned ending col 21.
-// Inputs: Moon nakshatra index (mode-appropriate) + decoded Kala/Pancha/
-// Sukshama display strings from horaChain() (sub_1AE29 mechanism).
-inline std::string renderScreen13(int nakIndex, const std::string& kala,
-                                  const std::string& pancha, const std::string& sukshama) {
-    const NakAttributes at = attributesFor(nakIndex);
-    char buf[1024];
-    std::snprintf(buf, sizeof(buf),
-        "KALA HORAVA : %-10sPANCHAMA HORAVA : %-9sSUKSHAMA HORAVA : %s\n\n"
-        "GANA  : %14s    YONI : %14s     RUXHA : %14s\n"
-        "LINGA : %14s    NAADI:%15s     PAXHI : %14s\n"
-        "GOTHRA:%15s    VARNA:%15s     RAJJU : %14s\n"
-        "BHUTHA:%15s\n",
-        kala.c_str(), pancha.c_str(), sukshama.c_str(),
-        ganaFor(nakIndex), displayYoni(at.yoni).c_str(), at.ruxha,
-        at.linga, at.naadi, at.paxhi,
-        at.gothra, at.varna, at.rajju,
-        at.bhutha);
-    return std::string(buf);
-}
-
-// Render a PAIR of kendra charts side by side (screens 08-11 layout).
+// Render a PAIR of kendra charts side by side (feeds modern chart pairs).
 // centerLabels forwards to the singles (modern display); default false is
 // the frozen byte-exact original.
 inline std::string renderKendraPair(const KendraChart& left, const std::string& leftTitle,

@@ -17,6 +17,14 @@ Where this project's output intentionally reproduces a quirk, rounding
 behavior, or apparent bug from the original program, that reproduction
 is documented in docs/quirks.md and is deliberate, not an oversight.
 
+## Frozen reference tree
+
+The pre-removal tree — original `STAR.EXE` binary, disassembly,
+extraction scripts, legacy display, and DOS-pinned goldens — is
+frozen on the `legacy` branch (`origin/legacy` at v2.35.0,
+commit `eeda1eb`), the court of last resort for arbitration. No
+release tag marks that commit; the branch is the reference.
+
 ## Third-party software
 
 - Swiss Ephemeris, v2.10.3final (https://github.com/aloistr/swisseph),

@@ -31,7 +31,8 @@ int main() {
     CHECK(p.yoga == "Parigha", "yoga %s", p.yoga.c_str());
     CHECK(p.karana == "Bava", "karana %s", p.karana.c_str());
 
-    // Machine-capture regression cells (tests/screen_test/output/*.txt).
+    // Machine-capture regression cells (hardcoded; the screen_test/output
+    // captures left with the golden files in R3).
     CHECK(tithiDisplay(20) == "Ava -Visheniya  - 5", "waning20 '%s'", tithiDisplay(20).c_str());
     CHECK(tithiDisplay(24) == "Ava -Navawaka   - 9", "waning24 '%s'", tithiDisplay(24).c_str());
     CHECK(tithiDisplay(2) == "Pura-Diyawaka   - 2", "waxing2 '%s'", tithiDisplay(2).c_str());

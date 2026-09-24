@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""gen_fuzz.py — generate a coverage-matrix entries file for differential
-fuzzing (DOS STAR.EXE vs modern_star). Valid dates only (day<=28, plus two
-leap-day specials); hours 0-23, minutes 0-59, cities 1-15.
+"""gen_fuzz.py — generate a coverage-matrix entries file for engine runs.
+Ranges decided in R5 (valid-input domains, engine-independent): valid
+dates only (day<=28, plus two leap-day specials); hours 0-23, minutes
+0-59, cities 1-15. Formerly fed differential fuzzing vs DOS captures
+(retired); usable against any engine backend.
 Usage: ./gen_fuzz.py [seed] > entries_fuzz.txt   (default seed 20260916)
 Matrix (~106 cases):
   SEAS m01-12 : 2000, day 15, 12:00, cities cycle 1-15 (seasonal sunrise)

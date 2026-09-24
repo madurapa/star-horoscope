@@ -62,9 +62,6 @@ struct CLIConfig {
     std::vector<int> screen_filter;  // specific output groups to show (1-14)
     std::string output_format = "text";  // text, json
     std::string output_file;  // empty = stdout (appended when set)
-    // Display layer: "modern" (default, corrected + redesigned) or "legacy"
-    // (byte-exact original, for verification runs).
-    std::string display = "modern";
     // Color: "auto" (TTY only, NO_COLOR respected), "always", "never".
     std::string color = "auto";
     // Output locale: "en" (default; "si"/"ta" fall back to English until
@@ -106,7 +103,6 @@ private:
     bool promptModern();
     void runInteractive();
     int runBaseline() const;
-    int runBaselineLegacy() const;
     int runBaselineModern() const;
     bool colorOn() const;
     int runVerify() const;

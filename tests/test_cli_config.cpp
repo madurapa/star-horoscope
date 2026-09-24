@@ -29,7 +29,6 @@ int main() {
     STAR_CHECK(c.nirayana.has_value() && *c.nirayana, "nirayana");
     STAR_CHECK(c.show_all_screens, "screens default all");
     STAR_CHECK(c.output_format == "text", "format default text");
-    STAR_CHECK(c.display == "modern", "display default modern");
     STAR_CHECK(c.color == "auto", "color default auto");
     // Comments / blank lines / unknown keys are skipped; = -less lines skipped.
     const CLIConfig c2 = CLI::parseConfigFilePublic("; comment\n\nbogus line\nfoo = bar\ncity_index = 2\n");
@@ -40,12 +39,11 @@ int main() {
     // screen/output/format/verify keys.
     const CLIConfig c3 = CLI::parseConfigFilePublic(
         "screen = 5,12\noutput_format = json\noutput_file = out.txt\nverify_mode = true\n"
-        "display = legacy\ncolor = never\n");
+        "color = never\n");
     STAR_CHECK(!c3.show_all_screens && c3.screen_filter.size() == 2, "screen filter");
     STAR_CHECK(c3.output_format == "json", "format json");
     STAR_CHECK(c3.output_file == "out.txt", "output file");
     STAR_CHECK(c3.verify_mode, "verify mode");
-    STAR_CHECK(c3.display == "legacy", "display legacy");
     STAR_CHECK(c3.color == "never", "color never");
     // loadConfigFile round-trip via a temp file (portable temp dir:
     // native Windows processes have no /tmp).
