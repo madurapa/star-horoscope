@@ -194,22 +194,14 @@ def test_north_fixed_houses_match_cli():
     assert len(re.findall(r'class="sign-num"', svg)) > 0
 
 
-def test_house_numbers_all_compartments():
+def test_no_house_number_labels():
     import re
 
     svg = east_svg(DOC, 0, None, "en", "Lagna Chart")
-    nums = re.findall(r'font-size="11"[^>]*>(\d+) · ([^<]*)</text>', svg)
-    assert sorted(int(n) for n, _ in nums) == list(range(1, 13))
-    # fixed-house: position 9 (bottom-right upper) reads house 9 with
-    # its sign; under Mesha Lagna the signs read Aries-forward.
-    hits = [(m.group(3), m.group(4)) for m in
-            re.finditer(r'<text x="([\d.]+)" y="([\d.]+)" font-size="11"[^>]*>(\d+) · ([^<]*)</text>',
-                        svg)
-            if 278 <= float(m.group(1)) <= 415 and 278 <= float(m.group(2)) <= 415
-            and float(m.group(2)) < float(m.group(1))]
-    assert hits == [("9", "Saggitarius")]
-    # Lagna-chart house 4 compartment reads its sign too
-    assert "4 · Aquarius" in svg or "4 · Cancer" in svg
+    # compartments carry no "h · Sign" labels (removed per owner call);
+    # houses read off the Lagna marker, planets off glyphs.
+    assert not re.findall(r'font-size="11"[^>]*>\d+ · [^<]*</text>', svg)
+    assert "Lagna" in svg
 
 
 def test_language_single_source():

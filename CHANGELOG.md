@@ -4,6 +4,11 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.34.1
+
+- Charts back to DOS glyphs (Ch, Rv, …) in all locales;
+  compartment house labels removed.
+
 ## 2.34.0
 
 - SL chart convention everywhere: DOS glyphs (Ch, Rv, …),
