@@ -4,6 +4,13 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.34.0
+
+- SL chart convention everywhere: DOS glyphs (Ch, Rv, …),
+  transliterated signs (Vrushchika, …), Lagna marker — in all
+  locales. Fork English blocks updated (other languages
+  untouched).
+
 ## 2.33.3
 
 - Single language source: `tools/gen_jylang.py` regenerates

@@ -73,19 +73,21 @@ planet_symbols = {
 # Sign Names
 ############################################################################
 sign_names = {
+    # STAR: transliterated sign names (match the app's modern rasi
+    # spellings); keys stay classical for set_ascendantsign validation.
     "english": {
-        "Aries"       : "Aries",
-        "Taurus"      : "Taurus",
-        "Gemini"      : "Gemini",
-        "Cancer"      : "Cancer",
-        "Leo"         : "Leo",
-        "Virgo"       : "Virgo",
-        "Libra"       : "Libra",
-        "Scorpio"     : "Scorpio",
-        "Saggitarius" : "Saggitarius",
-        "Capricorn"   : "Capricorn",
-        "Aquarius"    : "Aquarius",
-        "Pisces"      : "Pisces"
+        "Aries"       : "Mesha",
+        "Taurus"      : "Vrishabha",
+        "Gemini"      : "Mithuna",
+        "Cancer"      : "Kataka",
+        "Leo"         : "Simha",
+        "Virgo"       : "Kanya",
+        "Libra"       : "Tula",
+        "Scorpio"     : "Vrishchika",
+        "Saggitarius" : "Dhanu",
+        "Capricorn"   : "Makara",
+        "Aquarius"    : "Kumbha",
+        "Pisces"      : "Meena"
     },
     "kannada": {
         "Aries"       : "ಮೇಷ",
@@ -153,8 +155,9 @@ sign_names = {
 # UI Labels used in chart center text and Asc marker
 ############################################################################
 ui_labels = {
+    # STAR: the marker reads Lagna, not Asc.
     "english": {
-        "asc"         : "Asc",
+        "asc"         : "Lagna",
         "birth"       : "Birth",
         "birthplace"  : "BirthPlace",
         "chart"       : "Chart",

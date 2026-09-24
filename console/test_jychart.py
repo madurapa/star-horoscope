@@ -7,15 +7,15 @@ from test_render import DOC
 
 def test_east_english():
     svg = east_svg(DOC, 0, None, "en", "Lagna Chart")
-    assert svg.startswith("<svg") and "Su" in svg and "Mo" in svg
+    assert svg.startswith("<svg") and "Rv" in svg and "Ch" in svg
     assert "Asc" in svg
 
 
 def test_east_sinhala_tamil():
     si = east_svg(DOC, 0, None, "si", "Lagna Chart")
-    assert "ලග්න" in si and "සූ" in si
+    assert "ලග්න" in si and ">Ch<" in si
     ta = east_svg(DOC, 0, None, "ta", "Lagna Chart")
-    assert "லக்னம்" in ta and "சூ" in ta
+    assert "லக்னம்" in ta and ">Ch<" in ta
 
 
 def test_east_navamsa_lagna():
@@ -144,8 +144,8 @@ def test_all_charts_placements_geometric():
     from render import CHART_DEFS, chart_data
 
     doc = _spread_doc()
-    sym2p = {"Su": "Ravi", "Mo": "Chandra", "Ma": "Kuja", "Me": "Budha",
-             "Ju": "Guru", "Ve": "Sikuru", "Sa": "Shani", "Ra": "Raahu",
+    sym2p = {"Rv": "Ravi", "Ch": "Chandra", "Ku": "Kuja", "Bu": "Budha",
+             "Gu": "Guru", "Si": "Sikuru", "Sh": "Shani", "Ra": "Raahu",
              "Ke": "Kethu"}
     n = 0
     for title, varga, lagna_planet in CHART_DEFS:
@@ -156,8 +156,8 @@ def test_all_charts_placements_geometric():
             for p in ps:
                 want[p] = hh
         for m in re.finditer(
-                r'<text[^>]*x="([\d.]+)"[^>]*y="([\d.]+)"[^>]*>(Su|Mo|Ma|Me|Ju|Ve|Sa|Ra|Ke)</text>|'
-                r'<text[^>]*y="([\d.]+)"[^>]*x="([\d.]+)"[^>]*>(Su|Mo|Ma|Me|Ju|Ve|Sa|Ra|Ke)</text>',
+                r'<text[^>]*x="([\d.]+)"[^>]*y="([\d.]+)"[^>]*>(Rv|Ch|Ku|Bu|Gu|Si|Sh|Ra|Ke)</text>|'
+                r'<text[^>]*y="([\d.]+)"[^>]*x="([\d.]+)"[^>]*>(Rv|Ch|Ku|Bu|Gu|Si|Sh|Ra|Ke)</text>',
                 svg):
             g = m.groups()
             x, y, t = ((float(g[0]), float(g[1]), g[2]) if g[0]
@@ -183,13 +183,13 @@ def test_north_fixed_houses_match_cli():
     assert svg.startswith("<svg")
     # Ravi + Sikuru in house 10 (right diamond): |x-310|+|y-210| < 100
     found = {}
-    for m in re.finditer(r'<text[^>]*x="([\d.]+)"[^>]*y="([\d.]+)"[^>]*>(Su|Ve|Ke)</text>|'
-                         r'<text[^>]*y="([\d.]+)"[^>]*x="([\d.]+)"[^>]*>(Su|Ve|Ke)</text>',
+    for m in re.finditer(r'<text[^>]*x="([\d.]+)"[^>]*y="([\d.]+)"[^>]*>(Rv|Si|Ke)</text>|'
+                         r'<text[^>]*y="([\d.]+)"[^>]*x="([\d.]+)"[^>]*>(Rv|Si|Ke)</text>',
                          svg):
         g = m.groups()
         x, y, t = (float(g[0]), float(g[1]), g[2]) if g[0] else (float(g[4]), float(g[3]), g[5])
         found[t] = abs(x - 310) + abs(y - 210) < 100
-    assert found == {"Su": True, "Ve": True, "Ke": False}
+    assert found == {"Rv": True, "Si": True, "Ke": False}
     # sign numbers rotate with Lagna (North shows signs, houses are positions)
     assert len(re.findall(r'class="sign-num"', svg)) > 0
 

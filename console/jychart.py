@@ -31,6 +31,13 @@ PLANET_CONST = {
     "Shani": chart.SATURN, "Raahu": chart.RAHU, "Kethu": chart.KETU,
 }
 
+# SL glyph convention (DOS-style abbreviations) in every locale.
+GLYPHS = {
+    "Ravi": "Rv", "Chandra": "Ch", "Kuja": "Ku", "Budha": "Bu",
+    "Guru": "Gu", "Sikuru": "Si", "Shani": "Sh", "Raahu": "Ra",
+    "Kethu": "Ke",
+}
+
 LOCALE = {"en": "english", "si": "sinhala", "ta": "tamil"}
 
 # Light theme matching the report page (styled_light.py pattern, colors
@@ -78,7 +85,7 @@ def _base(doc, varga: int, lagna_planet, locale: str, title: str, cls):
     c.set_birth_details("", "", "")
     c.set_ascendantsign(MODERN_TO_CLASSICAL[RASIS[lagna_seat - 1]])
     for p, const in PLANET_CONST.items():
-        c.add_planet(const, chart.get_planet_symbol(const, lang),
+        c.add_planet(const, GLYPHS[p],
                      _house_of(houses, p), colour="black")
     c.updatechartcfg(show_center_lagna=DIVISIONS[title], **LIGHT)
     return c.to_svg_string()
@@ -93,7 +100,7 @@ def north_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
     c = chart.NorthChart("", "", language=lang)
     c.set_ascendantsign(MODERN_TO_CLASSICAL[RASIS[lagna_seat - 1]])
     for p, const in PLANET_CONST.items():
-        c.add_planet(const, chart.get_planet_symbol(const, lang),
+        c.add_planet(const, GLYPHS[p],
                      _house_of(houses, p), colour="black")
     c.updatechartcfg(**{k: v for k, v in LIGHT.items()
                          if k not in ("clr_inbox", "clr_Asc")})
@@ -116,7 +123,7 @@ def east_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
         # housenum n from true asc landing on position `house`: the library
         # maps n onto that position's fixed sign, so slots stay put.
         n = ((house - lagna_seat) % 12) + 1
-        c.add_planet(const, chart.get_planet_symbol(const, lang), n, colour="black")
+        c.add_planet(const, GLYPHS[p], n, colour="black")
     c.updatechartcfg(show_center_lagna=DIVISIONS[title], **LIGHT)
     return c.to_svg_string()
 

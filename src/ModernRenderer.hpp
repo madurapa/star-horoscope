@@ -514,7 +514,7 @@ inline std::string formatAge(YMD v) {
 
 // ---------------------------------------------------------------- sections
 
-inline constexpr const char* kAppVersion = "2.33.3";
+inline constexpr const char* kAppVersion = "2.34.0";
 
 // Closing art for full modern runs: top/bottom spacing, block-centered,
 // plain (no color — the art is busy enough). Skipped when the terminal is
