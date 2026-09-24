@@ -38,7 +38,7 @@ Post-landing deltas (remove_legacy): `--display` removed, JSON
   timelines, and CLI work unchanged. The Swiss path fills the SAME
   struct; only the numbers differ.
 - CLI: `--engine dos|swisseph`. The verifier asserts both engines
-  (dual block, R4); `--verify` still pins the DOS checkpoints; the
+  (dual block, R4) and `--verify` checks both checkpoint sets; the
   corpus runs Swiss. (Design said `--verify`/corpus ALWAYS DOS and
   display×engine independence — landed state per remove_legacy:
   `--display` removed, JSON `"display"` key dropped.)

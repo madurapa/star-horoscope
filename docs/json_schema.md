@@ -1,4 +1,8 @@
-# JSON schema v1 (frozen) — `star-horoscope/1`
+# JSON schema v2 — `star-horoscope/2`
+
+> Status 2026-09-24: v2 drops the `"display"` key (legacy display
+> removal). v1 documents stay in git history; all in-repo consumers
+> moved atomically and no API promises existed before v3.
 
 Machine output for pure consumers (Python/TypeScript later). Produced by
 `--format json`; the document always says how it was made. Hand-specified,
@@ -10,7 +14,7 @@ reject legitimate values).
 
 ```json
 {
-  "schema": "star-horoscope/1",
+  "schema": "star-horoscope/2",
   "version": "2.10.2",
   "name": "Test User",
   "birth_date": "2000-08-17",
@@ -58,7 +62,7 @@ reject legitimate values).
 
 ## Field rules (frozen)
 
-- `schema`: always exactly `star-horoscope/1`. Consumers switch on this,
+- `schema`: always exactly `star-horoscope/2`. Consumers switch on this,
   never on `version`.
 - `version`: the app version that produced the document (varies).
 - `name`: owner name, JSON-escaped (`\"`, `\\`, `\u00XX`).
@@ -92,11 +96,8 @@ reject legitimate values).
 
 ## Evolution policy
 
-v1 is frozen: additive fields only, never renames, removals, or
-reordering of `longitudes`. A breaking shape ships as `star-horoscope/2`
-alongside v1, never replacing it.
-
-> Erratum 2026-09-24 (remove_legacy): the `"display"` key was removed
-> under the v1 identifier when the legacy display died (all consumers
-> in-repo, updated atomically; no API promises exist before v3). The
-> version decision rides with the v3.0.0 cut (R8).
+v2 is frozen: additive fields only, never renames, removals, or
+reordering of `longitudes`. A breaking shape ships as `star-horoscope/3`
+alongside v2, never replacing it. (v1 broke this rule once, removing
+`"display"` under the v1 identifier in R6 — see erratum history in
+git; no API promises existed before v3.)

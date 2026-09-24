@@ -4,6 +4,18 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 3.1.0
+
+- JSON schema `star-horoscope/2` (drops `"display"`; all
+  in-repo consumers moved: CLI, pystar, smoke, console,
+  schema test + docs).
+- Single-source locales: `tools/gen_locales.py` generates
+  `console/i18n.py` + jyotichart si/ta blocks from the core
+  translator files; `locales_check` in the gate; chart
+  markers unified to core wording.
+- Post-release sweep: dead CLI wrappers out, stale
+  screen/display references fixed across code and docs.
+
 ## 3.0.0
 
 - Legacy display removed: no `--display` flag, no `renderScreen*`

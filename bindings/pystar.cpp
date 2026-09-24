@@ -52,10 +52,10 @@ static std::string horoscopeJson(const std::string& name, int year, int month, i
 NB_MODULE(pystar, m) {
     m.doc() = "STAR horoscope engine (frozen JSON schema consumer)";
     m.def("version", [] { return std::string(modern::kAppVersion); });
-    m.def("schema", [] { return std::string("star-horoscope/1"); });
+    m.def("schema", [] { return std::string("star-horoscope/2"); });
     m.def("horoscope", &horoscopeJson, nb::arg("name"), nb::arg("year"), nb::arg("month"),
           nb::arg("day"), nb::arg("hour"), nb::arg("minute"), nb::arg("city"),
           nb::arg("nirayana") = true, nb::arg("engine") = "swisseph",
           nb::arg("locale") = "en",
-          "Compute a horoscope; returns a star-horoscope/1 JSON document.");
+          "Compute a horoscope; returns a star-horoscope/2 JSON document.");
 }

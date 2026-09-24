@@ -1,4 +1,4 @@
-"""Rich rendering for star-horoscope/1 documents (pure consumer).
+"""Rich rendering for star-horoscope/2 documents (pure consumer).
 
 Reads no engine code: takes the parsed JSON dict from pystar.horoscope()
 and renders full-width, terminal-filling tables. Deterministic under a

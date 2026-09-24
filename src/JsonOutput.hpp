@@ -56,7 +56,7 @@ inline std::string renderJson(const HoroscopeOwner& owner, const HoroscopeResult
     std::snprintf(btime, sizeof(btime), "%02d:%02d", owner.birth_hour, owner.birth_minute);
     std::ostringstream js;
     js << "{\n";
-    js << "  \"schema\": \"star-horoscope/1\",\n";
+    js << "  \"schema\": \"star-horoscope/2\",\n";
     js << "  \"version\": \"" << kAppVersion << "\",\n";
     js << "  \"name\": \"" << jsonEscape(owner.name) << "\",\n";
     js << "  \"birth_date\": \"" << born << "\",\n";

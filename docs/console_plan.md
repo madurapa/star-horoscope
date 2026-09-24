@@ -6,7 +6,7 @@
   DOS program's own diamond charts, reproduced cell-exact from a decoded
   GOTOXY table (55→82 homes). The diamond *is* the Sri Lankan style.
   There is no "which layout" question for fidelity: legacy keeps them.
-- The engine is frozen and already serves JSON (`star-horoscope/1`
+- The engine is frozen and already serves JSON (`star-horoscope/2`
   via `pystar`). The console is a **pure consumer** — it can never
   corrupt calculations, only presentation. No engine work, ever.
 - The portable native binary stays the download-and-run product.

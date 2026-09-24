@@ -580,6 +580,47 @@ int CLI::runVerify() const {
     checkYmd("Kuja-Ravi", kb[7].to, 2095, 11, 28);
     checkYmd("Kuja-Sandu", kb[8].to, 2096, 6, 28);
 
+    // Swiss block (dual gate): same profile through the Swiss backend.
+    // Full 13-longitude table lives in tests/verifier.cpp; here the
+    // headlines proving the Swiss path end to end.
+    const HoroscopeResult hs = computeHoroscope(owner, geo, true, EngineKind::Swiss);
+    if (!hs.engineOk) {
+        ++fail;
+        std::printf("FAIL Swiss-engine %s\n", hs.engineError.c_str());
+    } else {
+        const auto slon = [&](const char* k) {
+            const PlanetLongitude* pl = findLongitude(hs.output, k);
+            if (pl == nullptr) {
+                ++fail;
+                std::printf("FAIL %-8s missing longitude\n", k);
+                return 0.0;
+            }
+            return pl->ecliptic.toDecimal();
+        };
+        checkDms("S-Lagna", slon("Lagna"), 239, 5, 18, 2.0);
+        checkDms("S-Chandra", slon("Chandra"), 325, 4, 41, 2.0);
+        const AngularDegrees say = AngularDegrees::fromDecimal(hs.ayanamsaDeg);
+        if (say.deg != 23 || say.min != 51 || say.sec != 57) {
+            ++fail;
+            std::printf("FAIL S-Ayanamsa got %d:%d:%d want 23:51:57\n",
+                        say.deg, say.min, say.sec);
+        } else {
+            std::printf("ok   S-Ayanamsa 23:51:57\n");
+        }
+        const DasaBalance sbal = dasaBalance(hs.moonNirayanaDeg);
+        if (sbal.ymd.y != 9 || sbal.ymd.m != 10 || sbal.ymd.d != 26) {
+            ++fail;
+            std::printf("FAIL S-balance got %d-%d-%d want 9-10-26\n",
+                        sbal.ymd.y, sbal.ymd.m, sbal.ymd.d);
+        } else {
+            std::printf("ok   S-balance 9-10-26\n");
+        }
+        const auto smahas = mahaTimeline(birth, r0, sbal);
+        checkYmd("S-Guru-end", smahas[0].to, 2010, 7, 13);
+        checkYmd("S-Kuja-start", smahas[7].from, 2089, 7, 13);
+        checkYmd("S-Kuja-end", smahas[7].to, 2096, 7, 13);
+    }
+
     if (fail == 0) std::printf("VERIFY_ALL_GREEN\n");
     return fail == 0 ? 0 : 1;
 }

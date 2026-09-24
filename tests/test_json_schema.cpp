@@ -36,7 +36,7 @@ int main() {
                                                birthFrac, bal);
     // Frozen shape: every v1 key present exactly as documented.
     for (const char* k :
-         {"\"schema\": \"star-horoscope/1\"", "\"version\": \"", "\"name\": ",
+         {"\"schema\": \"star-horoscope/2\"", "\"version\": \"", "\"name\": ",
           "\"birth_date\": \"2000-08-17\"", "\"birth_time\": \"14:05\"",
           "\"place\": {\"city_index\": 7, \"city\": \"Ratnapura\"}",
            "\"method\": \"nirayana\"", "\"engine\": \"dos\"",

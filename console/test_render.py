@@ -6,7 +6,7 @@ from rich.console import Console
 from render import render_all
 
 DOC = {
-    "schema": "star-horoscope/1", "version": "x", "name": "Test User",
+    "schema": "star-horoscope/2", "version": "x", "name": "Test User",
     "birth_date": "2000-08-17", "birth_time": "14:05",
     "place": {"city_index": 7, "city": "Ratnapura"},
     "method": "nirayana", "engine": "dos",

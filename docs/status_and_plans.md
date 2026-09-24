@@ -2952,3 +2952,21 @@ Gate: ctest 20/20 zero warnings.
   pointers, regen + gate commands, fidelity/reviewer
   policies). Language track L0–L2 + guide complete.
   Uncommitted (8 files).
+
+### Session 143 — 2026-09-24 (complete-all: v3.1.0, schema v2, dual verify)
+- Owner: "complete all". v3.1.0 (locales tool = feature):
+  kAppVersion, CHANGELOG + releases notes.
+- JSON schema star-horoscope/2 (display key gone): swept
+  JsonOutput, pystar, smoke, console fixture/render,
+  schema test, json_schema.md (example + policy), README,
+  console_plan. v1-break documented as history.
+- `--verify` dual (was DOS-only): Swiss headline block in
+  CLI::runVerify mirroring the verifier; README/phase2
+  claims updated.
+- pytest still unrunnable (no rich, no network); jychart
+  label wiring verified directly instead (ASC_LABELS_OK).
+- Back-tagged v2.35.0 on eeda1eb (frozen commit had none).
+- gh CLI absent — GitHub Release objects (v3.0.0, v3.1.0)
+  stay manual. Phase-3 sourcing stays blocked on a human
+  reviewer.
+- Gate: 26/26, zero warnings, VERIFY_ALL_GREEN.

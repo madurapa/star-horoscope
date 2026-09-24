@@ -111,8 +111,8 @@ Key options:
   `>26` takes manual coordinates, as in the original).
 - `--engine dos|swisseph` — Swiss Ephemeris feed (default)
   vs frozen DOS reconstruction. The verifier asserts both engines
-  (Swiss: all longitudes move ~2', dasa +15d); `--verify` still
-  pins the DOS checkpoints.
+  (Swiss: all longitudes move ~2', dasa +15d); `--verify` checks
+  both checkpoint sets.
 - `--locale en|si|ta` — output locale (default `en`; si/ta fall back
   to English per string until translated).
 - `--color auto|always|never` — headings color (`NO_COLOR` respected;
@@ -124,7 +124,7 @@ Key options:
 
 ## Python bindings
 
-`pystar.horoscope(...)` returns a `star-horoscope/1` JSON document
+`pystar.horoscope(...)` returns a `star-horoscope/2` JSON document
 (see `docs/json_schema.md`), parsed with stdlib `json`:
 
 ```python
@@ -158,7 +158,7 @@ days, so always match the flag on both sides.
 - `docs/modern_display.md` — palette and layout rules.
 - `docs/plans.md` — phased roadmap (publish → engines →
   localization → JSON consumers → multi-tradition).
-- `docs/json_schema.md` — frozen `star-horoscope/1` JSON schema.
+- `docs/json_schema.md` — frozen `star-horoscope/2` JSON schema.
 - `docs/status_and_plans.md` — session history log (append-only).
 
 ## Contributing

@@ -8,6 +8,22 @@ at the top of every release.
 
 ---
 
+## v3.1.0
+
+### Locales single-sourced, schema v2
+
+- JSON schema `star-horoscope/2`: the `"display"` key is gone
+  everywhere (CLI, pystar, console, docs).
+- `tools/gen_locales.py` is the single source for generated
+  language tables; `locales_check` fails the gate on drift;
+  jyotichart chart markers use core wording.
+- `--verify` now asserts both engines (was DOS-only).
+
+Full changelog: CHANGELOG.md. Provenance: NOTICE.md.
+License: GNU AGPL-3.0 (see LICENSE).
+
+---
+
 ## v3.0.0
 
 ### Legacy removal: Swiss product, DOS reference
