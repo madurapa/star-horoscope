@@ -2834,6 +2834,19 @@ Gate: ctest 20/20 zero warnings.
   R8 (v3.0.0).
 - Gate: 25/25 (docs-only).
 
+### Session 137 — 2026-09-24 (R8: commit + tag + push v3.0.0)
+- Owner: "continue" (authorized release sequence). Pre-commit
+  inspection: no secrets (CI placeholder + upstream comments
+  only); staged set verified (19 docs ADDED — untracked until
+  now — plus 33 modified + 319 deleted).
+- Committed 689e514 ("v3.0.0: remove legacy display, goldens,
+  renderers, tests, tooling (R1-R8)"), pushed main
+  (eeda1eb..689e514), tagged + pushed v3.0.0. Tree clean,
+  gate 25/25 on the committed tree.
+- Left to owner: GitHub Release object (body = releases.md
+  v3.0.0 section, copy-paste per AGENTS.md); release workflow
+  builds binaries from the tag. remove_legacy R1–R8 CLOSED.
+
 ### Session 136 — 2026-09-24 (R8: v3.0.0 prep, no tag yet)
 - Owner: "continue". kAppVersion 2.35.0 -> 3.0.0 (single
   source; tests pin the constant). CHANGELOG Unreleased
