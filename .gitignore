@@ -26,3 +26,4 @@ skills-lock.json
 # Pre-publish review hold: docs/
 # needing review before publish. Ignored until that pass completes.
 docs/*.md
+.idea/
