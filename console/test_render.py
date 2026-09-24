@@ -93,7 +93,7 @@ def test_cli_mirror_order_and_all_charts():
            "Chakra", "Nirayana Table of Houses", "Shadvarga Charts",
            "Shadvarga Positions", "Lagna Chart",
            "Navamsa Chart", "Hora Chart", "Drekkana Chart", "Dvadasamsa Chart",
-           "Trimshamsa Chart", "Sun Chart", "Moon Chart", "Mahadasa and Antardasa Timeline"]
+           "Trimshamsa Chart", "Surya Chart", "Chandra Chart", "Mahadasa and Antardasa Timeline"]
     pos = -1
     for s in seq:
         nxt = out.find(s, pos + 1)

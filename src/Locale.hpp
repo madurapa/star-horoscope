@@ -521,7 +521,7 @@ struct TrRow {
         {"TRISANSAKA"}, {"SOORYARASI"}, {"SANDURASI"},
         {"Hora Chart"}, {"Drekkana Chart"},
         {"Lagna Chart"}, {"Navamsa Chart"},
-        {"Dvadasamsa Chart"}, {"Trimshamsa Chart"}, {"Sun Chart"}, {"Moon Chart"},
+        {"Dvadasamsa Chart"}, {"Trimshamsa Chart"}, {"Surya Chart"}, {"Chandra Chart"},
         {"Yes"}, {"No"},
     };
     return k[static_cast<std::size_t>(c)];

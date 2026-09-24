@@ -64,8 +64,8 @@ DIVISIONS = {
     "Drekkana Chart": "Drekkana",
     "Dvadasamsa Chart": "Dwadasamsa",
     "Trimshamsa Chart": "Trimsamsa",
-    "Sun Chart": "Sun",
-    "Moon Chart": "Moon",
+    "Surya Chart": "Surya",
+    "Chandra Chart": "Chandra",
 }
 
 

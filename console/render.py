@@ -252,8 +252,8 @@ CHART_DEFS = [
     ("Drekkana Chart", 3, None),
     ("Dvadasamsa Chart", 4, None),
     ("Trimshamsa Chart", 5, None),
-    ("Sun Chart", 0, "Ravi"),
-    ("Moon Chart", 0, "Chandra"),
+    ("Surya Chart", 0, "Ravi"),
+    ("Chandra Chart", 0, "Chandra"),
 ]
 
 

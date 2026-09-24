@@ -51,7 +51,7 @@ def test_gallery_all_eight():
     spread["lagna"]["seats"] = [1, 12, 5, 4, 7, 2]
     g = gallery(spread, "diamond", "en")
     assert g.count("<svg") == 8
-    for title in ["Lagna Chart", "Navamsa Chart", "Sun Chart", "Moon Chart"]:
+    for title in ["Lagna Chart", "Navamsa Chart", "Surya Chart", "Chandra Chart"]:
         assert f"<h3>{title}</h3>" in g
     g2 = gallery(spread, "south", "ta")
     assert g2.count("<svg") == 8 and "லக்னம்" in g2

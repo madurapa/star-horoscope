@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.34.2
+
+- Sun/Moon charts titled Surya/Chandra (per translators) in
+  CLI, concepts, console, and SVG gallery. Engine key Ravi
+  unchanged.
+
 ## 2.34.1
 
 - Charts back to DOS glyphs (Ch, Rv, …) in all locales;
