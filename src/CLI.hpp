@@ -99,10 +99,8 @@ private:
     bool prompted_ = false;
 
     // Returns false when stdin hits EOF (abort cleanly, non-zero exit).
-    bool promptMissing();
     bool promptModern();
     void runInteractive();
-    int runBaseline() const;
     int runBaselineModern() const;
     bool colorOn() const;
     int runVerify() const;

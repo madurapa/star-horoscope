@@ -73,8 +73,8 @@ def main():
                 flags += ["--nirayana"] if v in ("true", "1", "yes") else ["--sayana"]
             elif k == "thathkala" and v in ("true", "1", "yes"):
                 flags += ["--thathkala"]
-        # R1: legacy display removed; corpus runs the modern layer until R3
-        # rewrites the golden expects (legacy literals no longer emitted).
+        # Modern-only product gate (legacy display removed R1;
+        # expects rewritten to modern literals in R3).
         cmd = [binary] + flags + ["--screen", scr]
         r = subprocess.run(cmd, capture_output=True, text=True)
         out = r.stdout + r.stderr

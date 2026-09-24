@@ -151,7 +151,7 @@ struct HoroscopeResult {
         r.output.longitudes[kv.first] = PlanetLongitude{ecl, rasiRel};
     }
     // Phase-1 array mirror: canonical Planet order (kPlanetNames), same
-    // values as the map by construction (proven in test_screens.cpp).
+    // values as the map by construction.
     for (int i = 0; i < 13; ++i)
         r.output.lonByPlanet[static_cast<std::size_t>(i)] =
             r.output.longitudes[kPlanetNames[static_cast<std::size_t>(i)]];

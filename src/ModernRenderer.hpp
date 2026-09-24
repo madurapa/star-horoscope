@@ -1,8 +1,8 @@
 #pragma once
-// STAR modern display layer (--display modern, the default).
-// Same engine numbers as the frozen byte-exact ScreenRenderer.hpp, presented
-// with corrected spellings (see docs/modern_display.md) and a redesigned,
-// responsive layout. Presentation only: no math changes.
+// STAR display layer (the only display; legacy removed in remove_legacy).
+// Same engine numbers, presented with corrected spellings (see
+// docs/modern_display.md) and a redesigned, responsive layout.
+// Presentation only: no math changes.
 //
 // TERMINAL TARGET: UTF-8 required. Box drawing (`─ │ ├ └`), the degree
 // sign (°), and boxed tables are used throughout with no ASCII fallback
@@ -735,8 +735,7 @@ inline std::string renderShadvargaNames(const AstroEngineOutput& output, int wid
 inline std::string renderShadvargaHouses(const AstroEngineOutput& output, int width,
                                          bool color, bool boxed = false,
                                          Locale loc = Locale::En) {
-    // Array read; the old null-fallback was dead (Engine always provides
-    // Lagna; see renderScreen0914 note).
+    // Array read (Engine always provides Lagna).
     std::array<int, 6> lagSv = VargaEngine::GetShadvarga(
         output.lonOf(Planet::Lagna).ecliptic.toDecimal());
     std::string out =
@@ -886,7 +885,7 @@ inline KeyRows birthProfileRows(const HoroscopeOwner& owner, const std::string& 
 }
 
 inline KeyRows astroRows(const AstroEngineOutput& output) {
-    // Array read; Engine always provides Lagna (see renderScreen07 note).
+    // Array read (Engine always provides Lagna).
     const double lagnaDec = output.lonOf(Planet::Lagna).ecliptic.toDecimal();
     const AngularDegrees lagnaRel = output.lonOf(Planet::Lagna).rasiRel;
     return {{"Julian Date", formatJulianDate(output.julianDate)},

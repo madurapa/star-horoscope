@@ -199,7 +199,7 @@ int CLI::run() {
         // pipes/files, and never in pure batch runs.
         std::cout << "\033[2J\033[3J\033[H" << std::flush;
     }
-    return runBaseline();
+    return runBaselineModern();
 }
 
 bool CLI::promptModern() {
@@ -332,13 +332,8 @@ bool CLI::promptModern() {
     return true;
 }
 
-bool CLI::promptMissing() {
-    // Modern-only (legacy prompt path removed per docs/remove_legacy.md R1).
-    return promptModern();
-}
-
 void CLI::runInteractive() {
-    promptMissing();
+    promptModern();
 }
 
 static GeoCoord resolveGeo(const CLIConfig& c) {
@@ -393,11 +388,6 @@ static modern::JsonProvenance jsonProv(const CLIConfig& config, bool nirayana,
     prov.cityIndex = config.thathkala ? 1 : config.city_index;
     prov.city = city;
     return prov;
-}
-
-int CLI::runBaseline() const {
-    // Modern-only (legacy renderer removed per docs/remove_legacy.md R1).
-    return runBaselineModern();
 }
 
 int CLI::runBaselineModern() const {

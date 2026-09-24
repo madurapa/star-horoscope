@@ -2879,3 +2879,20 @@ Gate: ctest 20/20 zero warnings.
 - Remaining legacy/ mentions are branch-historical framings
   by design. Gate: 25/25, zero warnings, VERIFY_ALL_GREEN.
   Only R8 (v3.0.0) is still open.
+
+### Session 138 — 2026-09-24 (post-release dead-code sweep)
+- Owner: "check if any blocks or anything is there from old
+  code". Clean rebuild: zero project warnings, 25/25.
+- Removed: `promptMissing()` + `runBaseline()` one-line
+  wrappers (R1 leftovers; callers go straight to
+  `promptModern()` / `runBaselineModern()`).
+- Fixed: `Engine.hpp` array-mirror comment (named deleted
+  test_screens), two dangling "see renderScreenX note"
+  pointers in ModernRenderer, transitional R1 comment in
+  corpus_run.py, stale `--display modern` header line.
+- Deliberately kept: DOS-literal engine tables (verifier +
+  slot/data tests pin them), TRANSCRI scenario names (live
+  verifier blocks), decode-record comments, ScreenRenderer
+  header removal note, test_panchanga provenance comment.
+- Gate: 25/25, zero warnings, VERIFY_ALL_GREEN. Uncommitted
+  (6 files incl. this log) — say the word to commit.
