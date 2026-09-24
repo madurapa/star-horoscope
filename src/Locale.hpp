@@ -443,7 +443,7 @@ struct TrRow {
         {"Saturday"},
         {"January"}, {"February"}, {"March"}, {"April"}, {"May"}, {"June"},
         {"July"}, {"August"}, {"September"}, {"October"}, {"November"}, {"December"},
-        {"Ketu"}, {"Shukra"}, {"Ravi"}, {"Chandra"}, {"Kuja"}, {"Rahu"},
+        {"Ketu"}, {"Shukra"}, {"Surya"}, {"Chandra"}, {"Kuja"}, {"Rahu"},
         {"Guru"}, {"Shani"}, {"Budha"},
         {"Asvida"}, {"Berana"}, {"Keti"}, {"Rehena"}, {"Muvasirasa"}, {"Ada"},
         {"Punavasa"}, {"Pushha"}, {"Aslisa"}, {"Maa"}, {"Puvapal"}, {"Utrapal"},

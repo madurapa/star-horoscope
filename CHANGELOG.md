@@ -4,6 +4,12 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 2.35.0
+
+- Sun displays as Surya everywhere modern (tables, dasa,
+  chart centers, console); Moon was already Chandra
+  throughout. Engine keys (Ravi) and legacy output frozen.
+
 ## 2.34.2
 
 - Sun/Moon charts titled Surya/Chandra (per translators) in

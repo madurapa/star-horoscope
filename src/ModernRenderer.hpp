@@ -426,7 +426,7 @@ inline std::string renderTable(const Table& t, int maxWidth, bool color = false,
 
 inline const char* planetName(int idx) {
     static constexpr const char* k[13] = {
-        "Lagna", "Chandra", "Ravi", "Budha", "Shukra", "Kuja", "Guru",
+        "Lagna", "Chandra", "Surya", "Budha", "Shukra", "Kuja", "Guru",
         "Shani", "Rahu", "Ketu", "Uranus", "Neptune", "Pluto"};
     return (idx >= 0 && idx < 13) ? k[idx] : "?";
 }
@@ -438,6 +438,7 @@ inline std::string displayPlanet(std::string_view key) {
     if (key == "Raahu" || key == "Rahu") return "Rahu";
     if (key == "Kethu" || key == "Ketu") return "Ketu";
     if (key == "Urenus") return "Uranus";
+    if (key == "Ravi") return "Surya";
     if (key == "Neptune" || key == "Neptun") return "Neptune";
     return std::string(key);  // Lagna Ravi Budha Kuja Guru Shani Pluto already correct
 }
@@ -491,7 +492,8 @@ inline std::string dasaName(const std::string& d) {
     if (d == "Sikuru") return "Shukra";
     if (d == "Sandu") return "Chandra";
     if (d == "Rahu") return "Rahu";
-    return d;  // Ketu Ravi Kuja Guru Shani Budha already correct
+    if (d == "Ravi") return "Surya";
+    return d;  // Ketu Kuja Guru Shani Budha already correct
 }
 
 inline std::string formatDeg(const AngularDegrees& a) {
@@ -514,7 +516,7 @@ inline std::string formatAge(YMD v) {
 
 // ---------------------------------------------------------------- sections
 
-inline constexpr const char* kAppVersion = "2.34.2";
+inline constexpr const char* kAppVersion = "2.35.0";
 
 // Closing art for full modern runs: top/bottom spacing, block-centered,
 // plain (no color — the art is busy enough). Skipped when the terminal is
@@ -805,9 +807,9 @@ inline ChartSet buildCharts(const AstroEngineOutput& output) {
                               planetSeats(4));
     c.trimshamsa = makeKendra(seats(Planet::Lagna, 5), rasiName(seats(Planet::Lagna, 5)), "Trimshamsa",
                               planetSeats(5));
-    c.sun = makeKendra(seats(Planet::Ravi, 0), rasiName(seats(Planet::Ravi, 0)), "Sun", planetSeats(0));
+    c.sun = makeKendra(seats(Planet::Ravi, 0), rasiName(seats(Planet::Ravi, 0)), "Surya", planetSeats(0));
     c.moon =
-        makeKendra(seats(Planet::Chandra, 0), rasiName(seats(Planet::Chandra, 0)), "Moon", planetSeats(0));
+        makeKendra(seats(Planet::Chandra, 0), rasiName(seats(Planet::Chandra, 0)), "Chandra", planetSeats(0));
     return c;
 }
 

@@ -31,7 +31,7 @@ def test_planets_pinned_to_rasi_cells():
         return bool(ri) and bool(pi) and any(abs(a - b) <= 4 for a in ri for b in pi)
 
     assert near("Kumbha", "Chandra")  # Chandra is Kumbha(11)
-    assert near("Simha", "Ravi")  # Ravi is Simha(5)
+    assert near("Simha", "Surya")  # Ravi is Simha(5)
 
 
 def test_lagna_highlight_moves_with_lagna():

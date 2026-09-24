@@ -35,7 +35,7 @@ int main() {
 
     const std::string houses = modern::renderHouseTable(h.output, W, false);
     // Corrected spellings present...
-    STAR_CHECK(houses.find("Ravi") != std::string::npos, "modern Ravi");
+    STAR_CHECK(houses.find("Surya") != std::string::npos, "modern Surya");
     STAR_CHECK(houses.find("Chandra") != std::string::npos, "modern Chandra");
     STAR_CHECK(houses.find("Shukra") != std::string::npos, "modern Shukra");
     STAR_CHECK(houses.find("Uranus") != std::string::npos, "modern Uranus");
@@ -260,10 +260,10 @@ int main() {
         modern::renderChartPair(cs.lagna, "Lagna Chart", cs.navamsa, "Navamsa Chart", 80, false);
     STAR_CHECK(wide.find("Lagna Chart") != std::string::npos, "wide pair titles");
     STAR_CHECK(wide.find("LAGNA CHART") == std::string::npos, "no all caps");
-    STAR_CHECK(wide.find("\xE2\x94\x82   Sun    \xE2\x94\x82") != std::string::npos ||
-                   modern::renderChartPair(cs.sun, "Sun Chart", cs.moon, "Moon Chart", 80,
+    STAR_CHECK(wide.find("\xE2\x94\x82  Surya   \xE2\x94\x82") != std::string::npos ||
+                   modern::renderChartPair(cs.sun, "Surya Chart", cs.moon, "Chandra Chart", 80,
                                            false)
-                           .find("\xE2\x94\x82   Sun    \xE2\x94\x82") != std::string::npos,
+                           .find("\xE2\x94\x82  Surya   \xE2\x94\x82") != std::string::npos,
                "center labels centered");
     const std::string narrow =
         modern::renderChartPair(cs.lagna, "Lagna Chart", cs.navamsa, "Navamsa Chart", 50, false);

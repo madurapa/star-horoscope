@@ -28,7 +28,7 @@ def test_fixed_houses_signs_rotate():
     # house 2 top-left holds Kethu (Dhanu from Wrschika)
     assert "2 · Dhanu" in out and "Ketu" in out
     # house 10 holds Ravi (display Shukra for Sikuru)
-    assert "10 · Simha" in out and "Ravi" in out and "Shukra" in out
+    assert "10 · Simha" in out and "Surya" in out and "Shukra" in out
 
 
 def test_signs_move_with_lagna():

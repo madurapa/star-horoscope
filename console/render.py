@@ -20,9 +20,10 @@ PLANETS = ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja", "Guru",
 
 # Modern display spellings (mirror displayPlanet); engine keys stay canonical.
 DISPLAY = {"Sikuru": "Shukra", "Raahu": "Rahu", "Kethu": "Ketu",
-           "Urenus": "Uranus"}
+           "Urenus": "Uranus", "Ravi": "Surya"}
 # Dasa-table spellings to modern display (mirror dasaName).
-DASA_DISPLAY = {"Sikuru": "Shukra", "Sandu": "Chandra", "Rahu": "Rahu"}
+DASA_DISPLAY = {"Sikuru": "Shukra", "Sandu": "Chandra", "Rahu": "Rahu",
+                "Ravi": "Surya"}
 # Yoga/karana romanizations to modern display (mirror displayYogaName /
 # displayKaranaName; engine tables stay byte-faithful).
 YOGA_DISPLAY = {"Vishkamba": "Vishkambha", "Aaushmaan": "Ayushman",
