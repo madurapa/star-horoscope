@@ -21,35 +21,14 @@ stay English technical vocabulary, like the terminal renderers.
 import base64
 import html as _html
 from functools import lru_cache
-from pathlib import Path
 
 from i18n import tr, trv
 from render import disp_lon
 from report_l10n import trx
 from services import hero_groups, hero_header, matrix_rows, timeline_rows
 
-def _base_dir() -> Path:
-    """console/ in dev; bundle root when frozen (PyInstaller one-file)."""
-    import sys
-
-    meipass = getattr(sys, "_MEIPASS", None)
-    if getattr(sys, "frozen", False) and meipass:
-        return Path(meipass)
-    return Path(__file__).resolve().parent
-
-
-ASSETS = _base_dir() / "assets"
-
-# Upstream sample shipped the scorpion as acorpio.svg (typo, fixed in
-# console/assets); _zodiac() still falls back to the typo name.
-ZODIAC_FILES = {
-    "Mesha": "aries.svg", "Vrishabha": "taurus.svg",
-    "Mithuna": "gemini.svg", "Kataka": "cancer.svg",
-    "Simha": "leo.svg", "Kanya": "virgo.svg",
-    "Tula": "libra.svg", "Vrishchika": "scorpio.svg",
-    "Dhanu": "sagittarius.svg", "Makara": "capricorn.svg",
-    "Kumbha": "aquarius.svg", "Meena": "pisces.svg",
-}
+# Assets + zodiac art live in services (WS-B single source).
+from services import ASSETS, matrix_headers, sign_name, zodiac_svg as _zodiac
 
 # jyotichart styles per --chart value (diamond renders fixed-house north).
 CHART_STYLE = {"diamond": "north"}
@@ -74,24 +53,6 @@ def _font_css() -> str:
             f"font-weight:{weight};font-display:swap;"
             f"src:url(data:font/ttf;base64,{blob}) format('truetype');}}")
     return "".join(faces)
-
-
-@lru_cache(maxsize=16)
-def _zodiac(rasi: str) -> str:
-    """Inline zodiac SVG for a Rasi ("" when the asset is missing)."""
-    candidates = [ZODIAC_FILES.get(rasi, "")]
-    if rasi == "Vrishchika":
-        candidates.append("acorpio.svg")
-    for name in candidates:
-        if not name:
-            continue
-        path = ASSETS / "zodiac" / name
-        if path.is_file():
-            lines = [ln for ln in path.read_text(encoding="utf-8")
-                     .splitlines()
-                     if not ln.lstrip().startswith("<?xml")]
-            return "\n".join(lines)
-    return ""
 
 
 CSS = """
@@ -357,13 +318,7 @@ def _matrix(doc, locale) -> str:
             row += f"<td>{_esc(v['rasi'])}<sup>{v['num']}</sup></td>"
         row += f"<td>{_esc(r['avastha'])}</td></tr>"
         rows.append(row)
-    head = "".join(f"<th>{_esc(c)}</th>" for c in
-                   [trx("Graha", locale), trx("Rasi", locale),
-                    trx("Longitude", locale), tr("Nakshatra", locale),
-                    trx("Pada", locale), tr("Hora", locale),
-                    trx("Drekkana", locale), trx("Navamsa", locale),
-                    trx("Dvadasamsa", locale), trx("Trimshamsa", locale),
-                    trx("Avastha", locale)])
+    head = "".join(f"<th>{_esc(c)}</th>" for c in matrix_headers(locale))
     note = (f"<div class=\"note\"><sup>*</sup>"
             f"{_esc(trx('Superscript numbers show the Rasi sign number.', locale))}"
             f"</div>")

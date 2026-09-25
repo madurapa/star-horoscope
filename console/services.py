@@ -9,14 +9,29 @@ Qt models from one computation.
 import calendar
 import json
 from datetime import date
+from functools import lru_cache
+from pathlib import Path
 
 from display_names import DASA_DISPLAY, MATRIX_ORDER, PLANET_DISPLAY
-from i18n import trv
+from i18n import tr, trv
 from kendra import RASIS
-from render import KARANA_DISPLAY, YOGA_DISPLAY
+from render import KARANA_DISPLAY, YOGA_DISPLAY, disp_lon, rasi_of
 from report_l10n import tr_avastha, tr_month, tr_tithi_full, trvx, trx
 
 CITY_COUNT = 26  # mirror kCityCount (src/AstroStructures.hpp)
+
+
+def _base_dir() -> Path:
+    """console/ in dev; bundle root when frozen (PyInstaller one-file)."""
+    import sys
+
+    meipass = getattr(sys, "_MEIPASS", None)
+    if getattr(sys, "frozen", False) and meipass:
+        return Path(meipass)
+    return Path(__file__).resolve().parent
+
+
+ASSETS = _base_dir() / "assets"
 
 
 class ServiceError(Exception):
@@ -174,6 +189,89 @@ def matrix_rows(doc, locale="en") -> list:
             "nakshatra": trv(d.get("nakshatra", "-"), locale, "nakshatras"),
             "pada": d.get("pada", "-"),
             "vargas": vargas,
+            "avastha": tr_avastha(doc["avastha"][p], locale) or "-",
+        })
+    return rows
+
+
+_ZODIAC_FILES = {
+    "Mesha": "aries.svg", "Vrishabha": "taurus.svg",
+    "Mithuna": "gemini.svg", "Kataka": "cancer.svg",
+    "Simha": "leo.svg", "Kanya": "virgo.svg",
+    "Tula": "libra.svg", "Vrishchika": "scorpio.svg",
+    "Dhanu": "sagittarius.svg", "Makara": "capricorn.svg",
+    "Kumbha": "aquarius.svg", "Meena": "pisces.svg",
+}
+
+
+@lru_cache(maxsize=16)
+def zodiac_svg(rasi: str) -> str:
+    """Inline zodiac SVG for a Rasi ("" when the asset is missing)."""
+    candidates = [_ZODIAC_FILES.get(rasi, "")]
+    if rasi == "Vrishchika":
+        candidates.append("acorpio.svg")
+    for name in candidates:
+        if not name:
+            continue
+        path = ASSETS / "zodiac" / name
+        if path.is_file():
+            lines = [ln for ln in path.read_text(encoding="utf-8")
+                     .splitlines()
+                     if not ln.lstrip().startswith("<?xml")]
+            return "\n".join(lines)
+    return ""
+
+
+_SUP = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
+
+
+def sup(num) -> str:
+    """Superscript digits for sign numbers (Qt plain-text cells)."""
+    return str(num).translate(_SUP)
+
+
+def sign_name(rasi: str, locale="en") -> str:
+    """Localized Rasi + superscript sign number (Vrishchika⁸)."""
+    return f"{trv(rasi, locale, 'rasis')}{RASIS.index(rasi) + 1}".translate(_SUP)
+
+
+def matrix_headers(locale="en") -> list:
+    """Shadvarga Matrix column headers, localized like the report."""
+    return [trx("Graha", locale), trx("Rasi", locale),
+            trx("Longitude", locale), tr("Nakshatra", locale),
+            trx("Pada", locale), tr("Hora", locale),
+            trx("Drekkana", locale), trx("Navamsa", locale),
+            trx("Dvadasamsa", locale), trx("Trimshamsa", locale),
+            trx("Avastha", locale)]
+
+
+def houses_headers(locale="en") -> list:
+    """Houses-table column headers."""
+    return [trx("Graha", locale), trx("Longitude", locale),
+            tr("Nakshatra", locale), trx("Pada", locale),
+            trx("Rasi", locale), tr("Rasi Longitude", locale),
+            trx("Avastha", locale)]
+
+
+def timeline_headers(locale="en") -> list:
+    """Dasa-timeline column headers (new keys: English-first)."""
+    return [tr("Lord", locale), tr("Span", locale), tr("Status", locale)]
+
+
+def houses_rows(doc, locale="en") -> list:
+    """Houses-table rows (mirror render_houses columns)."""
+    det = doc.get("details", {})
+    rows = []
+    for p in MATRIX_ORDER:
+        lon = doc["longitudes"][p]
+        d = det.get(p, {})
+        rows.append({
+            "planet": trvx(PLANET_DISPLAY.get(p, p), locale),
+            "lon": disp_lon(lon),
+            "nakshatra": trv(d.get("nakshatra", "-"), locale, "nakshatras"),
+            "pada": str(d.get("pada", "-")),
+            "rasi": trv(rasi_of(lon), locale, "rasis"),
+            "rasi_lon": (d.get("rasi_longitude") or "").strip() or "-",
             "avastha": tr_avastha(doc["avastha"][p], locale) or "-",
         })
     return rows

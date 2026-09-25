@@ -163,9 +163,10 @@ STAR_PYBUILD=/tmp/star-py python -m PyInstaller console/freeze.spec \
   --distpath dist --workpath freeze-build --noconfirm
 ```
 
-Qt desktop GUI (`gui/`, PySide6): profile form with validation,
-results summary, stacked navigation — services shared with the
-console above, full tables/charts land per `docs/qt_plan.md`:
+Qt desktop GUI (`gui/`, PySide6): validated profile form, tabbed
+results (summary, Shadvarga Matrix, houses, dasa timeline, chart
+gallery), stacked navigation — all views share services with the
+console above; PDF export lands per `docs/qt_plan.md`:
 
 ```bash
 PYTHONPATH=/tmp/star-py:console python gui/main.py

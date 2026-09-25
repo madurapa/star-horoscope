@@ -3370,3 +3370,15 @@ Gate: ctest 20/20 zero warnings.
   per untouched HTML tests). README: PySide6/pytest-qt requirement +
   GUI run block (verified verbatim). Docs ride every step per owner.
 - Gate: console 61/61, gui 7/7 offscreen, ctest 26/26.
+
+### Session 173 — 2026-09-25 (WS-D results views)
+- Qt models over shared services rows (gui/models.py): matrix,
+  houses, key/value groups, flat dasa timeline with bold active
+  rows; sign cells reuse superscript forms. services gained
+  houses_rows, zodiac_svg/ASSETS (moved from htmlreport),
+  *_headers(), sup(); htmlreport rewired (helpers deleted).
+- ResultsPage: hero (Laguna icon + header), 5 tabs (summary tables,
+  matrix, houses, dasa, 8-SVG scroll gallery). New tr() keys
+  (Summary/Houses/Dasa/Lord/Span/Status) English-first by design.
+- Gate: console 61/61, gui 11/11 offscreen, ctest 26/26.
+  Screenshots reviewed (profile + results tabs).

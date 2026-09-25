@@ -88,3 +88,50 @@ def test_back_navigates(window, qtbot, monkeypatch):
     assert window.stack.currentIndex() == 1
     qtbot.mouseClick(window.results.back_btn, Qt.LeftButton)
     assert window.stack.currentIndex() == 0
+
+
+def _computed(window, qtbot, monkeypatch, locale="en"):
+    
+    doc = copy.deepcopy(DOC)
+    monkeypatch.setattr(services, "compute", lambda **kw: doc)
+    page = window.profile
+    _fill_valid(page)
+    page.locale.setCurrentText(locale)
+    qtbot.mouseClick(page.compute_btn, Qt.LeftButton)
+    return doc
+
+
+def test_results_tabs(window, qtbot, monkeypatch):
+    _computed(window, qtbot, monkeypatch)
+    tabs = window.results.tabs
+    assert tabs.count() == 5
+    assert window.results.matrix_table.model().data(
+        window.results.matrix_table.model().index(0, 0)) == "Lagna"
+    assert window.results.matrix_table.model().headerData(
+        0, Qt.Horizontal) == "Graha"
+
+
+def test_timeline_active_row_bold(window, qtbot, monkeypatch):
+    _computed(window, qtbot, monkeypatch)
+    model = window.results.dasa_table.model()
+    assert model.data(model.index(0, 0)) == "Guru"
+    assert model.data(model.index(2, 0)) == "Shani"
+    assert model.data(model.index(2, 0), Qt.FontRole).bold() is True
+    assert model.data(model.index(0, 0), Qt.FontRole) is None
+
+
+def test_charts_gallery_loads_eight(window, qtbot, monkeypatch):
+    _computed(window, qtbot, monkeypatch)
+    widgets = window.results.chart_widgets
+    assert len(widgets) == 8
+    assert all(w.renderer().isValid() for w in widgets)
+    assert window.results.hero_icon.renderer().isValid()
+
+
+def test_matrix_headers_localize(window, qtbot, monkeypatch):
+    from report_l10n import EXTRA_STRINGS
+
+    _computed(window, qtbot, monkeypatch, locale="si")
+    model = window.results.matrix_table.model()
+    assert model.headerData(0, Qt.Horizontal) == EXTRA_STRINGS["Graha"][0]
+    assert model.data(model.index(0, 0)) != "Lagna"

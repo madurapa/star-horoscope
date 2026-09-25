@@ -8,12 +8,18 @@ feed the HTML report). Full tables/charts arrive in WS-D.
 import sys
 
 import services
+from gui import models
 from i18n import tr
+from jychart import gallery_items
 from PySide6.QtCore import Signal
+from PySide6.QtSvgWidgets import QSvgWidget
 from PySide6.QtWidgets import (QCheckBox, QComboBox, QFormLayout,
-                               QGroupBox, QHBoxLayout, QLabel, QLineEdit,
-                               QMainWindow, QPushButton, QSpinBox,
-                               QStackedWidget, QVBoxLayout, QWidget)
+                               QGridLayout, QGroupBox, QHBoxLayout,
+                               QHeaderView, QLabel, QLineEdit, QMainWindow,
+                               QPushButton, QScrollArea, QSpinBox,
+                               QStackedWidget, QTabWidget, QTableView,
+                               QVBoxLayout, QWidget)
+from report_l10n import trx
 
 
 class ProfilePage(QWidget):
@@ -124,39 +130,77 @@ class ProfilePage(QWidget):
 
 
 class ResultsPage(QWidget):
-    """Summary built from shared hero data (full views land in WS-D)."""
+    """Tabbed results: summary, matrix, houses, dasa, charts."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
         layout = QVBoxLayout(self)
+        hero = QHBoxLayout()
+        self.hero_icon = QSvgWidget()
+        self.hero_icon.setFixedSize(72, 72)
+        hero.addWidget(self.hero_icon)
+        head = QVBoxLayout()
         self.header_label = QLabel()
         self.sub_label = QLabel()
         self.sub_label.setWordWrap(True)
-        layout.addWidget(self.header_label)
-        layout.addWidget(self.sub_label)
-        self.groups_layout = QVBoxLayout()
-        layout.addLayout(self.groups_layout)
+        head.addWidget(self.header_label)
+        head.addWidget(self.sub_label)
+        hero.addLayout(head)
+        layout.addLayout(hero)
+        self.tabs = QTabWidget()
+        layout.addWidget(self.tabs)
         self.back_btn = QPushButton(tr("Back", "en"))
         layout.addWidget(self.back_btn)
 
     def show_doc(self, doc, locale):
-        from services import hero_groups, hero_header
+        from services import hero_groups, hero_header, zodiac_svg
 
         name, sub = hero_header(doc, locale)
         self.header_label.setText(name)
         self.sub_label.setText(sub)
-        while self.groups_layout.count():
-            item = self.groups_layout.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
-        for title, items in (("Panchanga", hero_groups(doc, locale)["panchanga"]),
-                             ("Hora", hero_groups(doc, locale)["hora"]),
-                             ("Chakra", hero_groups(doc, locale)["chakra"])):
+        self.hero_icon.load(zodiac_svg(doc["lagna"]["rasi"]).encode("utf-8"))
+        self.tabs.clear()
+        groups = hero_groups(doc, locale)
+        summary = QWidget()
+        summary_layout = QVBoxLayout(summary)
+        for title in ("Panchanga", "Hora", "Chakra"):
             box = QGroupBox(tr(title, locale))
-            form = QFormLayout(box)
-            for key, value in items:
-                form.addRow(tr(key, locale), QLabel(str(value)))
-            self.groups_layout.addWidget(box)
+            table = QTableView()
+            table.setModel(models.groups_model(groups[title.lower()], self))
+            table.horizontalHeader().setVisible(False)
+            table.verticalHeader().setVisible(False)
+            table.horizontalHeader().setSectionResizeMode(
+                QHeaderView.Stretch)
+            box_layout = QVBoxLayout(box)
+            box_layout.addWidget(table)
+            summary_layout.addWidget(box)
+        self.tabs.addTab(summary, tr("Summary", locale))
+        matrix = QTableView()
+        matrix.setModel(models.matrix_model(doc, locale, self))
+        self.matrix_table = matrix
+        self.tabs.addTab(matrix, trx("Shadvarga Matrix", locale))
+        houses = QTableView()
+        houses.setModel(models.houses_model(doc, locale, self))
+        self.houses_table = houses
+        self.tabs.addTab(houses, tr("Houses", locale))
+        dasa = QTableView()
+        dasa.setModel(models.TimelineModel(doc, None, locale, self))
+        self.dasa_table = dasa
+        self.tabs.addTab(dasa, tr("Dasa", locale))
+        gallery = QScrollArea()
+        grid_host = QWidget()
+        grid = QGridLayout(grid_host)
+        self.chart_widgets = []
+        for i, (_title, _varga, _lagna, svg) in enumerate(
+                gallery_items(doc, "east", locale)):
+            widget = QSvgWidget()
+            widget.load(svg.encode("utf-8"))
+            widget.setMinimumSize(240, 240)
+            self.chart_widgets.append(widget)
+            grid.addWidget(widget, i // 2, i % 2)
+        gallery.setWidget(grid_host)
+        gallery.setWidgetResizable(True)
+        self.tabs.addTab(gallery, trx("Divisional Charts", locale))
 
 
 class MainWindow(QMainWindow):
