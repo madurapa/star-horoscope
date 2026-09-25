@@ -3486,3 +3486,13 @@ Gate: ctest 20/20 zero warnings.
   Windows checkouts. Removed both via git rm. Prevention: the
   existing test_export_pdf_dev asserts the literal "wrote <path>"
   output, which fails exactly this way on recurrence.
+
+### Session 185 — 2026-09-25 (bundle system GL libs for Qt)
+- CI Linux failed: frozen GUI died at QtWidgets import, libEGL.so.1
+  missing on the minimal image. freeze-gui.spec now bundles the
+  build host's EGL/GLESv2/GL/GLdispatch (ldconfig-resolved with
+  diagnostics; Linux-only; load-only need, no GL contexts ever).
+  LD_DEBUG proves the loader takes the bundle copy first.
+- Aside: this box reaps /tmp aggressively (dist dirs vanished
+  mid-session twice); build outputs now go to ~/star-fdist.
+- Gate: console green (spec-only change); true proof is the CI rerun.

@@ -25,6 +25,35 @@ ext += glob.glob(os.path.join(pybuild, "Release", "pystar*.pyd"))
 assert ext, "no pystar extension in %s (build with -DSTAR_PYTHON=ON)" % pybuild
 binaries = [(ext[0], ".")]
 
+if sys.platform == "linux":
+    # QtGui links EGL/GLES at import; minimal images (CI) and user
+    # systems may lack them, so bundle the build host's copies next
+    # to the other root-level libs. Load-only need: the app creates
+    # no GL contexts (charts are software-rasterized).
+    import ctypes.util
+    import shutil
+    import subprocess
+
+    _ldconfig_bin = shutil.which("ldconfig") or "/sbin/ldconfig"
+    try:
+        _ldconfig = subprocess.run(
+            [_ldconfig_bin, "-p"], capture_output=True, text=True,
+            check=False).stdout
+    except OSError:
+        _ldconfig = ""
+    for _lib in ("EGL", "GLESv2", "GL", "GLdispatch"):
+        _soname = ctypes.util.find_library(_lib) or ""
+        _path = ""
+        for _line in _ldconfig.splitlines():
+            if _line.strip().startswith(_soname + " ") and "=>" in _line:
+                _path = _line.split("=>", 1)[1].strip()
+                break
+        if _path and os.path.isfile(_path):
+            print(f"bundling system GL lib: {_path}")
+            binaries.append((_path, "."))
+        else:
+            print(f"WARNING: system GL lib not found: {_lib} ({_soname})")
+
 zodiacs = glob.glob(os.path.join(ROOT, "console", "assets", "zodiac", "*.svg"))
 fonts = glob.glob(os.path.join(ROOT, "console", "assets", "fonts", "*.ttf"))
 assert len(zodiacs) == 12, "zodiac assets missing: %s" % zodiacs
