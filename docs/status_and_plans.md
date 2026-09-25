@@ -3470,3 +3470,9 @@ Gate: ctest 20/20 zero warnings.
   §6/notes restored verbatim from git). Tail diffed vs history:
   identical modulo blank lines. Lesson logged: file surgery needs
   a section-inventory check before and after.
+
+### Session 183 — 2026-09-25 (parking lot)
+- Owner: park open items for later review. New docs/parking_lot.md:
+  translation review, decision items (single binary, cert,
+  notarization, console flash), ready items (GUI polish, release
+  cut, CI watch), background threads.
