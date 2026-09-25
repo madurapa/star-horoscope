@@ -19,7 +19,7 @@ hand-typed below.
 
 import re
 
-from i18n import CONCEPTS, tr as _tr, tr_tithi as _tr_tithi
+from i18n import CONCEPTS, STRINGS, tr as _tr, tr_tithi as _tr_tithi
 
 # English literal -> (si, ta). Keys must equal the exact literals the
 # report emits; values are Draft translations, see module docstring.
@@ -72,7 +72,9 @@ _VARGA_KEYS = {
 }
 for _concept, _header in _VARGA_KEYS.items():
     _en, _si, _ta = CONCEPTS[_concept]
-    EXTRA_STRINGS.setdefault(_header, (_si, _ta))
+    # Canonical STRINGS wins in trx(); never shadow it (e.g. Hora).
+    if _header not in STRINGS:
+        EXTRA_STRINGS.setdefault(_header, (_si, _ta))
 EXTRA_STRINGS.setdefault('Pada', CONCEPTS['RajjuPada'][1:])
 
 # Month names derived from canonical concepts (timeline "Passed 2010

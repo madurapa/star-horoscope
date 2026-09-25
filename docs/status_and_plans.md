@@ -3415,3 +3415,14 @@ Gate: ctest 20/20 zero warnings.
   C++ --help gains the demotion epilog (output unpinned by tests).
   Binary/docs still built + gated, nothing removed.
 - Gate: console 63/63, gui 15/15, ctest 26/26 zero warnings.
+
+### Session 176 — 2026-09-25 (translator handoff list)
+- Owner: produce the handoff. New docs/translator_handoff.md,
+  generated from the live tables: 37 chrome + 12 short months +
+  12 avastha + 4 planet values + 9 glyph sets, plus GUI/app
+  literals needing concepts (with the Full Name/case canonicalize
+  note) and reviewer notes (AAgama collision, sphuta reading,
+  brand call, Tamil conventions, Ravi duplicate-en).
+- Drive-by fix: EXTRA_STRINGS shadowed canonical 'Hora' (derived
+  varga loop) — now skips STRINGS keys; zero behavior change.
+- Gate: console 63/63, gui 15/15, ctest 26/26.
