@@ -3432,3 +3432,9 @@ Gate: ctest 20/20 zero warnings.
   docs/translator_handoff.md with §0: all 363 canonical concepts
   (verified 0 Reviewed in both locale files; the 367-count was
   wrapped rows + commented examples). Integrity-checked table pipes.
+
+### Session 178 — 2026-09-25 (translator instructions in handoff)
+- Owner confirmed the workflow. Added a "For the translator" section
+  to docs/translator_handoff.md (work on a copy, English frozen,
+  marker/status conventions, §6 needs fresh translations, snapshot
+  regenerated not edited).

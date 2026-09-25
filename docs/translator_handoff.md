@@ -14,6 +14,23 @@ The pre-existing store (`src/locale_si.inc` / `src/locale_ta.inc`).
 Machine-drafted, never reviewed — the new batch in §1–§6 below
 joins this same queue. Promote row-by-row per the process above.
 
+## For the translator (how to return corrections)
+
+- Work on a **copy** of this file — never on code. For each wrong
+  cell, write the correction next to it (e.g. `ශ්‍රී ~~ලංකා~~
+  ලංකාව`) or add a `NOTE:` line under the row.
+- Columns: **English is frozen** (do not change it — tests pin
+  it); correct **Sinhala** / **Tamil** script and romanization.
+  `*` and `#` markers inside words are intentional — keep them.
+- Status meanings: Draft = machine-drafted, unreviewed; Reviewed =
+  confirmed by you (add your name + date in your reply).
+- §6 literals have no translation yet — provide all three columns
+  (English stays as shown).
+- Return the annotated copy; the maintainers transcribe it into
+  `src/locale_si.inc` / `src/locale_ta.inc`, regenerate, gate,
+  and commit. This file is a snapshot — it is regenerated, not
+  edited in place.
+
 | Concept | English | Sinhala | Tamil |
 | --- | --- | --- | --- |
 | RasiMesha | Mesha | මේෂ | மேஷம் |
