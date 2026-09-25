@@ -102,6 +102,71 @@ jobs:
           name: ${{ matrix.binary }}
           path: ${{ matrix.binary }}
 
+  # Frozen single-file report app (console + pystar engine, PyInstaller
+  # one-file per console/freeze.spec). Linux pins 22.04 so the glibc
+  # floor stays low for old distros; the C++ static binary above does
+  # not care. Artifacts join the GitHub Release via dist/ below.
+  freeze:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            artifact: star-report-linux
+            exe: dist/star-report
+          - os: macos-latest
+            artifact: star-report-macos
+            exe: dist/star-report
+          - os: windows-latest
+            artifact: star-report-windows.exe
+            exe: dist/star-report.exe
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Set up MSVC (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: Install freeze deps
+        shell: bash
+        run: python -m pip install nanobind pyinstaller rich typer
+
+      - name: Build pystar
+        shell: bash
+        run: |
+          PYEXE="$(python -c 'import sys; print(sys.executable)')"
+          cmake -S . -B pybuild -DSTAR_PYTHON=ON -DPython_EXECUTABLE="$PYEXE"
+          cmake --build pybuild --target pystar
+
+      - name: Freeze
+        shell: bash
+        run: |
+          STAR_PYBUILD=pybuild python -m PyInstaller console/freeze.spec \
+            --distpath dist --workpath freeze-build --noconfirm
+          mv "${{ matrix.exe }}" "dist/${{ matrix.artifact }}"
+
+      - name: Smoke-test frozen binary
+        shell: bash
+        run: |
+          BIN="dist/${{ matrix.artifact }}"
+          test "${{ runner.os }}" = "Windows" || chmod +x "$BIN"
+          "$BIN" --help
+          "$BIN" --name "Test User" --year 2000 --month 8 --day 17 \
+            --hour 14 --minute 5 --city 7 --export-html smoke.html
+          test -s smoke.html
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: ${{ matrix.artifact }}
+          path: dist/${{ matrix.artifact }}
+
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: build
@@ -124,5 +189,5 @@ jobs:
           else
             gh release create "${{ github.ref_name }}" dist/* \
               --title "${{ github.ref_name }}" \
-              --notes "Automated build of ${{ github.ref_name }} (see CHANGELOG.md). Linux (static binary), macOS (.dmg drag-to-Applications), Windows (MSVC exe, static CRT) — download and run, no install. Unsigned builds: macOS right-click > Open once; Windows SmartScreen > Run anyway."
+              --notes "Automated build of ${{ github.ref_name }} (see CHANGELOG.md). Linux (static binary), macOS (.dmg drag-to-Applications), Windows (MSVC exe, static CRT) — download and run, no install. star-report-* are the single-file horoscope app (terminal + self-contained HTML reports, no Python needed). Unsigned builds: macOS right-click > Open once; Windows SmartScreen > Run anyway."
           fi

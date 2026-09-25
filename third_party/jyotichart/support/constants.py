@@ -1,5 +1,3 @@
-import os
-
 #Housenumber related constants
 TAN = 1
 DHAN = 2
@@ -13,5 +11,3 @@ BHAGYA = 9
 KARMA = 10
 LAABA = 11
 KARCH = 12
-
-print(os.path.isfile("J:/Serials\\New folder/sample.txt"))

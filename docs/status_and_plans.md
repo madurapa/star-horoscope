@@ -3255,3 +3255,39 @@ Gate: ctest 20/20 zero warnings.
   left floating, no warnings). ilammy/msvc-dev-cmd@v1 untouched
   (latest major, unflagged). YAML parsed OK. Applies to future runs;
   v3.2.0 artifacts already published.
+
+### Session 164 — 2026-09-25 (frozen single-binary PoC, Linux green)
+- Owner: ship one download-and-run binary (no Python/install/compile
+  for end users). Approach: freeze, don't port — PyInstaller one-file
+  over console/app.py + nanobind pystar + vendored jyotichart
+  (console/freeze.spec; build dirs in /tmp, STAR_PYBUILD env).
+- Freeze-proofing (2 small product changes): htmlreport assets resolve
+  via sys._MEIPASS when frozen; jychart skips the in-tree sys.path
+  hack when frozen. Verified dev behavior byte-identical.
+- Findings fixed en route: (1) spec defined excludes= but never passed
+  it to Analysis() — 150MB bundle incl. PyQt6/scipy/pandas via the
+  rich.live->IPython.display edge; wired up -> 13MB. (2) Upstream debug
+  leftover print(os.path.isfile("J:/Serials...")) in
+  jyotichart/support/constants.py printed "False" on every import
+  (pre-existing, also unfrozen) — removed + unused import os.
+- Validation (no repo on path): --help, terminal run, --export-html
+  en/si/ta, --engine dos|swisseph, bad-args exit 2, silent stdout.
+  Frozen(dos) report byte-identical to unfrozen except the footer
+  version (fresh 3.2.0 pystar vs 3.1.0 reference JSON) — engine parity
+  proven. si timeline shows correct Swiss dates (ුූලි July).
+- Open: CI freeze job (linux 22.04 for glibc floor + mac/win),
+  interactive prompts for non-technical users, README/commit.
+
+### Session 165 — 2026-09-25 (ship-mode: prompts, CI freeze, docs)
+- Owner: single binary must serve non-technical users. console/app.py:
+  birth fields prompt when flags are missing (piped stdin unaffected);
+  --export-html asks on TTY only (blank skips, no hang in scripts).
+  Verified both paths over a real pty against the unfrozen app.
+- release.yml: new freeze job (ubuntu-22.04 glibc floor + mac/win,
+  setup-python v6, nanobind/pyinstaller/rich/typer, pystar build,
+  PyInstaller via console/freeze.spec, per-OS renamed artifacts,
+  --help + compute + export-html smoke gate). Artifacts auto-join the
+  GitHub Release (dist/ merge); release notes mention star-report-*.
+- README: Binaries + freeze recipe. Frozen binary rebuilt (13MB) and
+  re-validated: byte-identical to unfrozen modulo the version footer.
+- Gate: console 52/52, ctest 26/26.

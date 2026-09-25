@@ -10,8 +10,11 @@ for terminal output; this module feeds HTML export.
 import os
 import sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                                "third_party", "jyotichart"))
+if not getattr(sys, "frozen", False):
+    # Dev/CI: vendored jyotichart lives in-tree. Frozen builds bundle it
+    # as top-level modules instead (see console/freeze.spec).
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                    "third_party", "jyotichart"))
 
 import jyotichart as chart  # noqa: E402
 

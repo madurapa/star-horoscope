@@ -1,5 +1,6 @@
 """star-console: full-width rich front-end over pystar (pure consumer)."""
 import json
+import sys
 
 import typer
 from rich.console import Console
@@ -11,13 +12,15 @@ app = typer.Typer(add_completion=False)
 
 @app.command()
 def horoscope(
-    name: str = typer.Option(..., "--name"),
-    year: int = typer.Option(..., "--year"),
-    month: int = typer.Option(..., "--month"),
-    day: int = typer.Option(..., "--day"),
-    hour: int = typer.Option(..., "--hour"),
-    minute: int = typer.Option(..., "--minute"),
-    city: int = typer.Option(..., "--city"),
+    # Required birth fields prompt interactively when missing, so the
+    # frozen double-clickable binary works with no flags at all.
+    name: str = typer.Option(..., "--name", prompt="Full name"),
+    year: int = typer.Option(..., "--year", prompt="Birth year"),
+    month: int = typer.Option(..., "--month", prompt="Birth month (1-12)"),
+    day: int = typer.Option(..., "--day", prompt="Birth day"),
+    hour: int = typer.Option(..., "--hour", prompt="Birth hour (0-23)"),
+    minute: int = typer.Option(..., "--minute", prompt="Birth minute"),
+    city: int = typer.Option(..., "--city", prompt="District number"),
     nirayana: bool = typer.Option(True, "--nirayana/--sayana"),
     engine: str = typer.Option("swisseph", "--engine"),
     locale: str = typer.Option("en", "--locale"),
@@ -34,6 +37,10 @@ def horoscope(
 
     if chart not in ("north", "south", "east", "diamond", "none"):
         raise typer.BadParameter("--chart wants north|south|east")
+    if export_html is None and sys.stdin.isatty():
+        # Interactive (double-clickable binary) only: scripts pipe stdin.
+        export_html = typer.prompt("HTML report path (blank to skip)",
+                                   default="") or None
     doc = json.loads(pystar.horoscope(
         name, year, month, day, hour, minute, city,
         nirayana=nirayana, engine=engine, locale=locale))

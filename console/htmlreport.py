@@ -28,7 +28,17 @@ from i18n import tr, trv
 from render import KARANA_DISPLAY, YOGA_DISPLAY, disp_lon
 from report_l10n import tr_avastha, tr_month, tr_tithi_full, trvx, trx
 
-ASSETS = Path(__file__).resolve().parent / "assets"
+def _base_dir() -> Path:
+    """console/ in dev; bundle root when frozen (PyInstaller one-file)."""
+    import sys
+
+    meipass = getattr(sys, "_MEIPASS", None)
+    if getattr(sys, "frozen", False) and meipass:
+        return Path(meipass)
+    return Path(__file__).resolve().parent
+
+
+ASSETS = _base_dir() / "assets"
 
 # Upstream sample shipped the scorpion as acorpio.svg (typo, fixed in
 # console/assets); _zodiac() still falls back to the typo name.

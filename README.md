@@ -83,6 +83,12 @@ Download-and-run, no install — like the original STAR.EXE:
 - **macOS**: download `star.dmg`, double-click, drag into
   Applications. Unsigned, so on first launch right-click the app
   and choose Open (Gatekeeper one-time approval).
+- **Horoscope app** (terminal + HTML reports, no Python needed):
+  download `star-report-linux`, `star-report-macos`, or
+  `star-report-windows.exe` and run it — birth fields prompt
+  interactively, `--export-html report.html` writes the
+  self-contained report. Same Gatekeeper/SmartScreen one-time
+  approvals as above.
 
 Tagged versions (`v*`) build all three via
 `.github/workflows/release.yml`, published as GitHub Releases.
@@ -144,6 +150,15 @@ PYTHONPATH=/tmp/star-py:console python3.13 console/app.py \
   --name "Test User" --year 2000 --month 8 --day 17 \
   --hour 14 --minute 5 --city 7 --export-html /tmp/report.html
 python3.13 -m pytest console/ -q
+```
+
+Frozen single-file binary from the same sources (PyInstaller one-file
+over `console/app.py` + the `pystar` engine + report assets; Linux
+builds target older glibc, see the `freeze` CI job):
+
+```bash
+STAR_PYBUILD=/tmp/star-py python -m PyInstaller console/freeze.spec \
+  --distpath dist --workpath freeze-build --noconfirm
 ```
 
 `--export-html FILE` writes a self-contained horoscope report
