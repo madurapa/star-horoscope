@@ -90,6 +90,14 @@ ITEMS = [
     ("UiChakraGothra", "Gothra"),
     ("UiChakraRajju", "Rajju"),
     ("UiChakraBhutha", "Bhutha"),
+    ("UiChartLagna", "Lagna Chart"),
+    ("UiChartNavamsa", "Navamsa Chart"),
+    ("UiKendraHoraChart", "Hora Chart"),
+    ("UiKendraDrekkanaChart", "Drekkana Chart"),
+    ("UiChartDvadasamsa", "Dvadasamsa Chart"),
+    ("UiChartTrimshamsa", "Trimshamsa Chart"),
+    ("UiChartSun", "Surya Chart"),
+    ("UiChartMoon", "Chandra Chart"),
 ]
 
 # (jyotichart lang, concept) for generated ui_labels rows. Only keys
@@ -153,7 +161,7 @@ def concept_en_table():
     return pairs
 
 
-def build_console(si, ta, concepts):
+def build_console(si, ta, concepts, values):
     en_of = dict(concepts)
     lines = ['"""Report text translations (generated — do not hand-edit).',
              '',
@@ -190,7 +198,100 @@ def build_console(si, ta, concepts):
     lines.append("        if row:")
     lines.append('            return row[0] if locale == "si" else row[1]')
     lines.append("    return text")
+    lines.append("")
+    lines.append("def trv(text, locale, table):")
+    lines.append('    """Translate a report value via a VALUES table; unknown locales,')
+    lines.append('    tables, and keys pass through (English fallback, like the core)."""')
+    lines.append('    if locale in ("si", "ta"):')
+    lines.append("        row = VALUES.get(table, {}).get(text)")
+    lines.append("        if row:")
+    lines.append('            return row[1] if locale == "si" else row[2]')
+    lines.append("    return text")
+    lines.append("")
+    lines.append("def tr_tithi(text, locale):")
+    lines.append('    """Translate the limb inside a full tithi string, preserving the')
+    lines.append('    Pura-/Ava- prefix, spacing, and day number. Unparseable strings')
+    lines.append('    (e.g. Amaawaka-15) pass through."""')
+    lines.append('    if locale in ("si", "ta"):')
+    lines.append('        for limb, row in VALUES.get("limbs", {}).items():')
+    lines.append("            if limb and limb in text:")
+    lines.append('                return text.replace(limb, row[1] if locale == "si" else row[2], 1)')
+    lines.append("    return text")
+    lines.append("")
+    lines.append("VALUES = {")
+    lines.append("    # Report values by class (english -> concept, si, ta).")
+    lines.append("    # Reference for trv(); tr() only consults STRINGS.")
+    for table in values:
+        lines.append("    %r: {" % table)
+        for en, (c, s, t) in values[table].items():
+            lines.append("        %r: (%r, %r, %r)," % (en, c, s, t))
+        lines.append("    },")
+    lines.append("}")
     return "\n".join(lines) + "\n", missing
+
+
+# Value classes for report values (planets, rasis, weekdays, ...).
+# Each class lists explicit (concept, english) pairs and/or concept-name
+# prefixes resolved against the master concept/en table. English must
+# equal the en cell and (for display-mapped values) the modern display
+# string. A duplicate english key with DIFFERENT translations exits
+# nonzero; identical twins (Batticaloa A/B) share the key.
+VALUE_CLASSES = [
+    ("planets", {"explicit": [
+        ("UiAstroLagna", "Lagna"), ("DasaChandra", "Chandra"),
+        ("DasaRavi", "Surya"), ("DasaBudha", "Budha"),
+        ("DasaShukra", "Shukra"), ("DasaKuja", "Kuja"),
+        ("DasaGuru", "Guru"), ("DasaShani", "Shani"),
+        ("DasaRahu", "Rahu"), ("DasaKetu", "Ketu")]}),
+    ("rasis", {"prefixes": ["Rasi"]}),
+    ("weekdays", {"prefixes": ["Weekday"]}),
+    ("nakshatras", {"prefixes": ["Nak"]}),
+    ("yogas", {"prefixes": ["Yoga"]}),
+    ("karanas", {"prefixes": ["Kar"]}),
+    ("limbs", {"prefixes": ["Limb"]}),
+    ("attrs", {"prefixes": ["Gana", "Linga", "Naadi", "Varna", "Ruxha",
+                            "Paxhi", "Gothra", "Rajju", "Bhutha", "Yoni"]}),
+    ("cities", {"prefixes": ["District"]}),
+]
+
+
+def build_values(concepts, si, ta):
+    en_of = dict(concepts)
+    tables = {}
+    for name, spec in VALUE_CLASSES:
+        rows = []
+        for c, e in spec.get("explicit", []):
+            if en_of.get(c) != e:
+                raise SystemExit("VALUES en drift for %s" % c)
+            rows.append((c, e))
+        for c, e in concepts:
+            if any(c.startswith(p) for p in spec.get("prefixes", [])):
+                rows.append((c, e))
+        table, seen = {}, {}
+        for c, e in rows:
+            key = e.strip()
+            s = si.get(c, ("", "", ""))[0]
+            t = ta.get(c, ("", "", ""))[0]
+            if key in seen:
+                prev = seen[key]
+                ps = si.get(prev, ("", "", ""))[0]
+                pt = ta.get(prev, ("", "", ""))[0]
+                if (s, t) != (ps, pt):
+                    raise SystemExit("VALUES dup %r in %s" % (key, name))
+                continue
+            seen[key] = c
+            table[key] = (c, s, t)
+        if name == "attrs":
+            # Yoni display-truncated aliases (docs carry truncated forms).
+            for c, e in rows:
+                if c.startswith("Yoni"):
+                    trunc = e.strip()[:10]
+                    if trunc and trunc not in table:
+                        table[trunc] = (
+                            c, si.get(c, ("", "", ""))[0],
+                            ta.get(c, ("", "", ""))[0])
+        tables[name] = table
+    return tables
 
 
 def build_jyotichart(si, ta):
@@ -248,7 +349,8 @@ def main(argv):
     si = load_inc(SI_INC)
     ta = load_inc(TA_INC)
     concepts = concept_en_table()
-    console_txt, missing = build_console(si, ta, concepts)
+    values = build_values(concepts, si, ta)
+    console_txt, missing = build_console(si, ta, concepts, values)
     if missing:
         print("missing concepts: %s" % missing)
         return 2

@@ -13,6 +13,8 @@ renderers later — this diamond stays the default.
 from rich.console import Console
 from rich.text import Text
 
+from i18n import tr, trv
+
 RASIS = ["Mesha", "Vrishabha", "Mithuna", "Kataka", "Simha", "Kanya",
          "Tula", "Vrishchika", "Dhanu", "Makara", "Kumbha", "Meena"]
 
@@ -63,7 +65,12 @@ def planet_style(planet: str) -> str:
 
 
 def render_diamond(houses: dict, lagna_rasi: int, console: Console,
-                   box_w: int = 17, title: str = "Rasi Chart") -> None:
+                   box_w: int = 17, title: str = "Rasi Chart",
+                   locale: str = "en") -> None:
+    """Fixed-house diamond: house slots pinned (1 top-center,
+    anti-clockwise), signs rotate. Matches the CLI kendra charts."""
+    """Fixed-house diamond: house slots pinned (1 top-center,
+    anti-clockwise), signs rotate. Matches the CLI kendra charts."""
     """Fixed-house diamond: house slots pinned (1 top-center,
     anti-clockwise), signs rotate. Matches the CLI kendra charts."""
     box_w = max(13, box_w)
@@ -86,10 +93,10 @@ def render_diamond(houses: dict, lagna_rasi: int, console: Console,
         hl = (h == 1)
         rasi = RASIS[(lagna_rasi - 1 + h - 1) % 12]
         bl = [top(hl)]
-        bl.append(sline(f"{h} · {rasi}", "bold yellow" if hl else "dim", hl))
+        bl.append(sline(f"{h} · {trv(rasi, locale, 'rasis')}", "bold yellow" if hl else "dim", hl))
         names = houses.get(h, [])
         for p in names[:3]:
-            bl.append(sline(DISPLAY.get(p, p), planet_style(p), hl))
+            bl.append(sline(trv(DISPLAY.get(p, p), locale, "planets"), planet_style(p), hl))
         for _ in range(3 - len(names[:3])):
             bl.append(sline(" ", "", hl))
         bl.append(bottom(hl))
@@ -97,7 +104,7 @@ def render_diamond(houses: dict, lagna_rasi: int, console: Console,
 
     unit = box_w + 1
     width_cells = 5 * unit
-    lagna_name = RASIS[lagna_rasi - 1]
+    lagna_name = trv(RASIS[lagna_rasi - 1], locale, "rasis")
     lines = []
     for ri, row in enumerate(ROWS):
         height = max(len(boxes[h]) for h, _ in row)
@@ -117,8 +124,9 @@ def render_diamond(houses: dict, lagna_rasi: int, console: Console,
             for (a, b, st) in spans:
                 line.stylize(st, a, min(b, len(line.plain)))
             if ri == 3 and li == 0:
-                line.append(f" ✦ {lagna_name} Lagna ✦", style="bold yellow")
+                line.append(f" ✦ {lagna_name} {trv('Lagna', locale, 'planets')} ✦",
+                            style="bold yellow")
             lines.append(line)
-    console.print(Text(f"─── {title} (diamond) ───", style="bold"))
+    console.print(Text(f"─── {tr(title, locale)} (diamond) ───", style="bold"))
     for line in lines:
         console.print(line)

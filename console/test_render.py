@@ -204,8 +204,9 @@ def test_sinhala_report_translated_titles_keys():
                "Nirayana Table of Houses", "Shadvarga Charts",
                "Shadvarga Positions", "Mahadasa and Antardasa Timeline"]:
         assert en not in out, en
-    # values stay English (data, not UI)
-    assert "Ratnapura" in out and "Guru" in out and "2000-08-17" in out
+    # values translate too (names, dates, numbers stay as-is)
+    assert "රත්නපුර" in out and "ගුරු" in out and "2000-08-17" in out
+    assert "Ratnapura" not in out and "Guru" not in out
 
 
 def test_disp_lon_clock_form():

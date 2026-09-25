@@ -82,7 +82,7 @@ Per-entry wall time ≈ 25–45 s ⇒ budget ~1 h per 100 cases serially.
    Symptoms: "response: Unauthorized", empty captures, pattern-search
    misses, mid-run wedges. Recovery: kill ALL instances by PID (never
    pattern-pkill your own shell), verify zero remain, start exactly one.
-6. **Launch hangs the tool**: background the run with stdin detached
+7. **Launch hangs the tool**: background the run with stdin detached
    (`</dev/null`), stdout/stderr to a log file; poll the log. Template:
    `VAR=... nohup ./tools/run_all.sh E O > /tmp/fuzz.log 2>&1 </dev/null &`
 

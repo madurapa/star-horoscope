@@ -2970,3 +2970,155 @@ Gate: ctest 20/20 zero warnings.
   stay manual. Phase-3 sourcing stays blocked on a human
   reviewer.
 - Gate: 26/26, zero warnings, VERIFY_ALL_GREEN.
+
+### Session 144 — 2026-09-24 (HTML export double-check)
+- Owner: "double check html export is working". rich is
+  uninstallable here (no network), so render_report was
+  exercised via /tmp rich stubs (tree untouched): all 4
+  test_htmlreport tests pass, plus no-display-key,
+  live-engine end-to-end (dos + swisseph JSON render with
+  values/escaping), and all 11 test_jychart tests (incl. the
+  unified asc assertions). kendra/south pure-logic 4/9 pass;
+  the other 5 need real rich Console capture (env gap, not
+  code — same tests pass in CI with deps).
+- Verdict: HTML export works. No code changes.
+
+### Session 145 — 2026-09-24 (si/ta locale check)
+- Owner: "check Sinhala and Tamil too". HTML reports render
+  in si + ta (titles translated, values stay English) incl.
+  live-engine docs; CLI --locale si/ta prints translated
+  titles with English values; console tr() spot checks pass.
+  No code changes.
+
+### Session 146 — 2026-09-24 (si/ta value translation in reports)
+- Owner: "values also should be translated" (broad set +
+  limb decomposition). gen_locales.py now emits VALUES maps
+  (planets/rasis/weekdays/nakshatras/yogas/karanas/limbs/
+  attrs/cities, dup-checked, Batticaloa-twin + yoni-trunc
+  aliases); trv/tr_tithi live generated in i18n.py.
+- render.py + htmlreport.py translate every tabular value;
+  kendra.py/south.py thread locale (titles/planets/rasis);
+  gallery <h3> titles translate; 8 chart concepts added to
+  ITEMS. Tithi limbs substitute in place (spacing kept,
+  Amaawaka-15 passes); dasa/hora modernize before lookup.
+- Deviation logged: NO enum expansion — test_locale hardpins
+  Count==363 + full non-empty Draft rows, so avastha/outers
+  stay English via fallback (translator adds concepts+rows
+  later per locale_notes §5). Same observable behavior as
+  empty-fallback concepts, zero test churn.
+- Tests: test_sinhala values-assert rewritten (was pinning
+  English values), htmlreport si extended; verified via
+  stubs (htmlreport 4/4, jychart 11/11, trv/tithi units,
+  diamond/south recording checks, live dos+swisseph).
+  pytest proper still needs rich.
+- /tmp/star_{en,si,ta}.html regenerated (translated values).
+- Gate: 26/26, zero warnings, VERIFY_ALL_GREEN. Uncommitted.
+
+### Session 147 — 2026-09-25 (HTML report redesign to sample layout)
+- Owner brief: rebuild the HTML report to report_sample/report-light.html
+  (grouped hero + Shadvarga Matrix, drop the rest), dynamic zodiac SVGs,
+  embedded Noto Sans Sinhala, CLI-parity-ready structure, full en/si/ta,
+  remove report_sample/ after extraction (kept until review per owner).
+- New: console/assets/zodiac/*.svg (12, copied from report_sample;
+  acorpio.svg typo kept on disk, mapped with scorpio.svg fallback),
+  console/assets/fonts/ (Regular + Bold only, base64-embedded, ~650KB
+  self-contained, zero external links), console/report_l10n.py
+  (hand-maintained EXTRA strings: Engine/Locale/Chart Style/Shadvarga
+  Matrix/Divisional Charts/navamsa/Passed/Active/Starts/Ends/2 notes +
+  Ravi/Uranus/Neptune/Pluto values; Draft si/ta for translator review).
+- console/htmlreport.py rewritten: masthead, hero (birth line + Lagna
+  badge with dynamic zodiac + Panchanga/Hora/Chakra groups), Shadvarga
+  Matrix (sample column order Rasi/Hora/Drekkana/Navamsa/Dvadasamsa/
+  Trimshamsa, rasi-relative clock longitudes zero-padded, sign-number
+  superscripts, sample spellings Ravi/Shukra/Rahu/Ketu/Uranus),
+  Divisional Charts (8 cards, localized title + ascendant zodiac icon
+  each), collapsible dasa timeline (today-relative Passed/Active/Starts
+  + year, active maha open), technical provenance footer. Dropped:
+  Selected Options, Birth/ Astro/ Time tables, Houses, Shadvarga
+  Positions, flat dasa table. jychart.gallery_items() added (gallery()
+  output byte-identical); app.py --export-html auto-generates charts.
+- Deliberate deviations from the sample: timeline month abbrevs dropped
+  (sample's per-row Dec values are mock-inconsistent; year-only from
+  real dates, fully localizable); timeline title uses existing
+  "Mahadasa and Antardasa Timeline" key; table headers stay English
+  technical vocabulary per i18n doctrine; src/Locale.hpp untouched
+  (Count==363 hardpin — new strings live console-side, canonical wins).
+- Tests: test_htmlreport.py rewritten (13 tests: sections, matrix
+  values/spellings, escaping, font embed x2 + no external links, zodiac
+  inline count 1+8+8, timeline active/future, legacy gallery passthrough,
+  8 auto cards, si/ta chrome+values, footer). Verified vs live dos-engine
+  JSON (en/si/ta reports, browser-screenshot reviewed) + full gate:
+  console 45/45, ctest 26/26 zero warnings, VERIFY_ALL_GREEN.
+- report_sample/ left in place (untracked) for owner review, then delete.
+
+### Session 148 — 2026-09-25 (whole-codebase typo sweep)
+- Owner: "correct any typo in the whole codebase". Method: codespell
+  (default + clear/rare/informal dicts) over everything except
+  third_party, .git, graphify-out, report_sample, caches; strict
+  whole-word pattern sweep; three parallel proofreading agents over
+  docs groups A/B/C; one agent over src+console+tools+bindings+workflow
+  comments/CLI strings; hand-read README/CHANGELOG/CONTRIBUTING/NOTICE/
+  AGENTS-adjacent files.
+- Fixed 5: console/assets acorpio.svg -> scorpio.svg (mapping updated,
+  typo-name fallback kept); spellings_and_glossary.md avstha->avastha;
+  varga_and_sunrise_engine.md base tribe->base triad (doc's own term);
+  fuzzing.md duplicated 6.->7.; releases.md dasha->dasa (project
+  doctrine: "dasava (not dasha)").
+- Deliberately NOT fixed (fidelity contract): "Universal Siderial" x2
+  quotes the DOS screen-12 literal (quirks.md:78, AstroTime.hpp:167);
+  Juni/Juli/Minum are romanized translator data; ~194 refs to
+  Sikuru/Raahu/Kethu/Urenus/NRAYANA/Rav1/MATHARA/Deshkana/Sukarna etc.
+  are engine goldens/locale/test pins; status_and_plans.md old entries
+  untouched (append-only); json_schema backtick nit rejected as churn.
+- Gate: console 45/45, ctest 26/26 zero warnings, VERIFY_ALL_GREEN.
+
+### Session 149 — 2026-09-25 (third_party typo check)
+- Owner: check third_party too (project modifies jyotichart there).
+  swisseph is pure upstream (2 vendor commits ever) — scanned read-only
+  only: real upstream comment typos exist (attemp/andd/beween in swecl.c)
+  but left untouched (vendor pin v2.10.3final; local edits would rot on
+  re-vendor, zero user impact).
+- jyotichart (project fork: East code, glyphs, gen_locales language
+  blocks) fully swept (default + clear/rare/informal dicts): clean.
+  Only flags are valid spellings — README "Gotcha:" (correct caveat
+  noun), "co-ordinates" x9 (British variant; 6 in pristine-upstream
+  north files), "Re-uses" (valid hyphenation). No fixes made.
+- Gate unaffected (no code changes): console 45/45 re-run green.
+
+### Session 150 — 2026-09-25 (HTML report owner feedback round)
+- Owner: 5 items. (1) Notes lost the space after `</sup>` (matrix +
+  timeline). (2) chart-title rows removed from all chart cards (CSS +
+  per-chart zodiac icons go with them; cards are bare SVGs now, which
+  already carry center labels). (3) Timeline status regained the month:
+  Passed/Starts show year + localized full month from the real end/start
+  date (screenshot-proof: July/March/April/January/February end months —
+  the sample's all-Dec column was mock data); Active stays dateless per
+  sample. Months derived from canonical i18n.CONCEPTS, not retyped.
+- (4) render_report default chart diamond->east (app already passed east
+  explicitly; masthead now reads East by default).
+- (5) Localization gaps closed: brand, Schema/Version/Universal Time,
+  all 11 matrix headers (Nakshatra/Hora via canonical tr(), rest via
+  EXTRA, varga rows derived from CONCEPTS, Pada from RajjuPada),
+  Pura-/Ava- tithi prefixes (පුර/අව, வளர்பிறை/தேய்பிறை — tr_tithi only
+  did limbs), 12 avastha values (Draft transliterations). All new si/ta
+  marked Draft for translator review; single-source rule kept
+  (src/Locale.hpp untouched, Count==363).
+- Tests 14 in test_htmlreport (default-east, month, no-title, si/ta
+  header/footer/tithi/avastha, localized future Starts). Verified vs
+  live dos JSON en/si/ta + browser screenshots (East charts, timeline).
+- Gate: console 46/46, ctest 26/26 zero warnings, VERIFY_ALL_GREEN.
+
+### Session 151 — 2026-09-25 (HTML report feedback round 2)
+- Owner: 3 items. (1) Tithi uniform separators: tr_tithi_full() now
+  parses prefix/limb/day and re-emits 'Ava - Thiyawaka - 3' in every
+  locale ('Amaawaka-15' -> 'Amaawaka - 15'). (2) Timeline short months
+  in English (Passed 2010 Jun, sample-exact); si/ta keep full names
+  (no canonical abbreviations exist — short flag is en-only by design).
+- (3) Masthead values localized via EXTRA keys: Nirayana/Sayana,
+  EN/SI/TA language names, East/North/South/Diamond. Engine acronyms
+  DOS/SWISSEPH stay Latin in all locales (acronyms, like JSON/pystar).
+- Side find: console/assets SVGs are now minified (same artwork, no
+  Inkscape marker) — zodiac test marker switched to the #d8bfa0 fill;
+  all 12 rasis verified inlining.
+- Tests 15 in test_htmlreport. Gate: console 47/47, ctest 26/26 zero
+  warnings, VERIFY_ALL_GREEN.

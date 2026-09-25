@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 import jyotichart as chart  # noqa: E402
 
 from kendra import RASIS  # noqa: E402
+from i18n import tr  # noqa: E402
 from render import CHART_DEFS, chart_data  # noqa: E402
 
 MODERN_TO_CLASSICAL = {
@@ -132,15 +133,26 @@ def south_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
     return _base(doc, varga, lagna_planet, locale, title, chart.SouthChart)
 
 
-def gallery(doc, style: str, locale: str) -> str:
-    parts = ["<h2>Charts (SVG)</h2>"]
+def gallery_items(doc, style: str, locale: str):
+    """Structured chart cards: [(title, varga, lagna_planet, svg)].
+
+    The HTML report wraps each svg in its own card (title + zodiac
+    icon); gallery() below keeps the legacy flat-HTML assembly.
+    """
     if style == "south":
         make = south_svg
     elif style == "north":
         make = north_svg  # fixed houses like the CLI
     else:
         make = east_svg  # default: Sri Lankan East diamond
-    for title, varga, lagna_planet in CHART_DEFS:
-        parts.append(f"<h3>{title}</h3>")
-        parts.append(make(doc, varga, lagna_planet, locale, title))
+    return [(title, varga, lagna_planet,
+             make(doc, varga, lagna_planet, locale, title))
+            for title, varga, lagna_planet in CHART_DEFS]
+
+
+def gallery(doc, style: str, locale: str) -> str:
+    parts = ["<h2>Charts (SVG)</h2>"]
+    for title, _varga, _lagna_planet, svg in gallery_items(doc, style, locale):
+        parts.append(f"<h3>{tr(title, locale)}</h3>")
+        parts.append(svg)
     return "\n".join(parts)

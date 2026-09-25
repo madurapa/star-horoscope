@@ -13,7 +13,7 @@ refer to the retired harnesses; the live pins above are authoritative.
 The port reproduces the binary's strings VERBATIM, including typos.
 
 Gate strength per area (honest): house/Shadvarga/kendra TEXT — exact-line
-gates (strong). Panchanga/avstha/dasa VALUE strings — exact-value gates in
+gates (strong). Panchanga/avastha/dasa VALUE strings — exact-value gates in
 `tests/verifier.cpp` + `tests/test_panchanga.cpp` (strong). Rasi names —
 `tests/test_shadvarga.cpp` 72/72 relation + kendra centers (strong).
 

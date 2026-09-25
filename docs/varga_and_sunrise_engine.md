@@ -55,7 +55,7 @@ screen06; see docs/status_and_plans.md Session 13 — NOT the classical
   (591 -> Thula(7); w == 360 exactly -> Meena(12) via Meena jbe-360).
 - Hora/Deshkana/Dvadasansa validate the raw quotient (outside [0,11] the
   getter returns -1, rendered `**`); in-range sums wrap with a SINGLE
-  conditional subtract. Navamsa base tribe uses the rule1 rasi, sum wraps
+  conditional subtract. Navamsa base triad uses the rule1 rasi, sum wraps
   once (Lagna-591 -> 7+6 = 13 -> 1 Mesha).
 - House-table row: whole tail (NEKETH/PADA/RASI/rel/AVASTHA) blank when
   w > 360 (finder-loop bounds); longitude + nothing else prints.

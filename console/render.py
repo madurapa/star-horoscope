@@ -11,7 +11,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from i18n import tr
+from i18n import tr, tr_tithi, trv
 from kendra import RASIS, houses_from_longitudes, parse_dms, render_diamond
 from south import render_south, render_south_from_seats
 
@@ -41,9 +41,10 @@ def disp(planet: str) -> str:
 def render_profile(doc, console: Console) -> None:
     born = f"{doc['birth_date']} {doc['birth_time']}"
     place = doc["place"]
+    locale = doc["locale"]
     console.print(Panel(
         f"[bold]{doc['name']}[/bold]  |  Born {born}  |  "
-        f"{place['city']} ({place['city_index']})  |  {doc['method']}",
+        f"{trv(place['city'], locale, 'cities')} ({place['city_index']})  |  {doc['method']}",
         title=tr("Horoscope Profile", doc["locale"]), expand=True))
 
 
@@ -52,7 +53,7 @@ def render_longitudes(doc, console: Console) -> None:
     t.add_column("Graha", style="bold")
     t.add_column("Longitude", justify="right")
     for p in PLANETS:
-        t.add_row(disp(p), disp_lon(doc["longitudes"][p]))
+        t.add_row(trv(disp(p), doc["locale"], "planets"), disp_lon(doc["longitudes"][p]))
     console.print(t)
 
 
@@ -119,18 +120,19 @@ def boost_html(html: str, px: int = 15) -> str:
 
 def render_reference(doc, console: Console) -> None:
     lagna = doc["lagna"]
+    locale = doc["locale"]
     left = _kv("Birth Profile", [
         ("Name", doc["name"]),
         ("Born", f"{doc['birth_date']} {doc['birth_time']}"),
-        ("Birth Weekday", doc["panchanga"]["weekday"]),
-        ("Place", f"{doc['place']['city']} ({doc['place']['city_index']})"),
-        ("Method", doc["method"])], doc["locale"])
+        ("Birth Weekday", trv(doc["panchanga"]["weekday"], locale, "weekdays")),
+        ("Place", f"{trv(doc['place']['city'], locale, 'cities')} ({doc['place']['city_index']})"),
+        ("Method", doc["method"])], locale)
     right = _kv("Astronomical & Chart Reference", [
         ("Julian Date", f"{doc['julian_date']:.3f}"),
         ("Ayanamsa", ayan_dms(doc["ayanamsa_deg"])),
-        ("Lagna", lagna["rasi"]),
+        ("Lagna", trv(lagna["rasi"], locale, "rasis")),
         ("Lagna Degree", disp_lon(lagna["degree"])),
-        ("Lagna Navamsa", lagna["navamsa"])], doc["locale"])
+        ("Lagna Navamsa", trv(lagna["navamsa"], locale, "rasis"))], locale)
     console.print(left)
     console.print(right)
 
@@ -145,12 +147,14 @@ def render_time_panchanga(doc, console: Console) -> None:
         ("Local Mean Time (LMT)", tm["lmt"]),
         ("Local Mean Sidereal Time", tm["lmst"])], doc["locale"])
     pg = doc["panchanga"]
+    locale = doc["locale"]
     right = _kv("Panchanga", [
-        ("Nakshatra", pg["nakshatra"]),
-        ("Nakshatra Pada", pg["pada"]), ("Tithi", pg["tithi"]),
-        ("Yoga", YOGA_DISPLAY.get(pg["yoga"], pg["yoga"])),
-        ("Karana", KARANA_DISPLAY.get(pg["karana"], pg["karana"]))],
-        doc["locale"])
+        ("Nakshatra", trv(pg["nakshatra"], locale, "nakshatras")),
+        ("Nakshatra Pada", pg["pada"]),
+        ("Tithi", tr_tithi(pg["tithi"], locale)),
+        ("Yoga", trv(YOGA_DISPLAY.get(pg["yoga"], pg["yoga"]), locale, "yogas")),
+        ("Karana", trv(KARANA_DISPLAY.get(pg["karana"], pg["karana"]), locale, "karanas"))],
+        locale)
     console.print(left)
     console.print(right)
 
@@ -165,11 +169,13 @@ def render_houses(doc, console: Console) -> None:
     t.add_column("Rasi Longitude", justify="right")
     t.add_column("Avastha")
     det = doc.get("details", {})
+    locale = doc["locale"]
     for p in PLANETS:
         lon = doc["longitudes"][p]
         d = det.get(p, {})
-        t.add_row(disp(p), disp_lon(lon), d.get("nakshatra", "-"),
-                  str(d.get("pada", "-")), rasi_of(lon),
+        t.add_row(trv(disp(p), locale, "planets"), disp_lon(lon),
+                  trv(d.get("nakshatra", "-"), locale, "nakshatras"),
+                  str(d.get("pada", "-")), trv(rasi_of(lon), locale, "rasis"),
                   d.get("rasi_longitude", "-").strip(),
                   doc["avastha"][p] or "-")
     console.print(t)
@@ -180,8 +186,10 @@ def render_shadvarga(doc, console: Console) -> None:
     t.add_column("Graha", style="bold")
     for h in ["Rashi", "Navamsa", "Hora", "Drekkana", "Dvadasamsa", "Trimshamsa"]:
         t.add_column(h)
+    locale = doc["locale"]
     for p in PLANETS:
-        t.add_row(disp(p), *doc["shadvarga"][p])
+        t.add_row(trv(disp(p), locale, "planets"),
+                  *[trv(s, locale, "rasis") for s in doc["shadvarga"][p]])
     console.print(t)
 
 
@@ -196,54 +204,66 @@ def render_dasa(doc, console: Console, detail=None) -> None:
         detail = "all"
     dasa = doc["dasa"]
     spans = dasa["mahas"]
-    t = Table(title=tr("Mahadasa and Antardasa Timeline", doc["locale"]) +
-                    f" (balance {dasa['balance_lord']} {dasa['balance']})",
+    locale = doc["locale"]
+    t = Table(title=tr("Mahadasa and Antardasa Timeline", locale) +
+                    f" (balance {trv(DASA_DISPLAY.get(dasa['balance_lord'], dasa['balance_lord']), locale, 'planets')} {dasa['balance']})",
               expand=True, show_header=False, box=None)
     t.add_column("name", style="bold", no_wrap=True, width=12)
     t.add_column("span", no_wrap=True)
     for s in spans:
         lord = DASA_DISPLAY.get(s["lord"], s["lord"])
-        t.add_row(Text(lord, style="bold"),
+        t.add_row(Text(trv(lord, locale, "planets"), style="bold"),
                   Text(f"{s['from']} → {s['to']} ({s['age']})", style="bold"))
         if detail == "all" or (detail and detail.lower() in (s["lord"].lower(), lord.lower())):
             for b in s.get("bhuktis", []):
-                t.add_row("  └ " + DASA_DISPLAY.get(b["lord"], b["lord"]),
+                lord_b = DASA_DISPLAY.get(b["lord"], b["lord"])
+                t.add_row("  └ " + trv(lord_b, locale, "planets"),
                           Text(f"{b['from']} → {b['to']} ({b['age']})", style="dim"))
     console.print(t)
 
 
 def render_hora_chakra(doc, console: Console) -> None:
     hh = doc["hora"]
+    locale = doc["locale"]
     left = _kv("Hora", [
-        ("Kala", hh["kala"]), ("Panchama", hh["panchama"]),
-        ("Sukshama", hh["sukshama"])], doc["locale"])
+        ("Kala", trv(DASA_DISPLAY.get(hh["kala"], hh["kala"]), locale, "planets")),
+        ("Panchama", trv(DASA_DISPLAY.get(hh["panchama"], hh["panchama"]), locale, "planets")),
+        ("Sukshama", trv(DASA_DISPLAY.get(hh["sukshama"], hh["sukshama"]), locale, "planets"))],
+        locale)
     cc = doc["chakra"]
     right = _kv("Chakra", [
-        ("Gana", cc["gana"]), ("Yoni", cc["yoni"].strip()),
-        ("Linga", cc["linga"]), ("Naadi", cc["naadi"]),
-        ("Varna", cc["varna"]), ("Ruxha", cc["ruxha"]),
-        ("Paxhi", cc["paxhi"]), ("Gothra", cc["gothra"]),
-        ("Rajju", cc["rajju"]), ("Bhutha", cc["bhutha"])], doc["locale"])
+        ("Gana", trv(cc["gana"], locale, "attrs")),
+        ("Yoni", trv(cc["yoni"].strip(), locale, "attrs")),
+        ("Linga", trv(cc["linga"], locale, "attrs")),
+        ("Naadi", trv(cc["naadi"], locale, "attrs")),
+        ("Varna", trv(cc["varna"], locale, "attrs")),
+        ("Ruxha", trv(cc["ruxha"], locale, "attrs")),
+        ("Paxhi", trv(cc["paxhi"], locale, "attrs")),
+        ("Gothra", trv(cc["gothra"], locale, "attrs")),
+        ("Rajju", trv(cc["rajju"], locale, "attrs")),
+        ("Bhutha", trv(cc["bhutha"], locale, "attrs"))], locale)
     console.print(left)
     console.print(right)
 
 
 def render_dasa_info(doc, console: Console) -> None:
     dasa = doc["dasa"]
+    locale = doc["locale"]
     console.print(_kv("Dasa Information", [
-        ("Starting", dasa["balance_lord"]),
+        ("Starting", trv(DASA_DISPLAY.get(dasa["balance_lord"], dasa["balance_lord"]), locale, "planets")),
         ("Period", dasa["balance"]),
-        ("Reference", tr("From birth", doc["locale"]))], doc["locale"]))
+        ("Reference", tr("From birth", locale))], locale))
 
 
 def render_options(doc, console: Console, chart: str) -> None:
     place = doc["place"]
+    locale = doc["locale"]
     console.print(_kv("Selected Options", [
-        ("District", f"{place['city_index']} ({place['city']})"),
+        ("District", f"{place['city_index']} ({trv(place['city'], locale, 'cities')})"),
         ("Method", doc["method"]),
         ("Engine", doc["engine"]),
         ("Locale", doc["locale"]),
-        ("Chart", chart)], doc["locale"]))
+        ("Chart", chart)], locale))
 
 
 CHART_DEFS = [
@@ -281,12 +301,15 @@ def render_charts(doc, console: Console, style: str) -> None:
     if style == "none":
         return
     use = "south" if style in ("south", "east") else "diamond"
+    locale = doc["locale"]
     for title, varga, lagna_planet in CHART_DEFS:
         houses, seats, lagna_seat = chart_data(doc, varga, lagna_planet)
         if use == "south":
-            render_south_from_seats(seats, lagna_seat, console, title=title)
+            render_south_from_seats(seats, lagna_seat, console, title=title,
+                                    locale=locale)
         else:
-            render_diamond(houses, lagna_seat, console, title=title)
+            render_diamond(houses, lagna_seat, console, title=title,
+                           locale=locale)
 
 
 def render_positions(doc, console: Console) -> None:
@@ -300,7 +323,7 @@ def render_positions(doc, console: Console) -> None:
             seat = RASIS.index(doc["shadvarga"][p][v]) + 1
             lagna_seat = doc["lagna"]["seats"][v]
             row.append(str(((seat - lagna_seat) % 12) + 1))
-        t.add_row(disp(row[0]), *row[1:])
+        t.add_row(trv(disp(row[0]), doc["locale"], "planets"), *row[1:])
     console.print(t)
 
 

@@ -39,11 +39,8 @@ def horoscope(
         nirayana=nirayana, engine=engine, locale=locale))
     if export_html:
         from htmlreport import render_report
-        from jychart import gallery
 
-        style = {"diamond": "north"}.get(chart, chart)
-        html = render_report(doc, chart=chart, dasa=dasa,
-                             gallery=gallery(doc, style, locale))
+        html = render_report(doc, chart=chart, dasa=dasa)
         with open(export_html, "w", encoding="utf-8") as f:
             f.write(html)
         print(f"wrote {export_html}")

@@ -1,170 +1,554 @@
-"""Semantic HTML report renderer (pure consumer).
+"""Sample-layout HTML report renderer (pure consumer).
 
-Real <table>/<section>/<h2> with a small stylesheet — not terminal
-export. Same doc dict as the Rich renderers; charts embed jyotichart
-SVG strings. Print-friendly light theme.
+Self-contained single file: inline CSS, base64-embedded Noto Sans
+Sinhala (Regular + Bold, from console/assets/fonts), inline zodiac
+SVGs (console/assets/zodiac, picked dynamically per Rasi), and
+jyotichart SVG strings for the divisional charts. Same doc dict as
+the Rich renderers. Print-friendly light theme.
+
+Sections (match report_sample/report-light.html): masthead, hero
+(birth line + Lagna badge + Panchanga/Hora/Chakra groups), Shadvarga
+Matrix, Divisional Charts (8 cards, each titled with its ascendant
+zodiac icon), Mahadasa & Antardasa timeline, minimal provenance
+footer. Dropped from the old layout on purpose: Selected Options,
+Birth Profile / Astro Reference / Time & Solar tables, Houses table,
+Shadvarga Positions, flat dasa table (see docs/status_and_plans.md).
+
+All chrome goes through tr()/trx(), all values through trv()/
+tr_tithi()/trvx() (en/si/ta). Table headers and the provenance line
+stay English technical vocabulary, like the terminal renderers.
 """
+import base64
 import html as _html
+from datetime import date
+from functools import lru_cache
+from pathlib import Path
 
-from i18n import tr
-from render import (DASA_DISPLAY, KARANA_DISPLAY, YOGA_DISPLAY, ayan_dms, disp, disp_lon, rasi_of)
+from i18n import tr, trv
+from render import KARANA_DISPLAY, YOGA_DISPLAY, disp_lon
+from report_l10n import tr_avastha, tr_month, tr_tithi_full, trvx, trx
 
-CSS = """
-body{font-family:Georgia,serif;font-size:15px;color:#111;background:#fff;
-max-width:1100px;margin:2em auto;padding:0 1em}
-h1{font-size:1.6em;border-bottom:2px solid #333;padding-bottom:.2em}
-h2{font-size:1.25em;color:#333;border-bottom:1px solid #ccc;
-padding-bottom:.15em;margin-top:1.5em}
-table{border-collapse:collapse;width:100%;margin:.5em 0}
-th,td{border:1px solid #bbb;padding:.3em .6em;text-align:left}
-th{background:#f0f0f0}
-td.num{text-align:right;font-variant-numeric:tabular-nums}
-.maha{font-weight:bold;background:#f7f7f7}
-.bhukti td:first-child{padding-left:2em;color:#444}
-.charts{display:grid;grid-template-columns:1fr 1fr;gap:1em}
-.charts svg{width:100%;height:auto}
-.provenance{color:#777;font-size:.85em;margin-top:2em}
-@media print{.charts{grid-template-columns:1fr 1fr}}
-"""
+ASSETS = Path(__file__).resolve().parent / "assets"
+
+# Upstream sample shipped the scorpion as acorpio.svg (typo, fixed in
+# console/assets); _zodiac() still falls back to the typo name.
+ZODIAC_FILES = {
+    "Mesha": "aries.svg", "Vrishabha": "taurus.svg",
+    "Mithuna": "gemini.svg", "Kataka": "cancer.svg",
+    "Simha": "leo.svg", "Kanya": "virgo.svg",
+    "Tula": "libra.svg", "Vrishchika": "scorpio.svg",
+    "Dhanu": "sagittarius.svg", "Makara": "capricorn.svg",
+    "Kumbha": "aquarius.svg", "Meena": "pisces.svg",
+}
+
+# Sample-exact row order (Sun first, then Moon, Mars, ... + outers).
+MATRIX_ORDER = ["Lagna", "Ravi", "Chandra", "Kuja", "Budha", "Guru",
+                "Sikuru", "Shani", "Raahu", "Kethu", "Urenus",
+                "Neptune", "Pluto"]
+
+# Engine keys -> sample spellings (Ravi stays Ravi, unlike render.DISPLAY).
+GRAHA_DISPLAY = {"Sikuru": "Shukra", "Raahu": "Rahu", "Kethu": "Ketu",
+                 "Urenus": "Uranus"}
+
+# Dasa-lord normalisation (doc carries Sandu/Sikuru; Ravi stays).
+DASA_LORD = {"Sikuru": "Shukra", "Sandu": "Chandra"}
+
+# shadvarga index order for the matrix columns
+# (Rasi, Hora, Drekkana, Navamsa, Dvadasamsa, Trimshamsa).
+MATRIX_VARGAS = (0, 2, 3, 1, 4, 5)
+
+# jyotichart styles per --chart value (diamond renders fixed-house north).
+CHART_STYLE = {"diamond": "north"}
 
 
 def _esc(s) -> str:
     return _html.escape(str(s), quote=True)
 
 
-def _kv_table(title, rows, locale):
-    body = "".join(f"<tr><th>{_esc(tr(k, locale))}</th><td>{_esc(v)}</td></tr>"
-                   for k, v in rows)
-    return f"<section><h2>{_esc(tr(title, locale))}</h2><table>{body}</table></section>"
+@lru_cache(maxsize=1)
+def _font_css() -> str:
+    """@font-face with embedded Regular + Bold; "" when assets miss."""
+    faces = []
+    for weight, file in (("400", "NotoSansSinhala-Regular.ttf"),
+                         ("700", "NotoSansSinhala-Bold.ttf")):
+        path = ASSETS / "fonts" / file
+        if not path.is_file():
+            continue
+        blob = base64.b64encode(path.read_bytes()).decode("ascii")
+        faces.append(
+            "@font-face{font-family:'Noto Sans Sinhala';font-style:normal;"
+            f"font-weight:{weight};font-display:swap;"
+            f"src:url(data:font/ttf;base64,{blob}) format('truetype');}}")
+    return "".join(faces)
 
 
-def _houses_table(doc, locale):
-    rows = []
-    det = doc.get("details", {})
-    for p in doc["longitudes"]:
-        d = det.get(p, {})
-        rows.append(
-            f"<tr><td><b>{_esc(disp(p))}</b></td>"
-            f"<td class=\"num\">{_esc(disp_lon(doc['longitudes'][p]))}</td>"
-            f"<td>{_esc(d.get('nakshatra', '-'))}</td>"
-            f"<td class=\"num\">{_esc(d.get('pada', '-'))}</td>"
-            f"<td>{_esc(rasi_of(doc['longitudes'][p]))}</td>"
-            f"<td class=\"num\">{_esc(d.get('rasi_longitude', '-').strip())}</td>"
-            f"<td>{_esc(doc['avastha'][p] or '-')}</td></tr>")
-    head = "".join(f"<th>{c}</th>" for c in
-                   ["Graha", "Longitude", "Nakshatra", "Pada", "Rasi",
-                    "Rasi Longitude", "Avastha"])
-    return (f"<section><h2>{_esc(tr('Nirayana Table of Houses', locale))}</h2>"
-            f"<table><tr>{head}</tr>{''.join(rows)}</table></section>")
+@lru_cache(maxsize=16)
+def _zodiac(rasi: str) -> str:
+    """Inline zodiac SVG for a Rasi ("" when the asset is missing)."""
+    candidates = [ZODIAC_FILES.get(rasi, "")]
+    if rasi == "Vrishchika":
+        candidates.append("acorpio.svg")
+    for name in candidates:
+        if not name:
+            continue
+        path = ASSETS / "zodiac" / name
+        if path.is_file():
+            lines = [ln for ln in path.read_text(encoding="utf-8")
+                     .splitlines()
+                     if not ln.lstrip().startswith("<?xml")]
+            return "\n".join(lines)
+    return ""
 
 
-def _shadvarga_table(doc, locale, positions=False):
-    heads = ["Graha", "Rashi", "Navamsa", "Hora", "Drekkana", "Dvadasamsa",
-             "Trimshamsa"]
-    body = []
-    for p in doc["longitudes"]:
-        if positions:
-            cells = []
-            for v in range(6):
-                seat = doc["shadvarga"][p][v]
-                from kendra import RASIS
-                lagna_seat = doc["lagna"]["seats"][v]
-                cells.append(str(((RASIS.index(seat) + 1 - lagna_seat) % 12) + 1))
-        else:
-            cells = [_esc(c) for c in doc["shadvarga"][p]]
-        body.append(f"<tr><td><b>{_esc(disp(p))}</b></td>" +
-                    "".join(f"<td class=\"num\">{c}</td>" for c in cells) + "</tr>")
-    head = "".join(f"<th>{c}</th>" for c in heads)
-    title = "Shadvarga Positions" if positions else "Shadvarga Charts"
-    return (f"<section><h2>{_esc(tr(title, locale))}</h2>"
-            f"<table><tr>{head}</tr>{''.join(body)}</table></section>")
+CSS = """
+:root {
+    --bg: rgba(247, 246, 243, 0.5);
+    --panel: #ffffff;
+    --panel-2: #faf9f6;
+    --border: #e6e2da;
+    --border-soft: #eeebe4;
+    --text: #20221f;
+    --text-dim: #6b6a63;
+    --text-faint: #a3a097;
+    --accent: #b45309;
+    --accent-soft: #b453091a;
+    --accent-line: #b4530944;
+    --teal: #0f766e;
+    --chart-bg: #ffffff;
+    --chart-line: #d8d3c8;
+    font-size: 16px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans Sinhala', 'Noto Sans', system-ui, sans-serif;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    letter-spacing: .018em;
+}
+a { color: var(--accent); }
+.wrap { max-width: 1320px; margin: 0 auto; padding: 2rem 1.5rem 0; }
+.masthead {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: .6rem; margin-bottom: 1.75rem;
+}
+.brand { display: flex; align-items: baseline; gap: .65rem; }
+.brand-name { font-weight: 600; font-size: 1.3rem; letter-spacing: -.005em; }
+.head-divider { opacity: 0.2; }
+.meta-row {
+    display: flex; gap: 1.1rem; flex-wrap: wrap;
+    font-family: 'Noto Sans Sinhala', sans-serif;
+    font-size: .74rem; color: var(--text-dim);
+}
+.meta-row b { color: var(--text); font-weight: 600; }
+.footer { padding: 1.4rem 0; }
+.footer-inner {
+    display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: .75rem 2rem;
+}
+.footer-sig {
+    font-size: .7rem; color: var(--text-faint); width: 100%;
+    padding-top: .9rem; border-top: 1px dashed var(--border-soft);
+    margin-top: .4rem; text-align: center;
+}
+.hero1 {
+    display: grid; grid-template-columns: 1.3fr 1fr;
+    gap: 1.25rem; margin-bottom: 2.25rem; align-items: center;
+}
+@media (max-width: 700px) {
+    .hero1 { grid-template-columns: 1fr; }
+    .hero-side1 { justify-content: flex-start; }
+}
+.hero-main {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.75rem 1.9rem;
+    position: relative; overflow: hidden;
+}
+.hero-main::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(500px 200px at 85% -10%,
+        var(--accent-soft), transparent 70%);
+    pointer-events: none;
+}
+.hero-eyebrow {
+    background: linear-gradient(to right, rgba(180, 83, 9, 0.05),
+        rgba(180, 83, 9, 0.009));
+    padding: .3rem 0 .3rem .5rem;
+    font-size: 1rem; color: var(--accent); letter-spacing: .04em;
+}
+.hero-eyebrow--spaced { margin: 2.4rem 0 .9rem; }
+.hero-name {
+    font-size: 1.8rem; font-weight: 700;
+    margin: 0 0 .35rem; letter-spacing: -.01em;
+}
+.hero-sub { color: var(--text-dim); font-size: .92rem; margin: 0; }
+.hero-facts {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: .9rem 1.4rem; margin-top: 0;
+}
+.hero-fact-k { font-size: .68rem; color: var(--text-faint); }
+.hero-fact-v { font-size: .95rem; color: var(--text); margin-top: .15rem; }
+.hero-side1 {
+    display: flex; flex-direction: row; justify-content: right;
+    justify-self: right; align-items: center; gap: .9rem;
+}
+.hero-zodiac { width: 104px; flex: none; }
+.hero-zodiac svg {
+    width: 100%; height: auto; display: block;
+}
+.lagna-badge {
+    font-size: 1.25rem; font-weight: 500;
+    color: var(--accent-line); text-align: right;
+}
+.lagna-badge .hero-fact-k {
+    font-weight: normal; color: var(--accent-line);
+}
+.group-label {
+    font-size: 1rem; color: var(--accent);
+    margin: 2rem 0 .9rem .9rem; padding-bottom: .2rem;
+    display: flex; align-items: center; gap: .5rem;
+}
+.card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden;
+}
+.card-wide { margin-bottom: 1rem; }
+.table-scroll { overflow-x: auto; }
+table {
+    border-collapse: collapse; width: 100%;
+    min-width: 560px; font-size: .85rem;
+}
+thead th {
+    text-align: left; padding: .55rem .8rem; color: var(--text-dim);
+    font-weight: 600; border-bottom: 1px solid var(--border);
+    background: var(--panel-2); white-space: nowrap;
+}
+tbody td {
+    padding: .5rem .8rem; border-bottom: 1px solid var(--border-soft);
+    white-space: nowrap;
+}
+tbody tr:hover { background: var(--panel-2); }
+td.num { text-align: right; color: var(--teal); }
+tbody td:first-child { color: var(--text); }
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 1rem;
+}
+.chart-wrap { padding: .9rem; color: var(--text-dim); }
+.chart-wrap svg { width: 100%; height: auto; display: block; }
+.chart-wrap svg text { fill: var(--text); }
+.timeline { display: flex; flex-direction: column; gap: .5rem; }
+.note {
+    font-size: .68rem; color: var(--text-faint);
+    padding: 0.5rem; margin-bottom: .15rem;
+}
+.maha-block {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden;
+}
+.maha-block.active summary { background: var(--accent-line); }
+.maha-block summary {
+    list-style: none; cursor: pointer;
+    display: grid; grid-template-columns: 110px 1fr 1fr;
+    gap: 1rem; align-items: center;
+    padding: .75rem 1rem; background: var(--panel-2);
+}
+.maha-block summary::-webkit-details-marker { display: none; }
+.maha-lord {
+    font-weight: 700; font-size: .95rem;
+    display: flex; align-items: center; gap: .5rem;
+}
+.maha-lord::before {
+    content: "\\25B8"; color: var(--accent); font-size: .75rem;
+    transition: transform .15s ease;
+}
+.maha-block[open] .maha-lord::before { transform: rotate(90deg); }
+.maha-span { font-size: .82rem; text-align: right; }
+.maha-age {
+    display: flex; justify-content: end; align-items: baseline;
+    gap: .4rem; color: var(--text-dim); font-size: .8rem;
+    text-align: right;
+}
+.bhukti-list { padding: .3rem 1rem .6rem 2.6rem; }
+.bhukti-row {
+    display: grid; grid-template-columns: calc(110px - 1.6rem) 1fr 1fr;
+    gap: 1rem; padding: .38rem 0;
+    border-bottom: 1px solid var(--border-soft); font-size: .83rem;
+}
+.bhukti-row.active .bh-name,
+.bhukti-row.active .bh-span,
+.bhukti-row.active .bh-age {
+    color: var(--text) !important; font-weight: 500;
+}
+.bhukti-row:last-child { border-bottom: none; }
+.bh-name { color: var(--text-dim); }
+.bh-span { color: var(--text-dim); text-align: right; }
+.bh-age {
+    display: flex; justify-content: end; align-items: baseline;
+    gap: .4rem; color: var(--text-dim);
+}
+.hero2 { margin-bottom: 2.25rem; }
+@media print {
+    body { background: #fff; color: #000; }
+}
+"""
 
 
-def _dasa_table(doc, locale, detail):
-    dasa = doc["dasa"]
-    rows = []
-    for s in dasa["mahas"]:
-        lord = DASA_DISPLAY.get(s["lord"], s["lord"])
-        rows.append(
-            f"<tr class=\"maha\"><td><b>{_esc(lord)}</b></td>"
-            f"<td class=\"num\">{_esc(s['from'])} → {_esc(s['to'])}</td>"
-            f"<td class=\"num\">{_esc(s['age'])}</td></tr>")
-        if detail == "all" or (detail and detail.lower() in (s["lord"].lower(),
-                                                             lord.lower())):
-            for b in s.get("bhuktis", []):
-                lord_b = DASA_DISPLAY.get(b["lord"], b["lord"])
-                rows.append(
-                    f"<tr class=\"bhukti\"><td>└ {_esc(lord_b)}</td>"
-                    f"<td class=\"num\">{_esc(b['from'])} → {_esc(b['to'])}</td>"
-                    f"<td class=\"num\">{_esc(b['age'])}</td></tr>")
-    return (f"<section><h2>{_esc(tr('Mahadasa and Antardasa Timeline', locale))}</h2>"
-            f"<table><tr><th>Lord</th><th>Span</th><th>Age</th></tr>"
-            f"{''.join(rows)}</table></section>")
+def _masthead(doc, chart, locale) -> str:
+    meta = (f"<span>{_esc(trx('Engine', locale))} "
+            f"<b>{_esc(trx(doc['engine'].upper(), locale))}</b></span>"
+            f"<span class=\"head-divider\">|</span>"
+            f"<span>{_esc(tr('Method', locale))} "
+            f"<b>{_esc(trx(doc['method'].capitalize(), locale))}</b></span>"
+            f"<span class=\"head-divider\">|</span>"
+            f"<span>{_esc(trx('Locale', locale))} "
+            f"<b>{_esc(trx(doc['locale'].upper(), locale))}</b></span>"
+            f"<span class=\"head-divider\">|</span>"
+            f"<span>{_esc(trx('Chart Style', locale))} "
+            f"<b>{_esc(trx(chart.capitalize(), locale))}</b></span>")
+    brand = trx("Sri Lankan Vedic Astrology Engine", locale)
+    return (f"<header class=\"masthead\">"
+            f"<div class=\"brand\"><span class=\"brand-name\">"
+            f"{_esc(brand)}</span></div>"
+            f"<div class=\"meta-row\">{meta}</div></header>")
 
 
-def render_report(doc, chart="diamond", dasa=None, gallery="") -> str:
-    locale = doc.get("locale", "en")
+def _fact_group(title, items, locale, spaced=False) -> str:
+    cls = "hero-eyebrow hero-eyebrow--spaced" if spaced else "hero-eyebrow"
+    cells = "".join(
+        f"<div><div class=\"hero-fact-k\">{_esc(tr(k, locale))}</div>"
+        f"<div class=\"hero-fact-v\">{_esc(v)}</div></div>"
+        for k, v in items)
+    return (f"<p class=\"{cls}\">{_esc(tr(title, locale))}</p>"
+            f"<div class=\"hero-facts\">{cells}</div>")
+
+
+def _hero(doc, locale) -> str:
     lagna = doc["lagna"]
     place = doc["place"]
     pg = doc["panchanga"]
     tm = doc["times"]
+    cc = doc["chakra"]
+    hh = doc["hora"]
+    sub = (f"{doc['birth_date']} \u00b7 {doc['birth_time']} \u00b7 "
+           f"{trv(pg['weekday'], locale, 'weekdays')} \u00b7 "
+           f"{trv(place['city'], locale, 'cities')}")
+    badge = (f"<div class=\"lagna-badge\">"
+             f"{_esc(trv(lagna['rasi'], locale, 'rasis'))}<br/>"
+             f"<div class=\"hero-fact-k\">"
+             f"{_esc(disp_lon(lagna['degree']))}</div>"
+             f"<div class=\"hero-fact-k\"><b>"
+             f"{_esc(trv(lagna['navamsa'], locale, 'rasis'))}</b> "
+             f"{_esc(trx('navamsa', locale))}</div></div>"
+             f"<div class=\"hero-zodiac\">{_zodiac(lagna['rasi'])}</div>")
+    head = (f"<div class=\"hero1\"><div>"
+            f"<h1 class=\"hero-name\" style=\"color: var(--accent); "
+            f"font-weight: 500\">{_esc(doc['name'])}</h1>"
+            f"<p class=\"hero-sub\" style=\"font-size: 1.25rem;\">"
+            f"{_esc(sub)}</p></div>"
+            f"<div class=\"hero-side1\">{badge}</div></div>")
+    groups = _fact_group("Panchanga", [
+        ("Nakshatra", trv(pg["nakshatra"], locale, "nakshatras")),
+        ("Nakshatra Pada", pg["pada"]),
+        ("Tithi", tr_tithi_full(pg["tithi"], locale)),
+        ("Yoga", trv(YOGA_DISPLAY.get(pg["yoga"], pg["yoga"]),
+                     locale, "yogas")),
+        ("Karana", trv(KARANA_DISPLAY.get(pg["karana"], pg["karana"]),
+                       locale, "karanas"))], locale)
+    groups += _fact_group("Hora", [
+        ("Kala", trvx(DASA_LORD.get(hh["kala"], hh["kala"]), locale)),
+        ("Panchama", trvx(DASA_LORD.get(hh["panchama"],
+                                        hh["panchama"]), locale)),
+        ("Sukshama", trvx(DASA_LORD.get(hh["sukshama"],
+                                        hh["sukshama"]), locale)),
+        ("Sunrise", tm["sunrise"]),
+        ("Sunset", tm["sunset"])], locale, spaced=True)
+    groups += _fact_group("Chakra", [
+        ("Gana", trv(cc["gana"], locale, "attrs")),
+        ("Yoni", trv(cc["yoni"].strip(), locale, "attrs")),
+        ("Linga", trv(cc["linga"], locale, "attrs")),
+        ("Naadi", trv(cc["naadi"], locale, "attrs")),
+        ("Varna", trv(cc["varna"], locale, "attrs")),
+        ("Ruxha", trv(cc["ruxha"], locale, "attrs")),
+        ("Paxhi", trv(cc["paxhi"], locale, "attrs")),
+        ("Gothra", trv(cc["gothra"], locale, "attrs")),
+        ("Rajju", trv(cc["rajju"], locale, "attrs")),
+        ("Bhutha", trv(cc["bhutha"], locale, "attrs"))],
+        locale, spaced=True)
+    return (f"<div class=\"hero2\"><div class=\"hero-main\">"
+            f"{head}{groups}</div></div>")
+
+
+def _sign_cell(rasi: str, locale) -> str:
+    from kendra import RASIS
+
+    return (f"{_esc(trv(rasi, locale, 'rasis'))}"
+            f"<sup>{RASIS.index(rasi) + 1}</sup>")
+
+
+def _rasi_lon(raw: str) -> str:
+    """Rasi-relative longitude in clock form, sample-padded (00°55'01").
+
+    Engine docs carry clock form ('0°55\\'01"'); synthetic docs may
+    carry schema DMS (' 0:00:00'). Anything unparseable passes through.
+    """
+    import re
+
+    s = (raw or "").strip()
+    m = re.match(r"^([0-9]+)[:\u00b0]([0-9]+)[:']([0-9]+)\"?$", s)
+    if not m:
+        return s or "-"
+    deg, minute, sec = (int(m.group(1)) % 30, m.group(2), m.group(3))
+    return f"{deg:02d}\u00b0{minute}'{sec}\""
+
+
+def _matrix(doc, locale) -> str:
+    det = doc.get("details", {})
+    rows = []
+    for p in MATRIX_ORDER:
+        d = det.get(p, {})
+        lon = _rasi_lon(d.get("rasi_longitude", ""))
+        seats = doc["shadvarga"][p]
+        row = (f"<tr><td><b>{_esc(trvx(GRAHA_DISPLAY.get(p, p), locale))}"
+               f"</b></td><td>{_sign_cell(seats[0], locale)}</td>"
+               f"<td>{_esc(lon)}</td>"
+               f"<td>{_esc(trv(d.get('nakshatra', '-'), locale, 'nakshatras'))}</td>"
+               f"<td class=\"num\">{_esc(d.get('pada', '-'))}</td>")
+        for v in MATRIX_VARGAS[1:]:
+            row += f"<td>{_sign_cell(seats[v], locale)}</td>"
+        row += (f"<td>{_esc(tr_avastha(doc['avastha'][p], locale) or '-')}"
+                f"</td></tr>")
+        rows.append(row)
+    head = "".join(f"<th>{_esc(c)}</th>" for c in
+                   [trx("Graha", locale), trx("Rasi", locale),
+                    trx("Longitude", locale), tr("Nakshatra", locale),
+                    trx("Pada", locale), tr("Hora", locale),
+                    trx("Drekkana", locale), trx("Navamsa", locale),
+                    trx("Dvadasamsa", locale), trx("Trimshamsa", locale),
+                    trx("Avastha", locale)])
+    note = (f"<div class=\"note\"><sup>*</sup>"
+            f"{_esc(trx('Superscript numbers show the Rasi sign number.', locale))}"
+            f"</div>")
+    return (f"<div class=\"group-label\">"
+            f"{_esc(trx('Shadvarga Matrix', locale))}</div>"
+            f"<article class=\"card card-wide\"><div class=\"table-scroll\">"
+            f"<table><thead><tr>{head}</tr></thead>"
+            f"<tbody>{''.join(rows)}</tbody></table></div>{note}</article>")
+
+
+def _charts(doc, chart, locale, gallery) -> str:
+    title = (f"<div class=\"group-label\">"
+             f"{_esc(trx('Divisional Charts', locale))}</div>")
+    if gallery:
+        # Legacy path: pre-built HTML (tests / external callers).
+        return (f"{title}<article class=\"card card-wide\">"
+                f"<div class=\"chart-wrap\">{gallery}</div></article>")
+    from jychart import gallery_items
+
+    style = CHART_STYLE.get(chart, chart)
+    cards = []
+    for _ctitle, varga, lagna_planet, svg in gallery_items(doc, style,
+                                                           locale):
+        cards.append(
+            f"<article class=\"card chart-card\">"
+            f"<div class=\"chart-wrap\">{svg}</div></article>")
+    return f"{title}<div class=\"charts-grid\">{''.join(cards)}</div>"
+
+
+def _span_status(frm, to, locale) -> str:
+    """Passed/Starts + year + localized month; Active while running."""
+    today = date.today().isoformat()
+    if to < today:
+        return (f"{trx('Passed', locale)} {to[:4]} "
+                f"{tr_month(to, locale, short=True)}")
+    if frm > today:
+        return (f"{trx('Starts', locale)} {frm[:4]} "
+                f"{tr_month(frm, locale, short=True)}")
+    return trx("Active", locale)
+
+
+def _timeline(doc, locale, detail) -> str:
+    today = date.today().isoformat()
+    force = detail if detail and detail.lower() != "all" else None
+    blocks = []
+    for s in doc["dasa"]["mahas"]:
+        lord = DASA_LORD.get(s["lord"], s["lord"])
+        is_active = s["from"] <= today <= s["to"]
+        is_forced = force and force.lower() in (
+            s["lord"].lower(), lord.lower())
+        status = _span_status(s["from"], s["to"], locale)
+        open_attr = " open" if (is_active or is_forced) else ""
+        active_cls = " active" if is_active else ""
+        bhuktis = []
+        for b in s.get("bhuktis", []):
+            lord_b = DASA_LORD.get(b["lord"], b["lord"])
+            b_active = b["from"] <= today <= b["to"]
+            b_status = _span_status(b["from"], b["to"], locale)
+            b_cls = " active" if b_active else ""
+            bhuktis.append(
+                f"<div class=\"bhukti-row{b_cls}\">"
+                f"<span class=\"bh-name\">"
+                f"{_esc(trvx(lord_b, locale))}</span>"
+                f"<span class=\"bh-span\">{_esc(b['from'])} \u2192 "
+                f"{_esc(b['to'])}</span>"
+                f"<span class=\"bh-age\"><span class=\"status-label\">"
+                f"{_esc(b_status)}</span></span></div>")
+        blocks.append(
+            f"<details class=\"maha-block{active_cls}\"{open_attr}>"
+            f"<summary><span class=\"maha-lord\">"
+            f"{_esc(trvx(lord, locale))}</span>"
+            f"<span class=\"maha-span\">{_esc(s['from'])} \u2192 "
+            f"{_esc(s['to'])}</span>"
+            f"<span class=\"maha-age\"><span class=\"status-label\">"
+            f"{_esc(status)}</span></span></summary>"
+            f"<div class=\"bhukti-list\">{''.join(bhuktis)}</div>"
+            f"</details>")
+    click_note = trx("Click on each Mahadasa to view its corresponding "
+                      "Antardasas.", locale)
+    note = (f"<div class=\"note\"><sup>*</sup>{_esc(click_note)}</div>")
+    return (f"<div class=\"group-label\">"
+            f"{_esc(tr('Mahadasa and Antardasa Timeline', locale))}</div>"
+            f"<div class=\"timeline\">{''.join(blocks)}{note}</div>")
+
+
+def _footer(doc, locale) -> str:
+    tm = doc["times"]
+    sig = (f"{trx('Schema', locale)} {doc['schema']} \u00b7 "
+           f"{trx('Version', locale)} {doc['version']} \u00b7 "
+           f"{trx('Universal Time', locale)} {tm['ut']} \u00b7 "
+           f"{tr('Julian Date', locale)} {doc['julian_date']} \u00b7 "
+           f"{tr('Ayanamsa', locale)} {doc['ayanamsa_deg']}")
+    return (f"<footer class=\"footer\"><div class=\"footer-inner\">"
+            f"<div class=\"footer-sig\">{_esc(sig)}</div>"
+            f"</div></footer>")
+
+
+def render_report(doc, chart="east", dasa=None, gallery="") -> str:
+    locale = doc.get("locale", "en")
+    lang = locale if locale in ("en", "si", "ta") else "en"
     parts = [
         "<!DOCTYPE html>",
-        "<html><head><meta charset=\"utf-8\">"
-        f"<title>{_esc(doc['name'])} — Horoscope</title>"
-        f"<style>{CSS}</style></head><body>",
-        f"<h1>{_esc(doc['name'])}</h1>",
-        _kv_table("Selected Options", [
-            ("District", f"{place['city_index']} ({place['city']})"),
-            ("Method", doc["method"]), ("Engine", doc["engine"]),
-            ("Locale", doc["locale"]), ("Chart", chart)], locale),
-        _kv_table("Birth Profile", [
-            ("Name", doc["name"]),
-            ("Born", f"{doc['birth_date']} {doc['birth_time']}"),
-            ("Birth Weekday", pg["weekday"]),
-            ("Place", f"{place['city']} ({place['city_index']})"),
-            ("Method", doc["method"])], locale),
-        _kv_table("Astronomical & Chart Reference", [
-            ("Julian Date", f"{doc['julian_date']:.3f}"),
-            ("Ayanamsa", ayan_dms(doc["ayanamsa_deg"])),
-            ("Lagna", lagna["rasi"]),
-            ("Lagna Degree", disp_lon(lagna["degree"])),
-            ("Lagna Navamsa", lagna["navamsa"])], locale),
-        _kv_table("Time & Solar Metrics", [
-            ("Birth Time", tm["birth"]), ("Sinhala Time", tm["sinhala"]),
-            ("Sunrise", tm["sunrise"]), ("Sunset", tm["sunset"]),
-            ("Universal Time (UT)", tm["ut"]),
-            ("Greenwich Mean Sidereal Time", tm["gmst"]),
-            ("Local Mean Time (LMT)", tm["lmt"]),
-            ("Local Mean Sidereal Time", tm["lmst"])], locale),
-        _kv_table("Panchanga", [
-            ("Nakshatra", pg["nakshatra"]), ("Nakshatra Pada", pg["pada"]),
-            ("Tithi", pg["tithi"]),
-            ("Yoga", YOGA_DISPLAY.get(pg["yoga"], pg["yoga"])),
-            ("Karana", KARANA_DISPLAY.get(pg["karana"], pg["karana"]))],
-            locale),
-        _kv_table("Dasa Information", [
-            ("Starting", doc["dasa"]["balance_lord"]),
-            ("Period", doc["dasa"]["balance"]),
-            ("Reference", tr("From birth", locale))], locale),
-        _kv_table("Hora", [
-            ("Kala", doc["hora"]["kala"]), ("Panchama", doc["hora"]["panchama"]),
-            ("Sukshama", doc["hora"]["sukshama"])], locale),
-        _kv_table("Chakra", [
-            ("Gana", doc["chakra"]["gana"]), ("Yoni", doc["chakra"]["yoni"].strip()),
-            ("Linga", doc["chakra"]["linga"]), ("Naadi", doc["chakra"]["naadi"]),
-            ("Varna", doc["chakra"]["varna"]), ("Ruxha", doc["chakra"]["ruxha"]),
-            ("Paxhi", doc["chakra"]["paxhi"]), ("Gothra", doc["chakra"]["gothra"]),
-            ("Rajju", doc["chakra"]["rajju"]), ("Bhutha", doc["chakra"]["bhutha"])],
-            locale),
-        _houses_table(doc, locale),
-        _shadvarga_table(doc, locale),
-        _shadvarga_table(doc, locale, positions=True),
-        gallery,
-        _dasa_table(doc, locale, dasa if dasa else "all"),
-        (f"<p class=\"provenance\">schema {doc['schema']} | v{doc['version']} | "
-         f"{doc['engine']} | {doc['locale']} | "
-         f"JD {doc['julian_date']} | ayanamsa {doc['ayanamsa_deg']}</p>"),
-        "</body></html>",
+        f"<html lang=\"{lang}\">",
+        "<head>",
+        "<meta charset=\"utf-8\"/>",
+        ("<meta content=\"width=device-width, initial-scale=1, "
+         "viewport-fit=cover\" name=\"viewport\"/>"),
+        f"<title>{_esc(doc['name'])} \u2014 Horoscope</title>",
+        f"<style>{_font_css()}{CSS}</style>",
+        "</head>",
+        "<body>",
+        "<div class=\"wrap\">",
+        _masthead(doc, chart, locale),
+        _hero(doc, locale),
+        _matrix(doc, locale),
+        _charts(doc, chart, locale, gallery),
+        _timeline(doc, locale, dasa if dasa else "all"),
+        _footer(doc, locale),
+        "</div>",
+        "</body>",
+        "</html>",
     ]
-    return "\n".join(parts)
+    return "\n".join(parts) + "\n"

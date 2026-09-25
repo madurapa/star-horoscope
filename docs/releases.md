@@ -88,7 +88,7 @@ License: GNU AGPL-3.0 (see LICENSE).
   the original STAR.EXE
 - Since v2.8.19: 26 districts, Sinhala/Tamil first draft
   (`--locale si|ta`), frozen JSON schema (`--format json`),
-  optional `pystar` Python bindings, extended dasha/yoga wording
+  optional `pystar` Python bindings, extended dasa/yoga wording
 - Full gate on every build: tests + `VERIFY_ALL_GREEN`, on
   Linux (GCC), macOS (Clang), and Windows (MSVC)
 

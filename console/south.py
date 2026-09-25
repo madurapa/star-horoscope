@@ -7,6 +7,7 @@ DMS strings client-side). Center 2x2 carries the Lagna rasi. The diamond
 from rich.console import Console
 from rich.text import Text
 
+from i18n import tr, trv
 from kendra import DISPLAY, RASIS, planet_style
 
 # Fixed rasi per grid cell (None = center block).
@@ -19,7 +20,8 @@ GRID = [
 
 
 def render_south_from_seats(seats: dict, lagna_rasi: int, console: Console,
-                          box_w: int = 17, title: str = "Rasi Chart") -> None:
+                          box_w: int = 17, title: str = "Rasi Chart",
+                          locale: str = "en") -> None:
     box_w = max(13, box_w)
     inner = box_w - 2
     by_rasi: dict = {i: [] for i in range(1, 13)}
@@ -28,9 +30,11 @@ def render_south_from_seats(seats: dict, lagna_rasi: int, console: Console,
 
     def cell_lines(rasi, planets, hl, house):
         names = planets[:3]
-        lines = [(f"{house} · {RASIS[rasi - 1]}", "bold yellow" if hl else "dim", hl)]
+        lines = [(f"{house} · {trv(RASIS[rasi - 1], locale, 'rasis')}",
+                  "bold yellow" if hl else "dim", hl)]
         for p in names:
-            lines.append((DISPLAY.get(p, p).center(inner)[:inner], planet_style(p), hl))
+            lines.append((trv(DISPLAY.get(p, p), locale, "planets").center(inner)[:inner],
+                          planet_style(p), hl))
         for _ in range(3 - len(names)):
             lines.append((" " * inner, "", hl))
         return lines
@@ -81,15 +85,17 @@ def render_south_from_seats(seats: dict, lagna_rasi: int, console: Console,
                 bot.append("└" + "─" * inner + "┘ ", style="bold yellow" if hl else "")
         out_lines.append(bot)
     # Center block: lagna label over the middle gap rows.
-    console.print(Text(f"─── {title} (South Indian square) ───", style="bold"))
+    console.print(Text(f"─── {tr(title, locale)} (South Indian square) ───", style="bold"))
     for line in out_lines:
         console.print(line)
-    console.print(Text(f"✦ {RASIS[lagna_rasi - 1]} Lagna ✦",
+    console.print(Text(f"✦ {trv(RASIS[lagna_rasi - 1], locale, 'rasis')} "
+                         f"{trv('Lagna', locale, 'planets')} ✦",
                        style="bold yellow", justify="center"))
 
 
 def render_south(longitudes: dict, lagna_rasi: int, console: Console,
-                 box_w: int = 17, title: str = "Rasi Chart") -> None:
+                 box_w: int = 17, title: str = "Rasi Chart",
+                 locale: str = "en") -> None:
     from kendra import parse_dms as _parse
 
     seats = {}
@@ -97,4 +103,4 @@ def render_south(longitudes: dict, lagna_rasi: int, console: Console,
         if p == "Lagna":
             continue
         seats[p] = int(_parse(v) // 30) + 1
-    render_south_from_seats(seats, lagna_rasi, console, box_w, title)
+    render_south_from_seats(seats, lagna_rasi, console, box_w, title, locale)
