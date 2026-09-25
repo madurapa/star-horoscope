@@ -29,10 +29,9 @@ Kill the duplicated knowledge before a third consumer (Qt) copies it.
   (`render.py`), `DIVISIONS` + titles (`jychart.py`), kendra
   labels (C++). Target: single table (title, varga,
   lagna_planet, division label) consumed by terminal, SVG, and Qt.
-- A3: decide the second-binary question (owner-confirm): v1 ships
+- A3: second-binary question DECIDED 2026-09-25: v1 ships
   `star-report` (console) + `star-gui` as separate frozen
-  artifacts (recommended — clean smoke boundaries); single-binary
-  merge later, if ever.
+  artifacts (clean smoke boundaries); single-binary merge later.
 
 ## WS-B — Service layer (M)
 
@@ -49,10 +48,11 @@ Extract callable units so Qt, console, and tests share one path.
   `timeline_rows(doc)` (status computation) and
   `matrix_rows(doc)` (Shadvarga Matrix cells) — same objects feed
   Qt models and the HTML report.
-- B4: binding extension (spike first): manual lat/lon + thathkala
-  in `pystar.horoscope()` as default-off kwargs. The C++ batch
-  path already supports both — expose, don't reimplement. If the
-  spike shows engine-side work, split it out and sequence it first.
+- B4: binding extension APPROVED 2026-09-25: manual lat/lon +
+  thathkala in `pystar.horoscope()` as default-off kwargs. The C++
+  batch path already supports both — expose, don't reimplement. If
+  the spike shows engine-side work, split it out and sequence it
+  first.
 - Tests: service pytest matrix (valid/invalid incl. Feb 29, city
   bounds, manual geo); contract test: service output equals
   CLI/HTML values field-for-field.

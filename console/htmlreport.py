@@ -24,8 +24,9 @@ from datetime import date
 from functools import lru_cache
 from pathlib import Path
 
+from display_names import DASA_DISPLAY, KARANA_DISPLAY, PLANET_DISPLAY, YOGA_DISPLAY
 from i18n import tr, trv
-from render import KARANA_DISPLAY, YOGA_DISPLAY, disp_lon
+from render import disp_lon
 from report_l10n import tr_avastha, tr_month, tr_tithi_full, trvx, trx
 
 def _base_dir() -> Path:
@@ -56,12 +57,9 @@ MATRIX_ORDER = ["Lagna", "Ravi", "Chandra", "Kuja", "Budha", "Guru",
                 "Sikuru", "Shani", "Raahu", "Kethu", "Urenus",
                 "Neptune", "Pluto"]
 
-# Engine keys -> sample spellings (Ravi stays Ravi, unlike render.DISPLAY).
-GRAHA_DISPLAY = {"Sikuru": "Shukra", "Raahu": "Rahu", "Kethu": "Ketu",
-                 "Urenus": "Uranus"}
-
-# Dasa-lord normalisation (doc carries Sandu/Sikuru; Ravi stays).
-DASA_LORD = {"Sikuru": "Shukra", "Sandu": "Chandra"}
+# Display spellings come from display_names (WS-A single source):
+# PLANET_DISPLAY for grahas, DASA_DISPLAY for dasa/hora lords
+# (Ravi stays Ravi in both — sample convention).
 
 # shadvarga index order for the matrix columns
 # (Rasi, Hora, Drekkana, Navamsa, Dvadasamsa, Trimshamsa).
@@ -369,10 +367,10 @@ def _hero(doc, locale) -> str:
         ("Karana", trv(KARANA_DISPLAY.get(pg["karana"], pg["karana"]),
                        locale, "karanas"))], locale)
     groups += _fact_group("Hora", [
-        ("Kala", trvx(DASA_LORD.get(hh["kala"], hh["kala"]), locale)),
-        ("Panchama", trvx(DASA_LORD.get(hh["panchama"],
+        ("Kala", trvx(DASA_DISPLAY.get(hh["kala"], hh["kala"]), locale)),
+        ("Panchama", trvx(DASA_DISPLAY.get(hh["panchama"],
                                         hh["panchama"]), locale)),
-        ("Sukshama", trvx(DASA_LORD.get(hh["sukshama"],
+        ("Sukshama", trvx(DASA_DISPLAY.get(hh["sukshama"],
                                         hh["sukshama"]), locale)),
         ("Sunrise", tm["sunrise"]),
         ("Sunset", tm["sunset"])], locale, spaced=True)
@@ -422,7 +420,7 @@ def _matrix(doc, locale) -> str:
         d = det.get(p, {})
         lon = _rasi_lon(d.get("rasi_longitude", ""))
         seats = doc["shadvarga"][p]
-        row = (f"<tr><td><b>{_esc(trvx(GRAHA_DISPLAY.get(p, p), locale))}"
+        row = (f"<tr><td><b>{_esc(trvx(PLANET_DISPLAY.get(p, p), locale))}"
                f"</b></td><td>{_sign_cell(seats[0], locale)}</td>"
                f"<td>{_esc(lon)}</td>"
                f"<td>{_esc(trv(d.get('nakshatra', '-'), locale, 'nakshatras'))}</td>"
@@ -485,7 +483,7 @@ def _timeline(doc, locale, detail) -> str:
     force = detail if detail and detail.lower() != "all" else None
     blocks = []
     for s in doc["dasa"]["mahas"]:
-        lord = DASA_LORD.get(s["lord"], s["lord"])
+        lord = DASA_DISPLAY.get(s["lord"], s["lord"])
         is_active = s["from"] <= today <= s["to"]
         is_forced = force and force.lower() in (
             s["lord"].lower(), lord.lower())
@@ -494,7 +492,7 @@ def _timeline(doc, locale, detail) -> str:
         active_cls = " active" if is_active else ""
         bhuktis = []
         for b in s.get("bhuktis", []):
-            lord_b = DASA_LORD.get(b["lord"], b["lord"])
+            lord_b = DASA_DISPLAY.get(b["lord"], b["lord"])
             b_active = b["from"] <= today <= b["to"]
             b_status = _span_status(b["from"], b["to"], locale)
             b_cls = " active" if b_active else ""

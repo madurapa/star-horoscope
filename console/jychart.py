@@ -77,34 +77,8 @@ LIGHT = dict(
     font_family=THEME_FAMILY,
 )
 
-# Division label for the center box per chart (jyotichart vocabulary, so
-# si/ta translate; unknown names pass through unchanged). The Lagna
-# chart uses True: rising sign + Lagna marker (the library maps the
-# word "Lagna" to "Rashi", which is not what we want there).
-DIVISIONS = {
-    "Lagna Chart": True,
-    "Navamsa Chart": "Navamsa",
-    "Hora Chart": "Hora",
-    "Drekkana Chart": "Drekkana",
-    "Dvadasamsa Chart": "Dwadasamsa",
-    "Trimshamsa Chart": "Trimsamsa",
-    "Ravi Chart": "Ravi",
-    "Chandra Chart": "Chandra",
-}
-
-
-def _division_label(title, locale):
-    """Localized center-box label. Sun/Moon are not library varga names
-    (they would pass through in English), so localize here: the report
-    calls the Sun Ravi (sample/matrix convention), the Moon Chandra."""
-    from i18n import trv
-    from report_l10n import trvx
-
-    if title == "Ravi Chart":
-        return trvx("Ravi", locale)
-    if title == "Chandra Chart":
-        return trv("Chandra", locale, "planets")
-    return DIVISIONS[title]
+# Chart definitions + division labels live in display_names (WS-A).
+from display_names import division_label as _division_label
 
 
 def _house_of(houses: dict, planet: str) -> int:

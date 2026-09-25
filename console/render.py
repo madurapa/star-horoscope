@@ -18,23 +18,10 @@ from south import render_south, render_south_from_seats
 PLANETS = ["Lagna", "Chandra", "Ravi", "Budha", "Sikuru", "Kuja", "Guru",
            "Shani", "Raahu", "Kethu", "Urenus", "Neptune", "Pluto"]
 
-# Modern display spellings (mirror displayPlanet); engine keys stay canonical.
-DISPLAY = {"Sikuru": "Shukra", "Raahu": "Rahu", "Kethu": "Ketu",
-           "Urenus": "Uranus"}
-# Dasa-table spellings to modern display (mirror dasaName).
-DASA_DISPLAY = {"Sikuru": "Shukra", "Sandu": "Chandra", "Rahu": "Rahu"}
-# Yoga/karana romanizations to modern display (mirror displayYogaName /
-# displayKaranaName; engine tables stay byte-faithful).
-YOGA_DISPLAY = {"Vishkamba": "Vishkambha", "Aaushmaan": "Ayushman",
-                "Savbhagya": "Saubhagya", "Sukarna": "Sukarma",
-                "Drathi": "Dhriti", "Drava": "Dhruva", "Shubra": "Shukla",
-                "Mahendra": "Indra", "Vydruthi": "Vaidhriti",
-                "Brahhma": "Brahma"}
-KARANA_DISPLAY = {"Kinsthugana": "Kimstughna"}
-
-
-def disp(planet: str) -> str:
-    return DISPLAY.get(planet, planet)
+# Canonical display maps live in display_names (WS-A single source);
+# the names below stay importable for existing callers (same objects).
+from display_names import (CHART_DEFS, DASA_DISPLAY, KARANA_DISPLAY,
+                           PLANET_DISPLAY as DISPLAY, YOGA_DISPLAY, disp)
 
 
 def render_profile(doc, console: Console) -> None:
@@ -263,18 +250,6 @@ def render_options(doc, console: Console, chart: str) -> None:
         ("Engine", doc["engine"]),
         ("Locale", doc["locale"]),
         ("Chart", chart)], locale))
-
-
-CHART_DEFS = [
-    ("Lagna Chart", 0, None),
-    ("Navamsa Chart", 1, None),
-    ("Hora Chart", 2, None),
-    ("Drekkana Chart", 3, None),
-    ("Dvadasamsa Chart", 4, None),
-    ("Trimshamsa Chart", 5, None),
-    ("Ravi Chart", 0, "Ravi"),
-    ("Chandra Chart", 0, "Chandra"),
-]
 
 
 def chart_data(doc, varga: int, lagna_planet=None):

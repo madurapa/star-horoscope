@@ -251,3 +251,10 @@ def test_language_single_source():
         ["python3", os.path.join(root, "tools", "gen_jylang.py"), "--check"],
         capture_output=True, text=True, cwd=root)
     assert r.returncode == 0, r.stdout + r.stderr
+
+
+def test_division_label_single_source():
+    import display_names as dn
+    import jychart as J
+
+    assert J._division_label is dn.division_label

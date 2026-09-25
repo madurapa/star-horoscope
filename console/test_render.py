@@ -232,3 +232,18 @@ def test_display_maps_mirror_modern():
     assert KARANA_DISPLAY["Kinsthugana"] == "Kimstughna"
     assert DASA_DISPLAY["Sikuru"] == "Shukra"
     assert YOGA_DISPLAY.get("Parigha", "Parigha") == "Parigha"
+
+
+def test_display_single_source():
+    import display_names as dn
+    import kendra as K
+    import render as R
+
+    assert R.DISPLAY is dn.PLANET_DISPLAY
+    assert K.DISPLAY is dn.PLANET_DISPLAY
+    assert R.DASA_DISPLAY is dn.DASA_DISPLAY
+    assert R.YOGA_DISPLAY is dn.YOGA_DISPLAY
+    assert R.KARANA_DISPLAY is dn.KARANA_DISPLAY
+    assert R.CHART_DEFS is dn.CHART_DEFS
+    for p in R.PLANETS:  # every engine key resolves, none raise
+        assert isinstance(R.disp(p), str)

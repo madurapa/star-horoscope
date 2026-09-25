@@ -3328,3 +3328,14 @@ Gate: ctest 20/20 zero warnings.
   B services → C shell → D views → E PDF → F packaging, G demotion
   + H translators alongside), sequencing, test strategy, sizing.
   plans.md gains Phase 6 pointer. No code touched.
+
+### Session 170 — 2026-09-25 (WS-A: display/chart single source)
+- qt_plan WS-A1/A2 done (A3 already ruled separate binaries).
+  New console/display_names.py: canonical PLANET/DASA/YOGA/KARANA
+  maps + disp(), CHART_DEFS + DIVISION_LABELS + division_label().
+  render/kendra keep same-object aliases (south.py untouched);
+  htmlreport GRAHA_DISPLAY/DASA_LORD deleted; jychart DIVISIONS
+  deleted. C++ tables stay authoritative natively. New pins:
+  test_display_single_source (object identity + full key cover),
+  test_division_label_single_source.
+- Gate: console 54/54, ctest 26/26, live report spot-checked.

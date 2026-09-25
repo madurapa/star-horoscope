@@ -21,9 +21,8 @@ RASIS = ["Mesha", "Vrishabha", "Mithuna", "Kataka", "Simha", "Kanya",
 BENEFICS = {"Guru", "Sikuru", "Chandra", "Budha"}
 MALEFICS = {"Ravi", "Kuja", "Shani", "Raahu", "Kethu"}
 
-# Modern display spellings (mirror displayPlanet; keep engine keys for logic).
-DISPLAY = {"Sikuru": "Shukra", "Raahu": "Rahu", "Kethu": "Ketu",
-           "Urenus": "Uranus"}
+# Canonical display map (display_names); alias stays for importers.
+from display_names import PLANET_DISPLAY as DISPLAY
 
 # Diamond rows: (house, x cell). Fixed-HOUSE slots like the DOS original:
 ROWS = [
