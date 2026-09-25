@@ -3426,3 +3426,9 @@ Gate: ctest 20/20 zero warnings.
 - Drive-by fix: EXTRA_STRINGS shadowed canonical 'Hora' (derived
   varga loop) — now skips STRINGS keys; zero behavior change.
 - Gate: console 63/63, gui 15/15, ctest 26/26.
+
+### Session 177 — 2026-09-25 (full 363-concept handoff table)
+- Owner: the handoff covered only the ~100 new strings. Extended
+  docs/translator_handoff.md with §0: all 363 canonical concepts
+  (verified 0 Reviewed in both locale files; the 367-count was
+  wrapped rows + commented examples). Integrity-checked table pipes.
