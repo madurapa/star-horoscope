@@ -4,6 +4,23 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 3.2.0
+
+- HTML report redesigned to the sample layout: hero (birth line +
+  Lagna badge + Panchanga/Hora/Chakra groups), Shadvarga Matrix,
+  8 title-less divisional charts, collapsible dasa timeline —
+  self-contained (embedded Noto Sans Sinhala, inline zodiac art),
+  full en/si/ta. `--export-html` documented in README.
+- Sun reads Ravi everywhere modern (was translator-decided Surya):
+  display, dasa, kendra, CLI/chart titles, locale en, glossary;
+  Swiss goldens re-recorded (words only, numbers proven unchanged).
+- Chart SVG glyphs localized (si/ta first-akshara sets, DOS Latin
+  stays in en); drawings follow the report theme (CSS vars, Noto,
+  slim 1.5/1px borders, no East Asc marker, normal weight).
+- Timeline status with localized short months (Jun/ජූනි/ஜூன்).
+- Whole-tree typo sweep (DOS literals, locale data, goldens and
+  history untouched per fidelity contract).
+
 ## 3.1.0
 
 - JSON schema `star-horoscope/2` (drops `"display"`; all

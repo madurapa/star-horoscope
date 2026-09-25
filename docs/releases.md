@@ -8,6 +8,28 @@ at the top of every release.
 
 ---
 
+## v3.2.0
+
+### Report redesign, Ravi everywhere, localized charts
+
+The HTML horoscope report is rebuilt around the sample layout: hero
+with Lagna badge, Shadvarga Matrix, 8 divisional charts, collapsible
+Mahadasa timeline — one self-contained file (embedded Sinhala font,
+inline zodiac art) in English, Sinhala, or Tamil:
+`--export-html report.html --locale si`.
+
+- Sun reads **Ravi** in every modern surface (tables, dasa, kendra,
+  chart centers, console) — Swiss goldens re-recorded, numbers
+  proven byte-identical.
+- Chart glyphs localized (si/ta); drawings follow the page theme
+  with slim borders and no redundant Lagna marker on East charts.
+- Timeline shows localized short months; tithi spacing uniform.
+
+Full changelog: CHANGELOG.md. Provenance: NOTICE.md.
+License: GNU AGPL-3.0 (see LICENSE).
+
+---
+
 ## v3.1.0
 
 ### Locales single-sourced, schema v2

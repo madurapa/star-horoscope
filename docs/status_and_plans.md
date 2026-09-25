@@ -3239,3 +3239,10 @@ Gate: ctest 20/20 zero warnings.
   locale/chart/dasa options). No Requirements change (in-repo assets,
   no new deps). Verified app.py compiles; generation path is the
   tested render_report().
+
+### Session 162 — 2026-09-25 (v3.2.0 release)
+- Owner: do a release. Minor bump (features since 3.1.0): kAppVersion
+  3.2.0, CHANGELOG + releases.md entries (notes written before tag,
+  copy-paste ready). No version pins anywhere (banner/footer excluded
+  from goldens). Gate on release state: ctest 26/26 zero warnings,
+  fresh-binary VERIFY_ALL_GREEN + v3.2.0 banner, console 52/52.
