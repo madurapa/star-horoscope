@@ -35,7 +35,7 @@ datas += [(f, "assets/fonts") for f in fonts]
 hiddenimports = [
     "pystar",
     "htmlreport", "jychart", "report_l10n", "i18n", "render",
-    "kendra", "south",
+    "kendra", "south", "gui.pdf",
     "jyotichart", "eastindianchart", "southindianchart",
     "northindianchart", "eastindian_transitchart",
     "southindian_transitchart", "northindian_transitchart",
@@ -57,7 +57,7 @@ excludes = [
 
 a = Analysis(
     [os.path.join(ROOT, "console", "app.py")],
-    pathex=[os.path.join(ROOT, "console"),
+    pathex=[os.path.join(ROOT, "console"), ROOT,
             os.path.join(ROOT, "third_party", "jyotichart"), pybuild],
     binaries=binaries,
     datas=datas,

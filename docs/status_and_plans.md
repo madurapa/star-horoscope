@@ -3382,3 +3382,21 @@ Gate: ctest 20/20 zero warnings.
   (Summary/Houses/Dasa/Lord/Span/Status) English-first by design.
 - Gate: console 61/61, gui 11/11 offscreen, ctest 26/26.
   Screenshots reviewed (profile + results tabs).
+
+### Session 174 — 2026-09-25 (WS-E Qt print PDF + --export-pdf)
+- gui/pdf.py: dedicated print layout (A4 landscape, theme colors,
+  Noto registered from bundled assets, vector charts via
+  QSvgRenderer, 2×2 chart pages, page footers). export_pdf() shared
+  by GUI and console --export-pdf (offscreen-capable).
+- Root-caused two real bugs: (1) QPdfWriter emits Tf ×resolution/72
+  with coordinates in points — fixed by QPrinter+PdfFormat at
+  72dpi (1:1, no compensation layer); (2) Noto lacks →/●/└/⁸, so
+  print uses en-dash, drops markers, "Rasi (n)" cells (verified via
+  fontTools cmap). Table _fit gains shaping headroom.
+- si/ta extraction limits documented: Qt subset ToUnicode garbles
+  conjuncts for pypdf — goldens assert structure + ASCII + no-leak,
+  shaping proven by raster eyeball. MediaBox 841.89×595.28 pinned.
+- --export-pdf fails clean (exit 2 + guidance) where Qt is absent;
+  lean bundle proven Qt-free (13.3MB). Caught live bugs: dead
+  `import pystar` in app.py, export_pdf/flag name shadowing.
+- Gate: console 63/63, gui 15/15, ctest 26/26.

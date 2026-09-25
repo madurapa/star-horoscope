@@ -180,8 +180,9 @@ server. `--locale en|si|ta` localizes it; `--chart east|north|south`
 picks the chart style (east default); `--dasa LORD|all` controls
 Antardasa detail; `--city N` past 26 takes `--latdeg/--latmin/`
 `--londeg/--lonmin` manual coordinates; `--thathkala` runs the
-current moment at Colombo. Missing birth fields prompt
-interactively. (The native binary has no HTML flag:
+current moment at Colombo; `--export-pdf FILE` writes the print
+layout (needs the GUI build or pip PySide6). Missing birth fields
+prompt interactively. (The native binary has no HTML flag:
 `--format text|json` only.)
 
 Compare like with like: `--engine dos` reproduces the original

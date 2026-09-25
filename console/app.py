@@ -1,4 +1,5 @@
 """star-console: full-width rich front-end over services (pure consumer)."""
+import os
 import sys
 
 import typer
@@ -38,9 +39,9 @@ def horoscope(
                              help="Expand bhukti detail: a maha lord or 'all'"),
     export_html: str = typer.Option(None, "--export-html",
                                     help="Write a self-contained HTML report"),
+    export_pdf: str = typer.Option(None, "--export-pdf",
+                                   help="Write the dedicated print-layout PDF"),
 ) -> None:
-    import pystar
-
     if chart not in ("north", "south", "east", "diamond", "none"):
         raise typer.BadParameter("--chart wants north|south|east")
     if export_html is None and sys.stdin.isatty():
@@ -61,6 +62,22 @@ def horoscope(
         with open(export_html, "w", encoding="utf-8") as f:
             f.write(html)
         print(f"wrote {export_html}")
+        return
+    if export_pdf:
+        # Qt lives in the GUI build, not the lean frozen binary: fail
+        # with guidance instead of a traceback when it is absent.
+        try:
+            import PySide6  # noqa: F401
+        except ImportError:
+            print("PDF export needs the GUI build (star-gui) or "
+                  "pip-installed PySide6-Essentials.", file=sys.stderr)
+            raise typer.Exit(2)
+        _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if _root not in sys.path:
+            sys.path.insert(0, _root)
+        from gui.pdf import export_pdf as write_pdf
+
+        print(f"wrote {write_pdf(doc, export_pdf)}")
         return
     render_all(doc, Console(width=width), chart=chart, dasa=dasa)
 
