@@ -1,11 +1,11 @@
-"""star-console: full-width rich front-end over pystar (pure consumer)."""
-import json
+"""star-console: full-width rich front-end over services (pure consumer)."""
 import sys
 
 import typer
 from rich.console import Console
 
 from render import render_all
+from services import ServiceError, compute
 
 app = typer.Typer(add_completion=False)
 
@@ -21,6 +21,12 @@ def horoscope(
     hour: int = typer.Option(..., "--hour", prompt="Birth hour (0-23)"),
     minute: int = typer.Option(..., "--minute", prompt="Birth minute"),
     city: int = typer.Option(..., "--city", prompt="District number"),
+    latdeg: int = typer.Option(None, "--latdeg", help="Manual latitude degrees"),
+    latmin: int = typer.Option(None, "--latmin", help="Manual latitude minutes"),
+    londeg: int = typer.Option(None, "--londeg", help="Manual longitude degrees"),
+    lonmin: int = typer.Option(None, "--lonmin", help="Manual longitude minutes"),
+    thathkala: bool = typer.Option(False, "--thathkala",
+                                   help="Thathkala Kendra mode (time now, Colombo)"),
     nirayana: bool = typer.Option(True, "--nirayana/--sayana"),
     engine: str = typer.Option("swisseph", "--engine"),
     locale: str = typer.Option("en", "--locale"),
@@ -41,9 +47,13 @@ def horoscope(
         # Interactive (double-clickable binary) only: scripts pipe stdin.
         export_html = typer.prompt("HTML report path (blank to skip)",
                                    default="") or None
-    doc = json.loads(pystar.horoscope(
-        name, year, month, day, hour, minute, city,
-        nirayana=nirayana, engine=engine, locale=locale))
+    try:
+        doc = compute(name, year, month, day, hour, minute, city,
+                      nirayana=nirayana, engine=engine, locale=locale,
+                      lat_deg=latdeg, lat_min=latmin, lon_deg=londeg,
+                      lon_min=lonmin, thathkala=thathkala)
+    except ServiceError as e:
+        raise typer.BadParameter(str(e))
     if export_html:
         from htmlreport import render_report
 

@@ -20,14 +20,13 @@ stay English technical vocabulary, like the terminal renderers.
 """
 import base64
 import html as _html
-from datetime import date
 from functools import lru_cache
 from pathlib import Path
 
-from display_names import DASA_DISPLAY, KARANA_DISPLAY, PLANET_DISPLAY, YOGA_DISPLAY
 from i18n import tr, trv
 from render import disp_lon
-from report_l10n import tr_avastha, tr_month, tr_tithi_full, trvx, trx
+from report_l10n import trx
+from services import hero_groups, matrix_rows, timeline_rows
 
 def _base_dir() -> Path:
     """console/ in dev; bundle root when frozen (PyInstaller one-file)."""
@@ -51,19 +50,6 @@ ZODIAC_FILES = {
     "Dhanu": "sagittarius.svg", "Makara": "capricorn.svg",
     "Kumbha": "aquarius.svg", "Meena": "pisces.svg",
 }
-
-# Sample-exact row order (Sun first, then Moon, Mars, ... + outers).
-MATRIX_ORDER = ["Lagna", "Ravi", "Chandra", "Kuja", "Budha", "Guru",
-                "Sikuru", "Shani", "Raahu", "Kethu", "Urenus",
-                "Neptune", "Pluto"]
-
-# Display spellings come from display_names (WS-A single source):
-# PLANET_DISPLAY for grahas, DASA_DISPLAY for dasa/hora lords
-# (Ravi stays Ravi in both — sample convention).
-
-# shadvarga index order for the matrix columns
-# (Rasi, Hora, Drekkana, Navamsa, Dvadasamsa, Trimshamsa).
-MATRIX_VARGAS = (0, 2, 3, 1, 4, 5)
 
 # jyotichart styles per --chart value (diamond renders fixed-house north).
 CHART_STYLE = {"diamond": "north"}
@@ -338,9 +324,6 @@ def _hero(doc, locale) -> str:
     lagna = doc["lagna"]
     place = doc["place"]
     pg = doc["panchanga"]
-    tm = doc["times"]
-    cc = doc["chakra"]
-    hh = doc["hora"]
     sub = (f"{doc['birth_date']} \u00b7 {doc['birth_time']} \u00b7 "
            f"{trv(pg['weekday'], locale, 'weekdays')} \u00b7 "
            f"{trv(place['city'], locale, 'cities')}")
@@ -358,77 +341,25 @@ def _hero(doc, locale) -> str:
             f"<p class=\"hero-sub\" style=\"font-size: 1.25rem;\">"
             f"{_esc(sub)}</p></div>"
             f"<div class=\"hero-side1\">{badge}</div></div>")
-    groups = _fact_group("Panchanga", [
-        ("Nakshatra", trv(pg["nakshatra"], locale, "nakshatras")),
-        ("Nakshatra Pada", pg["pada"]),
-        ("Tithi", tr_tithi_full(pg["tithi"], locale)),
-        ("Yoga", trv(YOGA_DISPLAY.get(pg["yoga"], pg["yoga"]),
-                     locale, "yogas")),
-        ("Karana", trv(KARANA_DISPLAY.get(pg["karana"], pg["karana"]),
-                       locale, "karanas"))], locale)
-    groups += _fact_group("Hora", [
-        ("Kala", trvx(DASA_DISPLAY.get(hh["kala"], hh["kala"]), locale)),
-        ("Panchama", trvx(DASA_DISPLAY.get(hh["panchama"],
-                                        hh["panchama"]), locale)),
-        ("Sukshama", trvx(DASA_DISPLAY.get(hh["sukshama"],
-                                        hh["sukshama"]), locale)),
-        ("Sunrise", tm["sunrise"]),
-        ("Sunset", tm["sunset"])], locale, spaced=True)
-    groups += _fact_group("Chakra", [
-        ("Gana", trv(cc["gana"], locale, "attrs")),
-        ("Yoni", trv(cc["yoni"].strip(), locale, "attrs")),
-        ("Linga", trv(cc["linga"], locale, "attrs")),
-        ("Naadi", trv(cc["naadi"], locale, "attrs")),
-        ("Varna", trv(cc["varna"], locale, "attrs")),
-        ("Ruxha", trv(cc["ruxha"], locale, "attrs")),
-        ("Paxhi", trv(cc["paxhi"], locale, "attrs")),
-        ("Gothra", trv(cc["gothra"], locale, "attrs")),
-        ("Rajju", trv(cc["rajju"], locale, "attrs")),
-        ("Bhutha", trv(cc["bhutha"], locale, "attrs"))],
-        locale, spaced=True)
+    facts = hero_groups(doc, locale)
+    groups = _fact_group("Panchanga", facts["panchanga"], locale)
+    groups += _fact_group("Hora", facts["hora"], locale, spaced=True)
+    groups += _fact_group("Chakra", facts["chakra"], locale, spaced=True)
     return (f"<div class=\"hero2\"><div class=\"hero-main\">"
             f"{head}{groups}</div></div>")
 
 
-def _sign_cell(rasi: str, locale) -> str:
-    from kendra import RASIS
-
-    return (f"{_esc(trv(rasi, locale, 'rasis'))}"
-            f"<sup>{RASIS.index(rasi) + 1}</sup>")
-
-
-def _rasi_lon(raw: str) -> str:
-    """Rasi-relative longitude in clock form, sample-padded (00°55'01").
-
-    Engine docs carry clock form ('0°55\\'01"'); synthetic docs may
-    carry schema DMS (' 0:00:00'). Anything unparseable passes through.
-    """
-    import re
-
-    s = (raw or "").strip()
-    m = re.match(r"^([0-9]+)[:\u00b0]([0-9]+)[:']([0-9]+)\"?$", s)
-    if not m:
-        return s or "-"
-    deg, minute, sec = (int(m.group(1)) % 30, m.group(2), m.group(3))
-    return f"{deg:02d}\u00b0{minute}'{sec}\""
-
-
 def _matrix(doc, locale) -> str:
-    det = doc.get("details", {})
     rows = []
-    for p in MATRIX_ORDER:
-        d = det.get(p, {})
-        lon = _rasi_lon(d.get("rasi_longitude", ""))
-        seats = doc["shadvarga"][p]
-        row = (f"<tr><td><b>{_esc(trvx(PLANET_DISPLAY.get(p, p), locale))}"
-               f"</b></td><td>{_sign_cell(seats[0], locale)}</td>"
-               f"<td>{_esc(lon)}</td>"
-               f"<td>{_esc(trv(d.get('nakshatra', '-'), locale, 'nakshatras'))}</td>"
-               f"<td class=\"num\">{_esc(d.get('pada', '-'))}</td>")
-        for v in MATRIX_VARGAS[1:]:
-            row += f"<td>{_sign_cell(seats[v], locale)}</td>"
-        row += (f"<td>{_esc(tr_avastha(doc['avastha'][p], locale) or '-')}"
-                f"</td></tr>")
+    for r in matrix_rows(doc, locale):
+        row = (f"<tr><td><b>{_esc(r['planet'])}</b></td>"
+               f"<td>{_esc(r['rasi'])}<sup>{r['rasi_num']}</sup></td>"
+               f"<td>{_esc(r['lon'])}</td>"
+               f"<td>{_esc(r['nakshatra'])}</td>"
+               f"<td class=\"num\">{_esc(r['pada'])}</td>")
+        for v in r["vargas"]:
+            row += f"<td>{_esc(v['rasi'])}<sup>{v['num']}</sup></td>"
+        row += f"<td>{_esc(r['avastha'])}</td></tr>"
         rows.append(row)
     head = "".join(f"<th>{_esc(c)}</th>" for c in
                    [trx("Graha", locale), trx("Rasi", locale),
@@ -466,52 +397,30 @@ def _charts(doc, chart, locale, gallery) -> str:
     return f"{title}<div class=\"charts-grid\">{''.join(cards)}</div>"
 
 
-def _span_status(frm, to, locale) -> str:
-    """Passed/Starts + year + localized month; Active while running."""
-    today = date.today().isoformat()
-    if to < today:
-        return (f"{trx('Passed', locale)} {to[:4]} "
-                f"{tr_month(to, locale, short=True)}")
-    if frm > today:
-        return (f"{trx('Starts', locale)} {frm[:4]} "
-                f"{tr_month(frm, locale, short=True)}")
-    return trx("Active", locale)
-
-
 def _timeline(doc, locale, detail) -> str:
-    today = date.today().isoformat()
-    force = detail if detail and detail.lower() != "all" else None
     blocks = []
-    for s in doc["dasa"]["mahas"]:
-        lord = DASA_DISPLAY.get(s["lord"], s["lord"])
-        is_active = s["from"] <= today <= s["to"]
-        is_forced = force and force.lower() in (
-            s["lord"].lower(), lord.lower())
-        status = _span_status(s["from"], s["to"], locale)
-        open_attr = " open" if (is_active or is_forced) else ""
-        active_cls = " active" if is_active else ""
+    for s in timeline_rows(doc, detail, locale):
+        open_attr = " open" if s["open"] else ""
+        active_cls = " active" if s["active"] else ""
         bhuktis = []
-        for b in s.get("bhuktis", []):
-            lord_b = DASA_DISPLAY.get(b["lord"], b["lord"])
-            b_active = b["from"] <= today <= b["to"]
-            b_status = _span_status(b["from"], b["to"], locale)
-            b_cls = " active" if b_active else ""
+        for b in s["bhuktis"]:
+            b_cls = " active" if b["active"] else ""
             bhuktis.append(
                 f"<div class=\"bhukti-row{b_cls}\">"
                 f"<span class=\"bh-name\">"
-                f"{_esc(trvx(lord_b, locale))}</span>"
+                f"{_esc(b['lord'])}</span>"
                 f"<span class=\"bh-span\">{_esc(b['from'])} \u2192 "
                 f"{_esc(b['to'])}</span>"
                 f"<span class=\"bh-age\"><span class=\"status-label\">"
-                f"{_esc(b_status)}</span></span></div>")
+                f"{_esc(b['status'])}</span></span></div>")
         blocks.append(
-            f"<details class=\"maha-block{active_cls}\"{open_attr}>"
+            f"<details class=\"maha-block{active_cls}\">{open_attr}>"
             f"<summary><span class=\"maha-lord\">"
-            f"{_esc(trvx(lord, locale))}</span>"
+            f"{_esc(s['lord'])}</span>"
             f"<span class=\"maha-span\">{_esc(s['from'])} \u2192 "
             f"{_esc(s['to'])}</span>"
             f"<span class=\"maha-age\"><span class=\"status-label\">"
-            f"{_esc(status)}</span></span></summary>"
+            f"{_esc(s['status'])}</span></span></summary>"
             f"<div class=\"bhukti-list\">{''.join(bhuktis)}</div>"
             f"</details>")
     click_note = trx("Click on each Mahadasa to view its corresponding "

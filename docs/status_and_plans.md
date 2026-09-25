@@ -3339,3 +3339,22 @@ Gate: ctest 20/20 zero warnings.
   test_display_single_source (object identity + full key cover),
   test_division_label_single_source.
 - Gate: console 54/54, ctest 26/26, live report spot-checked.
+
+### Session 171 — 2026-09-25 (WS-B services + binding geo/thathkala)
+- B4 approved + done: pystar.horoscope gains default-off
+  lat_deg/lat_min/lon_deg/lon_min + thathkala (nanobind optionals),
+  mirroring CLI batch semantics exactly (validateGeo, Colombo
+  fallback, "Manual entry"/"Colombo (Thathkala default)" labels,
+  "Thatkala Kendra" owner sic, city>26 requirement, thathkala
+  bypass). smoke.py extended: manual==city-7 full-longitude parity,
+  thathkala labels, all three rejection paths. PYSTAR_SMOKE_GREEN.
+- B1/B2/B3: new console/services.py (validate_birth mirrors
+  CLI::validate* incl. 90/180-minute edges; compute() raises
+  ServiceError; timeline_rows/matrix_rows/hero_groups shared with
+  Qt-future). htmlreport._matrix/_timeline/_hero rewritten on top
+  (helpers deleted); app.py rewired + --latdeg/--latmin/--londeg/
+  --lonmin/--thathkala flags; README documents them.
+- Frozen re-validated: manual-geo numbers == city-7 (14 values),
+  thathkala labels present, pty prompts still green.
+- Gate: console 60/60 (6 new service tests), ctest 26/26 zero
+  warnings, VERIFY_ALL_GREEN, smoke green.

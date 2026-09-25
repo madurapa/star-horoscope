@@ -166,7 +166,10 @@ STAR_PYBUILD=/tmp/star-py python -m PyInstaller console/freeze.spec \
 collapsible dasa timeline) — double-clickable in any browser, no
 server. `--locale en|si|ta` localizes it; `--chart east|north|south`
 picks the chart style (east default); `--dasa LORD|all` controls
-Antardasa detail. (The native binary has no HTML flag:
+Antardasa detail; `--city N` past 26 takes `--latdeg/--latmin/`
+`--londeg/--lonmin` manual coordinates; `--thathkala` runs the
+current moment at Colombo. Missing birth fields prompt
+interactively. (The native binary has no HTML flag:
 `--format text|json` only.)
 
 Compare like with like: `--engine dos` reproduces the original

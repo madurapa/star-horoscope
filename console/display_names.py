@@ -32,6 +32,11 @@ def dasa_lord(lord: str) -> str:
     return DASA_DISPLAY.get(lord, lord)
 
 
+# Sample-exact matrix row order (Lagna first, then Sun-first).
+MATRIX_ORDER = ["Lagna", "Ravi", "Chandra", "Kuja", "Budha", "Guru",
+                "Sikuru", "Shani", "Raahu", "Kethu", "Urenus",
+                "Neptune", "Pluto"]
+
 # The 8 charts: (localized-title key, varga index, lagna planet).
 # Lagna planet None means the chart ascendant (doc lagna seats).
 CHART_DEFS = [
