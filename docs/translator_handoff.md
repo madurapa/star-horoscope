@@ -48,6 +48,21 @@ If a frozen string looks wrong to you, flag it in a NOTE instead —
 the maintainer verifies against the original program first
 (fidelity contract: reproducing the original is deliberate).
 
+Changing a frozen string later is possible, with a bar per tier
+(Surya→Ravi is the worked example of Tier 1):
+
+- Tier 1, display words (modern spellings, chart titles, locale en
+  cells): owner ruling → change source + all mirrors + ITEMS →
+  regen → en-pinning gates → re-record affected goldens with a
+  normalized words-only diff proof (numbers proven unchanged) →
+  justification log → commit.
+- Tier 2, engine/behavioral strings (DOS literals, engine keys,
+  quirks): additionally requires new evidence (re-disassembly,
+  fresh captures, or proof the original varies), arbitration
+  against the frozen `origin/legacy` tree, and re-baselining of
+  goldens/verifier/diff bounds. Never silent, never to match
+  new code.
+
 ## For the translator (how to return corrections)
 
 - Work on a **copy** of this file — never on code. For each wrong

@@ -3455,3 +3455,9 @@ Gate: ctest 20/20 zero warnings.
   Caught mid-flight that the restructure had dropped the
   do-not-touch/translator/maintainer sections — restored verbatim
   with marker wording updated.
+
+### Session 181 — 2026-09-25 (frozen-string exception process)
+- Owner: what if frozen strings prove wrong? Documented the tiered
+  exception process in the handoff do-not-touch section (Tier 1
+  display words per the Surya→Ravi drill; Tier 2 engine strings
+  need new evidence + legacy arbitration + re-baselining).
