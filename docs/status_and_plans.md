@@ -3446,3 +3446,12 @@ Gate: ctest 20/20 zero warnings.
   column, markers) and a maintainer checklist (diff stat, hunk
   review with zero-English-change rule, regen re-diff, gate).
   Fixed own Columbo typo on the spot.
+
+### Session 180 — 2026-09-25 (marker column + section restore)
+- Owner: markers out of language cells. §0 table is now Concept |
+  English | Sinhala | Tamil | Marker (all 22 trailing markers
+  verified consistent across columns; meaning documented: * =
+  female yoni form per owner ruling, # = literal tree-table mark).
+  Caught mid-flight that the restructure had dropped the
+  do-not-touch/translator/maintainer sections — restored verbatim
+  with marker wording updated.
