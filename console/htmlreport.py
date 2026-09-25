@@ -26,7 +26,7 @@ from pathlib import Path
 from i18n import tr, trv
 from render import disp_lon
 from report_l10n import trx
-from services import hero_groups, matrix_rows, timeline_rows
+from services import hero_groups, hero_header, matrix_rows, timeline_rows
 
 def _base_dir() -> Path:
     """console/ in dev; bundle root when frozen (PyInstaller one-file)."""
@@ -322,11 +322,7 @@ def _fact_group(title, items, locale, spaced=False) -> str:
 
 def _hero(doc, locale) -> str:
     lagna = doc["lagna"]
-    place = doc["place"]
-    pg = doc["panchanga"]
-    sub = (f"{doc['birth_date']} \u00b7 {doc['birth_time']} \u00b7 "
-           f"{trv(pg['weekday'], locale, 'weekdays')} \u00b7 "
-           f"{trv(place['city'], locale, 'cities')}")
+    name, sub = hero_header(doc, locale)
     badge = (f"<div class=\"lagna-badge\">"
              f"{_esc(trv(lagna['rasi'], locale, 'rasis'))}<br/>"
              f"<div class=\"hero-fact-k\">"
@@ -337,7 +333,7 @@ def _hero(doc, locale) -> str:
              f"<div class=\"hero-zodiac\">{_zodiac(lagna['rasi'])}</div>")
     head = (f"<div class=\"hero1\"><div>"
             f"<h1 class=\"hero-name\" style=\"color: var(--accent); "
-            f"font-weight: 500\">{_esc(doc['name'])}</h1>"
+            f"font-weight: 500\">{_esc(name)}</h1>"
             f"<p class=\"hero-sub\" style=\"font-size: 1.25rem;\">"
             f"{_esc(sub)}</p></div>"
             f"<div class=\"hero-side1\">{badge}</div></div>")

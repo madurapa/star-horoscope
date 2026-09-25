@@ -3358,3 +3358,15 @@ Gate: ctest 20/20 zero warnings.
   thathkala labels present, pty prompts still green.
 - Gate: console 60/60 (6 new service tests), ctest 26/26 zero
   warnings, VERIFY_ALL_GREEN, smoke green.
+
+### Session 172 — 2026-09-25 (WS-C Qt shell + docs discipline)
+- gui/ shell: MainWindow + QStackedWidget (ProfilePage/ResultsPage),
+  validated form (spin ranges, geo/thathkala toggles), compute wiring
+  via services, summary from shared hero data, back navigation.
+  gui/i18n.py adapter deleted before it could shadow console/i18n
+  (console tables are the single source; tr() passthrough is the
+  future-proofing). gui/main.py entry verified launching.
+- services.hero_header added; htmlreport._hero uses it (byte-identical
+  per untouched HTML tests). README: PySide6/pytest-qt requirement +
+  GUI run block (verified verbatim). Docs ride every step per owner.
+- Gate: console 61/61, gui 7/7 offscreen, ctest 26/26.

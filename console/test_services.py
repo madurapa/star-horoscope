@@ -111,3 +111,16 @@ def test_matrix_and_hero_rows():
     assert [k for k, _v in groups["panchanga"]] == \
         ["Nakshatra", "Nakshatra Pada", "Tithi", "Yoga", "Karana"]
     assert len(groups["hora"]) == 5 and len(groups["chakra"]) == 10
+
+
+def test_hero_header():
+    from services import hero_header
+
+    doc = copy.deepcopy(DOC)
+    name, sub = hero_header(doc, locale="en")
+    assert name == "Test User"
+    assert sub == "2000-08-17 \u00b7 14:05 \u00b7 Thursday \u00b7 Ratnapura"
+    from i18n import trv
+
+    _n, si_sub = hero_header(doc, locale="si")
+    assert trv("Thursday", "si", "weekdays") in si_sub

@@ -191,6 +191,16 @@ def _rasi_lon(raw: str) -> str:
     return f"{deg:02d}\u00b0{minute}'{sec}\""
 
 
+def hero_header(doc, locale="en") -> tuple:
+    """Owner name + birth summary line (shared hero data)."""
+    pg = doc["panchanga"]
+    place = doc["place"]
+    sub = (f"{doc['birth_date']} \u00b7 {doc['birth_time']} \u00b7 "
+           f"{trv(pg['weekday'], locale, 'weekdays')} \u00b7 "
+           f"{trv(place['city'], locale, 'cities')}")
+    return doc["name"], sub
+
+
 def hero_groups(doc, locale="en") -> dict:
     """Panchanga/Hora/Chakra fact groups (shared hero data)."""
     pg = doc["panchanga"]

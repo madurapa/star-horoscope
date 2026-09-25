@@ -33,6 +33,8 @@ at v2.35.0) — see `NOTICE.md`.
 - Optional: Python 3.9+ dev headers plus pip-installed `nanobind`
   for the `pystar` bindings (`-DSTAR_PYTHON=ON`, e.g.
   `-DPython_EXECUTABLE=/usr/bin/python3.13`)
+- Optional: pip-installed `PySide6-Essentials` plus `pytest-qt`
+  for the Qt desktop GUI (`gui/`, offscreen-tested)
 
 ## Build
 
@@ -159,6 +161,15 @@ builds target older glibc, see the `freeze` CI job):
 ```bash
 STAR_PYBUILD=/tmp/star-py python -m PyInstaller console/freeze.spec \
   --distpath dist --workpath freeze-build --noconfirm
+```
+
+Qt desktop GUI (`gui/`, PySide6): profile form with validation,
+results summary, stacked navigation — services shared with the
+console above, full tables/charts land per `docs/qt_plan.md`:
+
+```bash
+PYTHONPATH=/tmp/star-py:console python gui/main.py
+QT_QPA_PLATFORM=offscreen python3.13 -m pytest gui/ -q
 ```
 
 `--export-html FILE` writes a self-contained horoscope report
