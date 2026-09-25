@@ -3308,3 +3308,14 @@ Gate: ctest 20/20 zero warnings.
   Windows only. Same root cause class, second half: multi-config
   generators drop pystar*.pyd into pybuild/Release/, so freeze.spec
   globs that subdir too (proven with a fake tree).
+
+### Session 168 — 2026-09-25 (architecture assessment, no implementation)
+- Owner brief: decide the desktop-app architecture (TUI vs GUI,
+  engines, CLI fate, SVG/HTML reuse, PDF, portable distribution).
+  Three parallel research dives (framework+licensing, pysweph+engines,
+  PDF+packaging) + tree verification. Assessment saved to
+  docs/architecture.md (pending decision): recommends PySide6
+  QWidgets (no WebEngine v1), keep C++ engines + nanobind, reuse
+  reporting layer, WeasyPrint PDF path, incremental migration;
+  challenges CLI removal, TUI assumption, and portable-Python
+  assumptions. Open questions on bundle size, PDF bar, CLI fate.
