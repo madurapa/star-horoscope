@@ -12,7 +12,11 @@ import os
 ROOT = os.path.dirname(os.path.abspath(SPECPATH))
 
 # Directory holding the built pystar extension (cmake -DSTAR_PYTHON=ON).
+# Relative values anchor on the repo root: PyInstaller resolves bare
+# binaries/datas paths against the spec directory (console/).
 pybuild = os.environ.get("STAR_PYBUILD", "/tmp/star-py")
+if not os.path.isabs(pybuild):
+    pybuild = os.path.join(ROOT, pybuild)
 
 ext = glob.glob(os.path.join(pybuild, "pystar*.so"))
 ext += glob.glob(os.path.join(pybuild, "pystar*.pyd"))

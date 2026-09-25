@@ -3291,3 +3291,12 @@ Gate: ctest 20/20 zero warnings.
 - README: Binaries + freeze recipe. Frozen binary rebuilt (13MB) and
   re-validated: byte-identical to unfrozen modulo the version footer.
 - Gate: console 52/52, ctest 26/26.
+
+### Session 166 — 2026-09-25 (CI freeze fix: relative STAR_PYBUILD)
+- CI failed: binaries path resolved to console/pybuild/.... Root cause:
+  glob runs under CWD (repo root, match + assert pass) but PyInstaller
+  resolves relative binaries/datas against the spec directory. Fix:
+  anchor relative STAR_PYBUILD on ROOT (absolute values pass through).
+  Proven locally with a relative build dir (13MB binary, export
+  byte-identical modulo the version footer). Bonus confirmation:
+  setup-python@v6 works on CI runners.
