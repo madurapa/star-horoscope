@@ -32,32 +32,52 @@ PLANET_CONST = {
     "Shani": chart.SATURN, "Raahu": chart.RAHU, "Kethu": chart.KETU,
 }
 
-# SL glyph convention (DOS-style abbreviations) in every locale.
+# SL glyph convention: DOS-style abbreviations in English; first-akshara
+# abbreviations in si/ta (Draft for translator review — all distinct,
+# compartments are slot-positioned so narrower glyphs cannot collide).
 GLYPHS = {
     "Ravi": "Rv", "Chandra": "Ch", "Kuja": "Ku", "Budha": "Bu",
     "Guru": "Gu", "Sikuru": "Si", "Shani": "Sh", "Raahu": "Ra",
     "Kethu": "Ke",
 }
+GLYPH_LOCALE = {
+    "si": {"Ravi": "ර", "Chandra": "ච", "Kuja": "කු", "Budha": "බු",
+           "Guru": "ගු", "Sikuru": "ශු", "Shani": "ශ", "Raahu": "රා",
+           "Kethu": "කේ"},
+    "ta": {"Ravi": "சூ", "Chandra": "சந்", "Kuja": "செ", "Budha": "பு",
+           "Guru": "கு", "Sikuru": "சு", "Shani": "சனி", "Raahu": "ரா",
+           "Kethu": "கே"},
+}
+
+
+def _glyph(planet, locale):
+    """Chart glyph for an engine planet key in the report locale."""
+    return GLYPH_LOCALE.get(locale, {}).get(planet, GLYPHS[planet])
 
 LOCALE = {"en": "english", "si": "sinhala", "ta": "tamil"}
 
-# Light theme matching the report page (styled_light.py pattern, colors
-# only — font sizes/weights stay library-default per owner call).
+# Report-theme matching the page (docs/modern_display.md palette).
+# Colors ride as CSS vars so the SVG follows the theme instead of
+# baking literals (light now, dark later); family matches the report
+# body. Sizes/weights stay library-tuned to the compartments — the
+# theme defines no chart type scale.
+THEME_FAMILY = "'Noto Sans Sinhala', 'Noto Sans', sans-serif"
 LIGHT = dict(
     aspect=False,
-    clr_background="white",
-    clr_outbox="gray",
-    clr_inbox="gray",
-    clr_line="gray",
-    clr_Asc="black",
-    clr_houses=["white"] * 12,
-    clr_details="black",
+    clr_background="var(--chart-bg)",
+    clr_outbox="var(--chart-line)",
+    clr_inbox="var(--chart-line)",
+    clr_line="var(--chart-line)",
+    clr_Asc="var(--text)",
+    clr_houses=["var(--chart-bg)"] * 12,
+    clr_details="var(--text)",
+    font_family=THEME_FAMILY,
 )
 
 # Division label for the center box per chart (jyotichart vocabulary, so
-# si/ta translate; Sun/Moon pass through unchanged). The Lagna chart uses
-# True: rising sign + Lagna marker (the library maps the word "Lagna" to
-# "Rashi", which is not what we want there).
+# si/ta translate; unknown names pass through unchanged). The Lagna
+# chart uses True: rising sign + Lagna marker (the library maps the
+# word "Lagna" to "Rashi", which is not what we want there).
 DIVISIONS = {
     "Lagna Chart": True,
     "Navamsa Chart": "Navamsa",
@@ -65,9 +85,23 @@ DIVISIONS = {
     "Drekkana Chart": "Drekkana",
     "Dvadasamsa Chart": "Dwadasamsa",
     "Trimshamsa Chart": "Trimsamsa",
-    "Surya Chart": "Surya",
+    "Ravi Chart": "Ravi",
     "Chandra Chart": "Chandra",
 }
+
+
+def _division_label(title, locale):
+    """Localized center-box label. Sun/Moon are not library varga names
+    (they would pass through in English), so localize here: the report
+    calls the Sun Ravi (sample/matrix convention), the Moon Chandra."""
+    from i18n import trv
+    from report_l10n import trvx
+
+    if title == "Ravi Chart":
+        return trvx("Ravi", locale)
+    if title == "Chandra Chart":
+        return trv("Chandra", locale, "planets")
+    return DIVISIONS[title]
 
 
 def _house_of(houses: dict, planet: str) -> int:
@@ -86,9 +120,10 @@ def _base(doc, varga: int, lagna_planet, locale: str, title: str, cls):
     c.set_birth_details("", "", "")
     c.set_ascendantsign(MODERN_TO_CLASSICAL[RASIS[lagna_seat - 1]])
     for p, const in PLANET_CONST.items():
-        c.add_planet(const, GLYPHS[p],
-                     _house_of(houses, p), colour="black")
-    c.updatechartcfg(show_center_lagna=DIVISIONS[title], **LIGHT)
+        c.add_planet(const, _glyph(p, locale),
+                     _house_of(houses, p), colour="var(--text)")
+    c.updatechartcfg(show_center_lagna=_division_label(title, locale),
+                     **LIGHT)
     return c.to_svg_string()
 
 
@@ -101,8 +136,8 @@ def north_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
     c = chart.NorthChart("", "", language=lang)
     c.set_ascendantsign(MODERN_TO_CLASSICAL[RASIS[lagna_seat - 1]])
     for p, const in PLANET_CONST.items():
-        c.add_planet(const, GLYPHS[p],
-                     _house_of(houses, p), colour="black")
+        c.add_planet(const, _glyph(p, locale),
+                     _house_of(houses, p), colour="var(--text)")
     c.updatechartcfg(**{k: v for k, v in LIGHT.items()
                          if k not in ("clr_inbox", "clr_Asc")})
     return c.to_svg_string()
@@ -123,14 +158,38 @@ def east_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
         # housenum n from true asc landing on position `house`: the library
         # maps n onto that position's fixed sign, so slots stay put.
         n = ((house - lagna_seat) % 12) + 1
-        c.add_planet(const, GLYPHS[p], n, colour="black")
+        c.add_planet(const, _glyph(p, locale), n, colour="var(--text)")
     # Full names need smaller type in the cramped triangles.
-    c.updatechartcfg(show_center_lagna=DIVISIONS[title], **LIGHT)
-    return c.to_svg_string()
+    c.updatechartcfg(show_center_lagna=_division_label(title, locale),
+                     **LIGHT)
+    return _drop_asc_marker(c.to_svg_string())
+
+
+def _drop_asc_marker(svg: str) -> str:
+    """Strip the in-compartment Lagna marker (East only).
+
+    Fixed-house mode pins the ascendant in house 1 (top-center) on
+    every chart, so the marker carries no information — the center
+    box already names the rising sign. South keeps its marker (its
+    signs rotate across compartments).
+    """
+    import re
+
+    svg = re.sub(r'<text[^>]*id="[A-Za-z]*Asc"[^>]*>[^<]*</text>\s*', "", svg)
+    return re.sub(r"  <!-- \*+ Ascendant Sign \*+ -->\n", "", svg)
 
 
 def south_svg(doc, varga: int, lagna_planet, locale: str, title: str) -> str:
     return _base(doc, varga, lagna_planet, locale, title, chart.SouthChart)
+
+
+def _thin(svg: str) -> str:
+    """Slim the library's chunky strokes (3/2 viewBox px read heavy at
+    display size): outer/center boxes 3 -> 1.5, compartments 2 -> 1."""
+    import re
+
+    svg = re.sub(r"stroke-width:3(\.0)?(?![\d.])", "stroke-width:1.5", svg)
+    return re.sub(r"stroke-width:2(\.0)?(?![\d.])", "stroke-width:1", svg)
 
 
 def gallery_items(doc, style: str, locale: str):
@@ -146,7 +205,7 @@ def gallery_items(doc, style: str, locale: str):
     else:
         make = east_svg  # default: Sri Lankan East diamond
     return [(title, varga, lagna_planet,
-             make(doc, varga, lagna_planet, locale, title))
+             _thin(make(doc, varga, lagna_planet, locale, title)))
             for title, varga, lagna_planet in CHART_DEFS]
 
 

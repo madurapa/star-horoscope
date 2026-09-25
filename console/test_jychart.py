@@ -8,28 +8,66 @@ from test_render import DOC
 def test_east_english():
     svg = east_svg(DOC, 0, None, "en", "Lagna Chart")
     assert svg.startswith("<svg") and "Rv" in svg and "Ch" in svg
-    assert "Asc" in svg
+    assert 'Asc"' not in svg  # fixed house 1 needs no in-house marker
+    assert "Mesha" in svg  # center still names the rising sign
 
 
 def test_east_sinhala_tamil():
     si = east_svg(DOC, 0, None, "si", "Lagna Chart")
-    assert "ලග්නය" in si and ">Ch<" in si
+    assert "ලග්නය" in si and ">ච<" in si and ">Ch<" not in si
     ta = east_svg(DOC, 0, None, "ta", "Lagna Chart")
-    assert "இலக்கினம்" in ta and ">Ch<" in ta
+    assert "இலக்கினம்" in ta and ">சந்<" in ta and ">Ch<" not in ta
+
+
+def test_localized_glyphs_cover_all_planets():
+    from jychart import GLYPH_LOCALE, GLYPHS, east_svg
+
+    for locale, table in GLYPH_LOCALE.items():
+        assert set(table) == set(GLYPHS), locale  # every planet mapped
+        assert len(set(table.values())) == 9, locale  # all distinct
+        svg = east_svg(DOC, 0, None, locale, "Lagna Chart")
+        for glyph in table.values():
+            assert f">{glyph}<" in svg, (locale, glyph)
 
 
 def test_east_navamsa_lagna():
     svg = east_svg(DOC, 1, None, "en", "Navamsa Chart")
     assert svg.startswith("<svg")
     assert "Navamsa" in svg  # center division label
-    assert 'fill="white"' in svg or "white" in svg  # light theme
+    for var in ["var(--chart-bg)", "var(--chart-line)", "var(--text)"]:
+        assert var in svg, var  # report theme, no baked literals
+    assert "Noto Sans Sinhala" in svg  # report body family
     assert "Georgia" not in svg  # default fonts only
+
+
+def test_sun_moon_centers_localized_ravi_convention():
+    from i18n import trv
+    from jychart import east_svg
+    from report_l10n import trvx
+
+    sun = east_svg(DOC, 0, "Ravi", "en", "Ravi Chart")
+    assert ">Ravi<" in sun and "Surya" not in sun
+    moon = east_svg(DOC, 0, "Chandra", "en", "Chandra Chart")
+    assert ">Chandra<" in moon
+    sun_si = east_svg(DOC, 0, "Ravi", "si", "Ravi Chart")
+    assert trvx("Ravi", "si") in sun_si and "Surya" not in sun_si
+    moon_si = east_svg(DOC, 0, "Chandra", "si", "Chandra Chart")
+    assert trv("Chandra", "si", "planets") in moon_si
+
+
+def test_gallery_thins_library_strokes():
+    from jychart import gallery_items
+    from test_render import DOC
+
+    for _title, _varga, _lagna, svg in gallery_items(DOC, "east", "en"):
+        assert "stroke-width:3" not in svg and "stroke-width:2" not in svg
+        assert "stroke-width:1.5" in svg and "stroke-width:1" in svg
 
 
 def test_center_no_name_or_chart_title():
     svg = east_svg(DOC, 0, None, "en", "Lagna Chart")
     assert "Test User" not in svg and "Chart :" not in svg
-    assert "Asc" in svg  # rising sign + Lagna marker
+    assert "Mesha" in svg  # center still names the rising sign
 
 
 def test_south_english():
@@ -51,7 +89,7 @@ def test_gallery_all_eight():
     spread["lagna"]["seats"] = [1, 12, 5, 4, 7, 2]
     g = gallery(spread, "diamond", "en")
     assert g.count("<svg") == 8
-    for title in ["Lagna Chart", "Navamsa Chart", "Surya Chart", "Chandra Chart"]:
+    for title in ["Lagna Chart", "Navamsa Chart", "Ravi Chart", "Chandra Chart"]:
         assert f"<h3>{title}</h3>" in g
     g2 = gallery(spread, "south", "ta")
     assert g2.count("<svg") == 8 and "இலக்கினம்" in g2

@@ -94,12 +94,23 @@ contract:
 - Summary is a headerless key-value table; all item labels Title Case
   (`Birth Place`, `Julian Date`, `Kala Hora`, ...).
 
+## HTML report chart theming
+
+The HTML report (`console/htmlreport.py`) carries its own light palette
+in `:root` (`--chart-bg #ffffff`, `--chart-line #d8d3c8`,
+`--text #20221f`). Chart SVGs follow it: `console/jychart.py` emits
+colors as CSS vars (`var(--chart-bg)` boxes, `var(--chart-line)`
+grid, `var(--text)` glyphs) and the report body family
+(`'Noto Sans Sinhala'`), so retheming the page rethemes the drawings.
+Type sizes/weights stay library-tuned to the compartments
+(bold 12–20px) — the theme defines no chart type scale.
+
 ## Correction catalog
 
 Single-sourced in `docs/glossary.md` (modern vocabulary + regeneration
 tooling) — not duplicated here, so the two can never disagree. (An older
 revision of this section carried its own Legacy→Modern table, including
-stale `Sun/Moon chart` titles since corrected to Surya/Chandra.)
+stale `Sun/Moon chart` titles since corrected to Ravi/Chandra.)
 
 ### Deliberately retained (transliteration, not typos)
 

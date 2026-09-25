@@ -8,7 +8,7 @@
 ────────────────────────────────────────────────────────────────────────────────
 Lagna     186°15'56"   Sita             4  Tula       6°15'56"        -
 Chandra   31°29'49"    Keti             2  Vrishabha  1°29'49"        Nidra
-Surya     34°02'27"    Keti             3  Vrishabha  4°02'27"        Nethrapani
+Ravi      34°02'27"    Keti             3  Vrishabha  4°02'27"        Nethrapani
 Budha     12°22'48"    Asvida           4  Mesha      12°22'48"       Prakasha
 Shukra    78°35'09"    Ada              4  Mithuna    18°35'09"       Nidra
 Kuja      95°08'18"    Pushha           1  Kataka     5°08'18"        Nidra
@@ -30,7 +30,7 @@ Pluto     276°06'39"   Utrasala         3  Makara     6°06'39"        -
 ────────────────────────────────────────────────────────────────────────────────
 Lagna     Tula        Vrishchika   Simha    Tula        Dhanu        Kumbha
 Chandra   Vrishabha   Makara       Kataka   Vrishabha   Vrishabha    Vrishabha
-Surya     Vrishabha   Kumbha       Kataka   Vrishabha   Mithuna      Kanya
+Ravi      Vrishabha   Kumbha       Kataka   Vrishabha   Mithuna      Kanya
 Budha     Mesha       Kataka       Simha    Simha       Simha        Dhanu
 Shukra    Mithuna     Meena        Kataka   Tula        Makara       Mithuna
 Kuja      Kataka      Simha        Kataka   Kataka      Kanya        Kanya
@@ -51,7 +51,7 @@ Pluto     Makara      Kumbha       Kataka   Makara      Meena        Kanya
   Graha      Rashi     Navamsa     Hora    Drekkana    Dvadasamsa    Trimshamsa
 ────────────────────────────────────────────────────────────────────────────────
 Chandra            8           3      12           8             6             4
-Surya              8           4      12           8             7             8
+Ravi               8           4      12           8             7             8
 Budha              7           9       1          11             9            11
 Shukra             9           5      12           1             2             5
 Kuja              10          10      12          10            10             8
@@ -90,7 +90,7 @@ Nakshatra Pada : 2
 Yoga           : Shobhana
 Karana         : Naaga
 === dasa-info ===
-Starting  : Surya
+Starting  : Ravi
 Period    : 3 years 9 months 27 days
 Reference : From birth
 === dasa ===
@@ -98,7 +98,7 @@ Reference : From birth
 
 ─────────────────────── Mahadasa and Antardasa Timeline ────────────────────────
 
-├─ Surya: 2023-05-19 to 2027-03-16 (0y 0m 0d to 3y 9m 27d)
+├─ Ravi: 2023-05-19 to 2027-03-16 (0y 0m 0d to 3y 9m 27d)
 │  ├─ Guru: 2023-05-19 to 2024-01-22 (0y 0m 0d to 0y 8m 3d)
 │  ├─ Shani: 2024-01-22 to 2025-01-04 (0y 8m 3d to 1y 7m 15d)
 │  ├─ Budha: 2025-01-04 to 2025-11-10 (1y 7m 15d to 2y 5m 21d)
@@ -113,7 +113,7 @@ Reference : From birth
 │  ├─ Budha: 2033-01-16 to 2034-06-16 (9y 7m 27d to 11y 0m 27d)
 │  ├─ Ketu: 2034-06-16 to 2035-01-16 (11y 0m 27d to 11y 7m 27d)
 │  ├─ Shukra: 2035-01-16 to 2036-09-16 (11y 7m 27d to 13y 3m 27d)
-│  └─ Surya: 2036-09-16 to 2037-03-16 (13y 3m 27d to 13y 9m 27d)
+│  └─ Ravi: 2036-09-16 to 2037-03-16 (13y 3m 27d to 13y 9m 27d)
 ├─ Kuja: 2037-03-16 to 2044-03-16 (13y 9m 27d to 20y 9m 27d)
 │  ├─ Kuja: 2037-03-16 to 2037-08-13 (13y 9m 27d to 14y 2m 24d)
 │  ├─ Rahu: 2037-08-13 to 2038-09-01 (14y 2m 24d to 15y 3m 12d)
@@ -122,7 +122,7 @@ Reference : From birth
 │  ├─ Budha: 2040-09-16 to 2041-09-13 (17y 3m 27d to 18y 3m 24d)
 │  ├─ Ketu: 2041-09-13 to 2042-02-10 (18y 3m 24d to 18y 8m 21d)
 │  ├─ Shukra: 2042-02-10 to 2043-04-10 (18y 8m 21d to 19y 10m 21d)
-│  ├─ Surya: 2043-04-10 to 2043-08-16 (19y 10m 21d to 20y 2m 27d)
+│  ├─ Ravi: 2043-04-10 to 2043-08-16 (19y 10m 21d to 20y 2m 27d)
 │  └─ Chandra: 2043-08-16 to 2044-03-16 (20y 2m 27d to 20y 9m 27d)
 ├─ Rahu: 2044-03-16 to 2062-03-16 (20y 9m 27d to 38y 9m 27d)
 │  ├─ Rahu: 2044-03-16 to 2046-11-28 (20y 9m 27d to 23y 6m 9d)
@@ -131,7 +131,7 @@ Reference : From birth
 │  ├─ Budha: 2052-02-28 to 2054-09-16 (28y 9m 9d to 31y 3m 27d)
 │  ├─ Ketu: 2054-09-16 to 2055-10-04 (31y 3m 27d to 32y 4m 15d)
 │  ├─ Shukra: 2055-10-04 to 2058-10-04 (32y 4m 15d to 35y 4m 15d)
-│  ├─ Surya: 2058-10-04 to 2059-08-28 (35y 4m 15d to 36y 3m 9d)
+│  ├─ Ravi: 2058-10-04 to 2059-08-28 (35y 4m 15d to 36y 3m 9d)
 │  ├─ Chandra: 2059-08-28 to 2061-02-28 (36y 3m 9d to 37y 9m 9d)
 │  └─ Kuja: 2061-02-28 to 2062-03-16 (37y 9m 9d to 38y 9m 27d)
 ├─ Guru: 2062-03-16 to 2078-03-16 (38y 9m 27d to 54y 9m 27d)
@@ -140,7 +140,7 @@ Reference : From birth
 │  ├─ Budha: 2066-11-16 to 2069-02-22 (43y 5m 27d to 45y 9m 3d)
 │  ├─ Ketu: 2069-02-22 to 2070-01-28 (45y 9m 3d to 46y 8m 9d)
 │  ├─ Shukra: 2070-01-28 to 2072-09-28 (46y 8m 9d to 49y 4m 9d)
-│  ├─ Surya: 2072-09-28 to 2073-07-16 (49y 4m 9d to 50y 1m 27d)
+│  ├─ Ravi: 2072-09-28 to 2073-07-16 (49y 4m 9d to 50y 1m 27d)
 │  ├─ Chandra: 2073-07-16 to 2074-11-16 (50y 1m 27d to 51y 5m 27d)
 │  ├─ Kuja: 2074-11-16 to 2075-10-22 (51y 5m 27d to 52y 5m 3d)
 │  └─ Rahu: 2075-10-22 to 2078-03-16 (52y 5m 3d to 54y 9m 27d)
@@ -149,7 +149,7 @@ Reference : From birth
 │  ├─ Budha: 2081-03-19 to 2083-11-28 (57y 10m 0d to 60y 6m 9d)
 │  ├─ Ketu: 2083-11-28 to 2085-01-07 (60y 6m 9d to 61y 7m 18d)
 │  ├─ Shukra: 2085-01-07 to 2088-03-07 (61y 7m 18d to 64y 9m 18d)
-│  ├─ Surya: 2088-03-07 to 2089-02-19 (64y 9m 18d to 65y 9m 0d)
+│  ├─ Ravi: 2088-03-07 to 2089-02-19 (64y 9m 18d to 65y 9m 0d)
 │  ├─ Chandra: 2089-02-19 to 2090-09-19 (65y 9m 0d to 67y 4m 0d)
 │  ├─ Kuja: 2090-09-19 to 2091-10-28 (67y 4m 0d to 68y 5m 9d)
 │  ├─ Rahu: 2091-10-28 to 2094-09-04 (68y 5m 9d to 71y 3m 15d)
@@ -158,7 +158,7 @@ Reference : From birth
 │  ├─ Budha: 2097-03-16 to 2099-08-13 (73y 9m 27d to 76y 2m 24d)
 │  ├─ Ketu: 2099-08-13 to 2100-08-10 (76y 2m 24d to 77y 2m 21d)
 │  ├─ Shukra: 2100-08-10 to 2103-06-10 (77y 2m 21d to 80y 0m 21d)
-│  ├─ Surya: 2103-06-10 to 2104-04-16 (80y 0m 21d to 80y 10m 27d)
+│  ├─ Ravi: 2103-06-10 to 2104-04-16 (80y 0m 21d to 80y 10m 27d)
 │  ├─ Chandra: 2104-04-16 to 2105-09-16 (80y 10m 27d to 82y 3m 27d)
 │  ├─ Kuja: 2105-09-16 to 2106-09-13 (82y 3m 27d to 83y 3m 24d)
 │  ├─ Rahu: 2106-09-13 to 2109-04-01 (83y 3m 24d to 85y 10m 12d)
@@ -167,7 +167,7 @@ Reference : From birth
 ├─ Ketu: 2114-03-16 to 2121-03-16 (90y 9m 27d to 97y 9m 27d)
 │  ├─ Ketu: 2114-03-16 to 2114-08-13 (90y 9m 27d to 91y 2m 24d)
 │  ├─ Shukra: 2114-08-13 to 2115-10-13 (91y 2m 24d to 92y 4m 24d)
-│  ├─ Surya: 2115-10-13 to 2116-02-19 (92y 4m 24d to 92y 9m 0d)
+│  ├─ Ravi: 2115-10-13 to 2116-02-19 (92y 4m 24d to 92y 9m 0d)
 │  ├─ Chandra: 2116-02-19 to 2116-09-19 (92y 9m 0d to 93y 4m 0d)
 │  ├─ Kuja: 2116-09-19 to 2117-02-16 (93y 4m 0d to 93y 8m 27d)
 │  ├─ Rahu: 2117-02-16 to 2118-03-04 (93y 8m 27d to 94y 9m 15d)
@@ -176,7 +176,7 @@ Reference : From birth
 │  └─ Budha: 2120-03-19 to 2121-03-16 (96y 10m 0d to 97y 9m 27d)
 └─ Shukra: 2121-03-16 to 2141-03-16 (97y 9m 27d to 117y 9m 27d)
    ├─ Shukra: 2121-03-16 to 2124-07-16 (97y 9m 27d to 101y 1m 27d)
-   ├─ Surya: 2124-07-16 to 2125-07-16 (101y 1m 27d to 102y 1m 27d)
+   ├─ Ravi: 2124-07-16 to 2125-07-16 (101y 1m 27d to 102y 1m 27d)
    ├─ Chandra: 2125-07-16 to 2127-03-16 (102y 1m 27d to 103y 9m 27d)
    ├─ Kuja: 2127-03-16 to 2128-05-16 (103y 9m 27d to 104y 11m 27d)
    ├─ Rahu: 2128-05-16 to 2131-05-16 (104y 11m 27d to 107y 11m 27d)

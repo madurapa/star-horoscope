@@ -23,7 +23,7 @@ MALEFICS = {"Ravi", "Kuja", "Shani", "Raahu", "Kethu"}
 
 # Modern display spellings (mirror displayPlanet; keep engine keys for logic).
 DISPLAY = {"Sikuru": "Shukra", "Raahu": "Rahu", "Kethu": "Ketu",
-           "Urenus": "Uranus", "Ravi": "Surya"}
+           "Urenus": "Uranus"}
 
 # Diamond rows: (house, x cell). Fixed-HOUSE slots like the DOS original:
 ROWS = [

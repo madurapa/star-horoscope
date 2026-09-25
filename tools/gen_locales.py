@@ -96,7 +96,7 @@ ITEMS = [
     ("UiKendraDrekkanaChart", "Drekkana Chart"),
     ("UiChartDvadasamsa", "Dvadasamsa Chart"),
     ("UiChartTrimshamsa", "Trimshamsa Chart"),
-    ("UiChartSun", "Surya Chart"),
+    ("UiChartSun", "Ravi Chart"),
     ("UiChartMoon", "Chandra Chart"),
 ]
 
@@ -239,7 +239,7 @@ def build_console(si, ta, concepts, values):
 VALUE_CLASSES = [
     ("planets", {"explicit": [
         ("UiAstroLagna", "Lagna"), ("DasaChandra", "Chandra"),
-        ("DasaRavi", "Surya"), ("DasaBudha", "Budha"),
+        ("DasaRavi", "Ravi"), ("DasaBudha", "Budha"),
         ("DasaShukra", "Shukra"), ("DasaKuja", "Kuja"),
         ("DasaGuru", "Guru"), ("DasaShani", "Shani"),
         ("DasaRahu", "Rahu"), ("DasaKetu", "Ketu")]}),

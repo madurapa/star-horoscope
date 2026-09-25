@@ -68,7 +68,7 @@ STRINGS = {
     'Drekkana Chart': ('ද්\u200dරෙක්කාණ සටහන', 'திரேக்காண கட்டம்'),
     'Dvadasamsa Chart': ('ද්වාදශාංශ සටහන', 'துவாதசாம்ச கட்டம்'),
     'Trimshamsa Chart': ('ත්\u200dරිංශාංශ සටහන', 'திரிம்சாம்ச கட்டம்'),
-    'Surya Chart': ('සූර්ය සටහන', 'சூரிய கட்டம்'),
+    'Ravi Chart': ('සූර්ය සටහන', 'சூரிய கட்டம்'),
     'Chandra Chart': ('චන්ද්\u200dර සටහන', 'சந்திர கட்டம்'),
 }
 
@@ -114,7 +114,7 @@ CONCEPTS = {
     'MonthDecember': ('December', 'දෙසැම්බර්', 'டிசம்பர்'),
     'DasaKetu': ('Ketu', 'කේතු', 'கேது'),
     'DasaShukra': ('Shukra', 'ශුක්\u200dර', 'சுக்கிரன்'),
-    'DasaRavi': ('Surya', 'රවි', 'சூரியன்'),
+    'DasaRavi': ('Ravi', 'රවි', 'சூரியன்'),
     'DasaChandra': ('Chandra', 'චන්ද්\u200dර', 'சந்திரன்'),
     'DasaKuja': ('Kuja', 'කුජ', 'செவ்வாய்'),
     'DasaRahu': ('Rahu', 'රාහු', 'ராகு'),
@@ -434,7 +434,7 @@ CONCEPTS = {
     'UiChartNavamsa': ('Navamsa Chart', 'නවාංශ සටහන', 'நவாம்ச கட்டம்'),
     'UiChartDvadasamsa': ('Dvadasamsa Chart', 'ද්වාදශාංශ සටහන', 'துவாதசாம்ச கட்டம்'),
     'UiChartTrimshamsa': ('Trimshamsa Chart', 'ත්\u200dරිංශාංශ සටහන', 'திரிம்சாம்ச கட்டம்'),
-    'UiChartSun': ('Surya Chart', 'සූර්ය සටහන', 'சூரிய கட்டம்'),
+    'UiChartSun': ('Ravi Chart', 'සූර්ය සටහන', 'சூரிய கட்டம்'),
     'UiChartMoon': ('Chandra Chart', 'චන්ද්\u200dර සටහන', 'சந்திர கட்டம்'),
     'UiMiscYes': ('Yes', 'ඔව්', 'ஆம்'),
     'UiMiscNo': ('No', 'නැහැ', 'இல்லை'),
@@ -473,7 +473,7 @@ VALUES = {
     'planets': {
         'Lagna': ('UiAstroLagna', 'ලග්නය', 'இலக்கினம்'),
         'Chandra': ('DasaChandra', 'චන්ද්\u200dර', 'சந்திரன்'),
-        'Surya': ('DasaRavi', 'රවි', 'சூரியன்'),
+        'Ravi': ('DasaRavi', 'රවි', 'சூரியன்'),
         'Budha': ('DasaBudha', 'බුධ', 'புதன்'),
         'Shukra': ('DasaShukra', 'ශුක්\u200dර', 'சுக்கிரன்'),
         'Kuja': ('DasaKuja', 'කුජ', 'செவ்வாய்'),

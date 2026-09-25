@@ -184,6 +184,24 @@ def test_tithi_prefix_translated():
     assert "Ava -" not in html and "Thiyawaka" not in html
 
 
+def test_normal_weight_only_inside_charts():
+    html = _report()
+    # report chrome keeps its weights (sample-exact) ...
+    for weight in ["font-weight: 700", "font-weight: 600",
+                   "font-weight: 500"]:
+        assert weight in html, weight
+    # ... while every SVG glyph renders normal via one override rule.
+    assert ".chart-wrap svg text" in html
+    assert ".chart-wrap svg text { fill: var(--text); font-weight: normal; }" \
+        in html
+
+
+def test_east_charts_carry_no_asc_marker():
+    html = _report()
+    assert 'Asc"' not in html  # fixed house 1 needs no in-house marker
+    assert "Mesha" in html  # center still names the rising sign
+
+
 def test_tithi_uniform_separators():
     import copy
 

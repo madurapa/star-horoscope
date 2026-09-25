@@ -3122,3 +3122,104 @@ Gate: ctest 20/20 zero warnings.
   all 12 rasis verified inlining.
 - Tests 15 in test_htmlreport. Gate: console 47/47, ctest 26/26 zero
   warnings, VERIFY_ALL_GREEN.
+
+### Session 152 — 2026-09-25 (chart SVGs follow the report theme)
+- Owner: match chart font color/family/size/weight, border color/width
+  to the theme. console/jychart.py LIGHT now emits CSS vars
+  (var(--chart-bg) boxes, var(--chart-line) grid, var(--text) glyphs +
+  Asc/details) and the report body family (Noto Sans Sinhala); glyph
+  colour="black" x3 -> var(--text). Generated SVGs carry zero baked
+  color literals (verified). Sizes/weights stay library-tuned
+  (bold 12-20px, geometry-bound — the theme defines no chart scale).
+- test_jychart light-theme assertions updated to the vars + family.
+  Palette rule recorded in docs/modern_display.md. Browser-verified:
+  computed planet text is Noto 14px 700 #20221f, warm #d8d3c8 grid.
+- Gate: console 47/47, ctest 26/26 zero warnings, VERIFY_ALL_GREEN.
+
+### Session 153 — 2026-09-25 (slimmer chart borders)
+- Owner: chart borders too thick. Library hardcodes 3px (outer/center)
+  and 2px (compartments) with no config knob, so console/jychart.py
+  thins the SVG string at the gallery_items choke point (3->1.5,
+  2->1, all styles uniformly; vendor files untouched, direct
+  east/north/south callers unaffected). Test pins the slim widths.
+- Gate: console 48/48 (ctest/verify untouched — no C++ change).
+
+### Session 154 — 2026-09-25 (unified Lagna marker style)
+- Owner: "Lagna" rendered 20px vs 15px across charts. Root cause: the
+  library assigns sign-num (20px) in rectangular compartments but
+  sign-num-tri (15px) in triangular ones, positionally — same <style>
+  block everywhere, different class per chart. Fixed at the report
+  layer: `.chart-wrap svg text[id$="Asc"]` forces every chart's marker
+  to var(--accent-line), normal weight, 15px (covers east+south; north
+  draws no Asc marker; center-box labels have no id, unaffected).
+  Browser-verified: all 8 markers compute 15px/400/accent-line.
+- Note: --accent-line is translucent (#b4530944), so the marker reads
+  faint by design; solid --accent is one-line away if wanted.
+- Gate: console 49/49 (no C++ change).
+
+### Session 155 — 2026-09-25 (all report text normal weight)
+- Owner: font-weight normal everywhere. Normalized all rendered
+  weights: brand/meta/hero-name/lagna-badge/table headers/maha-lord/
+  active-bhukti 600-700 -> normal, hero h1 inline 500 dropped, new
+  `.wrap b/strong` rule (matrix grahas, masthead values, badge),
+  `.chart-wrap svg text` gains font-weight normal (covers baked
+  library bold incl. Asc markers). @font-face descriptors untouched.
+  Browser-verified: 120 sampled elements (h1/th/b/lords/SVG text),
+  zero non-normal. Test pins absence of 500/600/700.
+- Gate: console 50/50, ctest 26/26 (no C++ change).
+
+### Session 156 — 2026-09-25 (drop East Asc marker)
+- Owner: in-house "Lagna" marker pointless on East charts (house 1 is
+  always top-center in fixed-house mode). No library flag exists (the
+  marker write is unconditional; show_center_lagna only gates the
+  center label), so console/jychart.py strips the marker element + its
+  orphan comment at the east_svg choke point; the now-dead Asc CSS rule
+  removed. Center-box rising-sign labels untouched; South keeps its
+  marker (signs rotate there). Tests repointed (marker absent, Mesha
+  center present). Browser-verified: clean top-center house.
+- Gate: console 50/50, ctest 26/26 (no C++ change).
+
+### Session 157 — 2026-09-25 (normal weight scoped to charts only)
+- Owner correction: the all-normal request meant SVG charts, not report
+  CSS. Reverted every report-side weight (brand/meta 600, hero-name 700
+  + h1 inline 500, lagna-badge 500, th 600, maha-lord 700, active
+  bhukti 500; dropped the `.wrap b/strong` rule). Charts stay normal
+  via the single `.chart-wrap svg text` override (covers baked library
+  bold). Browser-verified split: h1 500 / th 600 / lords 700 vs 88/88
+  SVG glyphs normal. Test repointed.
+- Gate: console 50/50 (no C++ change).
+
+### Session 158 — 2026-09-25 (Sun/Moon chart centers localized, Ravi)
+- Owner: chart-center words still English; Sun should read Ravi, not
+  Surya. Root cause: "Surya"/"Chandra" are not library varga names, so
+  get_varga_name passed them through raw in si/ta (only Latin tokens
+  left in si/ta charts besides intentional DOS glyphs). Fix in
+  console/jychart.py: _division_label() localizes before handing to the
+  library — Sun center is Ravi (sample/matrix convention, si රවි),
+  Moon center is Chandra (si චන්ද්‍ර). North takes no division label;
+  legacy <h3> titles untouched. Tests pin en/si centers.
+- Verified: si/ta charts contain zero Latin beyond Rv/Ch/… glyphs; en
+  shows Ravi + Chandra centers.
+- Gate: console 51/51 (no C++ change).
+
+### Session 159 — 2026-09-25 (Surya->Ravi everywhere + si/ta glyphs)
+- Owner: Sun reads Ravi (not Surya) everywhere; chart glyphs localized.
+- RENAME (owner-directed policy flip, explicit golden re-baseline):
+  src displayPlanet/dasaName/planetName/kendra label/CLI title,
+  Locale en DasaRavi + UiChartSun ("Ravi", "Ravi Chart"), gen_locales
+  ITEMS/VALUES + regen, console DISPLAY/DASA_DISPLAY/CHART_DEFS/kendra
+  map/jychart DIVISIONS, glossary 2 hand + 2 coded cells, C++ + console
+  test pins. Duplicate-en audit: PnameRavi/DasaRavi share si/ta
+  (රවි/சூரியன்), first-match resolution harmless. si/ta concept rows
+  kept (translator-owned).
+- GOLDENS: re-recorded via --record; all 3 files byte-identical modulo
+  the rename + column re-padding (proven by normalized diff) — zero
+  numeric drift. tests/corpus untouched (DOS engine keys already Ravi).
+- GLYPHS: jychart per-locale first-akshara sets (si single chars; ta
+  uses சந்/சனி — bare ச collided Chandra/Shani, caught by the new
+  distinctness test). DOS Latin stays in en. Terminal renderers
+  untouched (full names, CLI workstream later). Draft for review.
+- HTML report needed no change (already Ravi); its Sun center now
+  resolves through the renamed title. Verified si/ta charts carry zero
+  Latin beyond glyphs; browser-checked si glyph legibility.
+- Gate: console 52/52, ctest 26/26 zero warnings, VERIFY_ALL_GREEN.

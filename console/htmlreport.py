@@ -239,7 +239,7 @@ tbody td:first-child { color: var(--text); }
 }
 .chart-wrap { padding: .9rem; color: var(--text-dim); }
 .chart-wrap svg { width: 100%; height: auto; display: block; }
-.chart-wrap svg text { fill: var(--text); }
+.chart-wrap svg text { fill: var(--text); font-weight: normal; }
 .timeline { display: flex; flex-direction: column; gap: .5rem; }
 .note {
     font-size: .68rem; color: var(--text-faint);

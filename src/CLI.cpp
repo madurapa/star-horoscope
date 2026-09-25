@@ -499,7 +499,7 @@ int CLI::runBaselineModern() const {
             emit(modern::renderChartPair(cs.dvadasamsa, "Dvadasamsa Chart", cs.trimshamsa,
                                          "Trimshamsa Chart", W, col, config_.locale));
         if (show(11))
-            emit(modern::renderChartPair(cs.sun, "Surya Chart", cs.moon, "Chandra Chart", W, col,
+            emit(modern::renderChartPair(cs.sun, "Ravi Chart", cs.moon, "Chandra Chart", W, col,
                                          config_.locale));
     }
     if (show(14))

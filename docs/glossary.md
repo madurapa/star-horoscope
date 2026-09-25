@@ -85,10 +85,10 @@
 | Drekkana Chart | |
 | Dvadasamsa Chart | |
 | Trimshamsa Chart | |
-| Surya Chart | |
+| Ravi Chart | |
 | Chandra Chart | |
 | Lagna | |
-| Surya | |
+| Ravi | |
 | Chandra | |
 | Name | |
 | Born | |
@@ -142,7 +142,7 @@
 | --- | --- |
 | Lagna | |
 | Chandra | |
-| Surya | |
+| Ravi | |
 | Budha | |
 | Shukra | |
 | Kuja | |
@@ -215,7 +215,7 @@
 | --- | --- |
 | Ketu | |
 | Shukra | |
-| Surya | |
+| Ravi | |
 | Chandra | |
 | Kuja | |
 | Rahu | |

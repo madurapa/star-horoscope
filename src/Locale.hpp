@@ -443,7 +443,7 @@ struct TrRow {
         {"Saturday"},
         {"January"}, {"February"}, {"March"}, {"April"}, {"May"}, {"June"},
         {"July"}, {"August"}, {"September"}, {"October"}, {"November"}, {"December"},
-        {"Ketu"}, {"Shukra"}, {"Surya"}, {"Chandra"}, {"Kuja"}, {"Rahu"},
+        {"Ketu"}, {"Shukra"}, {"Ravi"}, {"Chandra"}, {"Kuja"}, {"Rahu"},
         {"Guru"}, {"Shani"}, {"Budha"},
         {"Asvida"}, {"Berana"}, {"Keti"}, {"Rehena"}, {"Muvasirasa"}, {"Ada"},
         {"Punavasa"}, {"Pushha"}, {"Aslisa"}, {"Maa"}, {"Puvapal"}, {"Utrapal"},
@@ -521,7 +521,7 @@ struct TrRow {
         {"TRISANSAKA"}, {"SOORYARASI"}, {"SANDURASI"},
         {"Hora Chart"}, {"Drekkana Chart"},
         {"Lagna Chart"}, {"Navamsa Chart"},
-        {"Dvadasamsa Chart"}, {"Trimshamsa Chart"}, {"Surya Chart"}, {"Chandra Chart"},
+        {"Dvadasamsa Chart"}, {"Trimshamsa Chart"}, {"Ravi Chart"}, {"Chandra Chart"},
         {"Yes"}, {"No"},
     };
     return k[static_cast<std::size_t>(c)];
