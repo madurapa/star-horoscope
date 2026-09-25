@@ -3400,3 +3400,18 @@ Gate: ctest 20/20 zero warnings.
   lean bundle proven Qt-free (13.3MB). Caught live bugs: dead
   `import pystar` in app.py, export_pdf/flag name shadowing.
 - Gate: console 63/63, gui 15/15, ctest 26/26.
+
+### Session 175 — 2026-09-25 (WS-F GUI freeze + WS-G demotion docs)
+- freeze-gui.spec: star-gui one-file (linux/win) + STAR Horoscope.app
+  BUNDLE on darwin (ad-hoc codesign, kAppVersion-sourced plist);
+  PySide6 kept (removed from excludes only here). 65MB Linux build,
+  --smoke green. gui/main.py --smoke now end-to-end (window +
+  baseline compute + PDF export).
+- release.yml freeze-gui job (22.04/mac/win, pystar build with
+  Windows Release config, smoke greps GUI_SMOKE_GREEN, mac dmg,
+  per-OS renames, auto-published via dist/). Release notes + README
+  Binaries list GUI artifacts.
+- WS-G: README reordered GUI-first with engine-as-oracle framing;
+  C++ --help gains the demotion epilog (output unpinned by tests).
+  Binary/docs still built + gated, nothing removed.
+- Gate: console 63/63, gui 15/15, ctest 26/26 zero warnings.

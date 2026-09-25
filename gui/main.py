@@ -19,8 +19,29 @@ from PySide6.QtWidgets import QApplication
 from gui.views import MainWindow
 
 
-def main() -> int:
-    app = QApplication(sys.argv)
+def main(argv=None) -> int:
+    argv = sys.argv if argv is None else argv
+    if "--smoke" in argv[1:]:
+        # CI/dev aid: construct the window, compute the baseline
+        # profile and export a PDF offscreen, proving Qt plugins,
+        # engine and print path resolve in the frozen bundle.
+        import os
+        import tempfile
+
+        os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+        app = QApplication([])
+        window = MainWindow()
+        window.show()
+        import services
+        from gui.pdf import export_pdf
+
+        doc = services.compute("Test User", 2000, 8, 17, 14, 5, 7)
+        assert doc["longitudes"]["Lagna"].startswith("239:")
+        with tempfile.TemporaryDirectory() as tmp:
+            export_pdf(doc, f"{tmp}/smoke.pdf")
+        print("GUI_SMOKE_GREEN")
+        return 0
+    app = QApplication(argv)
     window = MainWindow()
     window.show()
     return app.exec()

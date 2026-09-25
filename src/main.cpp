@@ -64,7 +64,10 @@ void printHelp() {
               << "  --color <auto|always|never>  Headings color (default: auto)\n"
               << "  --verify               Run checkpoint verification, exit non-zero on fail\n"
               << "  --config <file>        Load key=value config file first\n"
-              << "  --help, -h             Show this help\n";
+              << "  --help, -h             Show this help\n"
+              << "This binary is the headless engine: batch runs, JSON feed,\n"
+              << "and CI oracle. For the desktop app with HTML/PDF reports,\n"
+              << "see the star-gui downloads.\n";
 }
 
 }  // namespace

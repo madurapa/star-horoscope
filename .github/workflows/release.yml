@@ -173,6 +173,87 @@ jobs:
           name: ${{ matrix.artifact }}
           path: dist/${{ matrix.artifact }}
 
+  # Frozen Qt GUI: same engine/assets as freeze plus PySide6. macOS
+  # ships STAR Horoscope.app inside a dmg (one-file .app is blocked);
+  # Linux/Windows stay one-file. --smoke proves Qt plugins, engine
+  # and print path resolve in the bundle.
+  freeze-gui:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            artifact: star-gui-linux
+            exe: dist/star-gui
+            final: dist/star-gui-linux
+          - os: macos-latest
+            artifact: star-gui-macos.dmg
+            exe: dist/STAR Horoscope.app/Contents/MacOS/star-gui
+            final: dist/star-gui-macos.dmg
+          - os: windows-latest
+            artifact: star-gui-windows.exe
+            exe: dist/star-gui.exe
+            final: dist/star-gui-windows.exe
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Set up MSVC (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
+
+      - name: Install freeze deps
+        shell: bash
+        run: python -m pip install nanobind pyinstaller rich typer PySide6-Essentials
+
+      - name: Build pystar
+        shell: bash
+        run: |
+          PYEXE="$(python -c 'import sys; print(sys.executable)')"
+          cmake -S . -B pybuild -DSTAR_PYTHON=ON -DPython_EXECUTABLE="$PYEXE"
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cmake --build pybuild --target pystar --config Release
+          else
+            cmake --build pybuild --target pystar
+          fi
+
+      - name: Freeze GUI
+        shell: bash
+        run: |
+          STAR_PYBUILD=pybuild python -m PyInstaller console/freeze-gui.spec \
+            --distpath dist --workpath freeze-build --noconfirm
+
+      - name: Smoke-test frozen GUI
+        shell: bash
+        run: |
+          QT_QPA_PLATFORM=offscreen "${{ matrix.exe }}" --smoke | grep -q GUI_SMOKE_GREEN
+
+      - name: Build macOS disk image
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p dmg-root
+          cp -R "dist/STAR Horoscope.app" dmg-root/
+          ln -s /Applications dmg-root/
+          hdiutil create -volname "STAR Horoscope" -srcfolder dmg-root \
+            -ov -format UDZO "dist/star-gui-macos.dmg"
+          rm -rf dmg-root
+
+      - name: Rename binary (Linux/Windows)
+        if: runner.os != 'macOS'
+        shell: bash
+        run: mv "${{ matrix.exe }}" "${{ matrix.final }}"
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.final }}
+
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: build
@@ -195,5 +276,5 @@ jobs:
           else
             gh release create "${{ github.ref_name }}" dist/* \
               --title "${{ github.ref_name }}" \
-              --notes "Automated build of ${{ github.ref_name }} (see CHANGELOG.md). Linux (static binary), macOS (.dmg drag-to-Applications), Windows (MSVC exe, static CRT) — download and run, no install. star-report-* are the single-file horoscope app (terminal + self-contained HTML reports, no Python needed). Unsigned builds: macOS right-click > Open once; Windows SmartScreen > Run anyway."
+              --notes "Automated build of ${{ github.ref_name }} (see CHANGELOG.md). Desktop app: star-gui-* (forms, tables, charts, HTML/PDF export). Terminal: star-report-* (self-contained HTML reports, no Python needed). Engine: star_linux / star.dmg / star.exe (headless batch + CI oracle). Unsigned builds: macOS right-click > Open once; Windows SmartScreen > Run anyway."
           fi
