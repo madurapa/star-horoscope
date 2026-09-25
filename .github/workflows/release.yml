@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             binary: star_linux
             exe: modern_star
           - os: macos-latest
@@ -30,7 +30,7 @@ jobs:
             exe: modern_star.exe
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up MSVC (Windows)
         if: runner.os == 'Windows'
@@ -97,7 +97,7 @@ jobs:
         # info (.pdb, not uploaded); macOS is stripped pre-dmg above.
         run: strip "${{ matrix.binary }}"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.binary }}
           path: ${{ matrix.binary }}
@@ -105,12 +105,12 @@ jobs:
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v5
         with:
           path: dist
           merge-multiple: true

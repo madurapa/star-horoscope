@@ -3246,3 +3246,12 @@ Gate: ctest 20/20 zero warnings.
   copy-paste ready). No version pins anywhere (banner/footer excluded
   from goldens). Gate on release state: ctest 26/26 zero warnings,
   fresh-binary VERIFY_ALL_GREEN + v3.2.0 banner, console 52/52.
+
+### Session 163 — 2026-09-25 (CI warning fixes)
+- Owner: ubuntu-latest migration + Node 20 deprecation warnings on the
+  v3.2.0 tag build. release.yml: checkout/download/upload-artifact
+  v4->v5 (Node 24 runtimes, same inputs), ubuntu-latest->ubuntu-24.04
+  in both jobs (dodge the Oct 2026 runner migration; macos/windows
+  left floating, no warnings). ilammy/msvc-dev-cmd@v1 untouched
+  (latest major, unflagged). YAML parsed OK. Applies to future runs;
+  v3.2.0 artifacts already published.
