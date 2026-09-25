@@ -3476,3 +3476,13 @@ Gate: ctest 20/20 zero warnings.
   translation review, decision items (single binary, cert,
   notarization, console flash), ready items (GUI polish, release
   cut, CI watch), background threads.
+
+### Session 184 — 2026-09-25 (remove Windows-illegal junk files)
+- Windows CI checkout failed: invalid path
+  'console/<function export_pdf at ...>'. Root cause: the
+  export_pdf/flag shadowing bug (fixed by alias in Session 174)
+  created real files named str(function) during pre-fix test runs,
+  and `git add -A` committed two of them. Legal on Linux, fatal on
+  Windows checkouts. Removed both via git rm. Prevention: the
+  existing test_export_pdf_dev asserts the literal "wrote <path>"
+  output, which fails exactly this way on recurrence.
