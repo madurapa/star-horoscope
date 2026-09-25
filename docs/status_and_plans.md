@@ -3461,3 +3461,12 @@ Gate: ctest 20/20 zero warnings.
   exception process in the handoff do-not-touch section (Tier 1
   display words per the Surya→Ravi drill; Tier 2 engine strings
   need new evidence + legacy arbitration + re-baselining).
+
+### Session 182 — 2026-09-25 (handoff columns + tail recovery)
+- Owner: Marker first + Note column last in §0; port the practical
+  upshot paragraph. Restructure scripts mishandled section order and
+  dropped §1–§6 + notes mid-flight; caught by section audit and
+  rebuilt deterministically (§1–§5 regenerated from live tables,
+  §6/notes restored verbatim from git). Tail diffed vs history:
+  identical modulo blank lines. Lesson logged: file surgery needs
+  a section-inventory check before and after.
