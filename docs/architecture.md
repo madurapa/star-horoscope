@@ -1,9 +1,11 @@
 # Architecture Assessment: Cross-Platform Horoscope Application
 
-Status: proposed — pending owner decision. Analysis phase only; no
-implementation started. Three parallel deep-dives fed this (framework
-+ licensing, engines, PDF/packaging); load-bearing claims verified
-against the tree.
+Status: decided 2026-09-25 — PySide6 QWidgets; Qt-native dedicated
+print PDF (not WeasyPrint); CLI demoted to headless oracle (not
+deleted). Analysis phase only; no implementation started. Three
+parallel deep-dives fed this (framework + licensing, engines,
+PDF/packaging); load-bearing claims verified against the tree.
+Detailed plan: docs/qt_plan.md.
 
 ## A. Current architecture
 
@@ -145,7 +147,7 @@ Decided by project constraints, not generic preference:
         │ Reporting (reuse, extend — no rewrites)     │
         │  htmlreport.py (HTML export) · jychart SVGs │
         │  + Qt widget builders over the same doc     │
-        │  + WeasyPrint --export-pdf (lazy import)    │
+        │  + Qt print layout → QPdfWriter (dedicated) │
         └──────────────────────┬──────────────────────┘
                                │ star-horoscope/2 JSON (already the seam)
                 ┌──────────────▼───────────────┐
@@ -182,9 +184,11 @@ story survives.
    `gallery_items()`.
 5. **Tables + timeline views** over the same doc objects the HTML
    report uses.
-6. **PDF**: `render_report(pdf=True)` print variant (all-`open`
-   details, single-column charts, literalized colors) + WeasyPrint
-   lazy path + text-extraction golden tests.
+6. **PDF**: dedicated Qt print layout (`QTextDocument` tables/text
+   + `QPainter` + `QSvgRenderer` charts → `QPdfWriter`: single
+   column, expanded timeline, literal chart colors) + text-extraction
+   golden tests. (WeasyPrint evaluated and set aside: with Qt
+   accepted, native printing needs no extra system-dependency stack.)
 7. **Packaging per OS** in the existing `freeze` job shape, then
    macOS `.app`/notarization path.
 8. **Retire only when redundant**: the C++ binary stays as
@@ -198,8 +202,10 @@ story survives.
 2. **Qt bundle size/trust surface** — mitigated by versioned
    releases, pre-release VirusTotal scans, documented
    right-click-Open flow, cert costed later.
-3. **WeasyPrint native deps** — mitigated by lazy import,
-   per-OS CI smoke on clean runners + old-glibc container.
+3. **Print-layout fidelity drift** (dedicated layout vs screen/HTML
+   diverging) — mitigated by shared doc-level helpers, PDF-text
+   goldens, and one eyeball-reference PDF per release. (No Pango
+   stack: Qt-native printing keeps the dependency set at PySide6.)
 4. **Translator pipeline overload** — mitigated by routing all
    strings through `gen_locales` from day one, English-first with
    fallback.
@@ -221,9 +227,9 @@ story survives.
    branches, per-OS CI, and glibc-floor discipline. Budget
    packaging as a workstream (a Qt app multiplies it).
 
-## Open questions for the owner
+## Owner rulings 2026-09-25 (settled, do not relitigate)
 
-1. Qt Widgets accepted, ~40–120MB bundles?
-2. PDF fidelity bar: mirror of the HTML report, or clean print
-   variant (recommended)?
-3. CLI's fate: demote-to-oracle (recommended) or full removal?
+1. PySide6 / Qt Widgets — accepted (bundle size accepted).
+2. PDF — dedicated clean print layout (Qt-native, not HTML mirror).
+3. CLI — demote to headless/batch calculation and CI oracle (kept,
+   not deleted).

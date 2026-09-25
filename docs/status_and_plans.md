@@ -3319,3 +3319,12 @@ Gate: ctest 20/20 zero warnings.
   reporting layer, WeasyPrint PDF path, incremental migration;
   challenges CLI removal, TUI assumption, and portable-Python
   assumptions. Open questions on bundle size, PDF bar, CLI fate.
+
+### Session 169 — 2026-09-25 (Qt plan from decided architecture)
+- Owner rulings recorded: PySide6 QWidgets accepted; dedicated
+  Qt-native print PDF; CLI demoted to oracle. docs/architecture.md
+  updated to decided status (WeasyPrint set aside in E/G with
+  reasons). New docs/qt_plan.md: 8 workstreams (A consolidation →
+  B services → C shell → D views → E PDF → F packaging, G demotion
+  + H translators alongside), sequencing, test strategy, sizing.
+  plans.md gains Phase 6 pointer. No code touched.

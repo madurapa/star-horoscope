@@ -138,6 +138,11 @@ pointer to `NOTICE.md`).
 - Ayanamsa options, house systems (incl. Bhava decision §4.6), KP
   sub-lords; resolve the `kIstMeridianDeg = 82.5` artifact via asm first.
 
+### Phase 6 — Desktop GUI application (decided 2026-09-25)
+- PySide6 QWidgets; Qt-native dedicated print PDF; CLI demoted to
+  headless/batch + CI oracle (kept, not deleted). Decision record:
+  `docs/architecture.md`; detailed plan: `docs/qt_plan.md`.
+
 ## 4. Conflicts — OWNER RULINGS RECORDED 2026-09-19
 
 - **4.1 Privacy → FULL SYNTHETIC (ruling refined).** Baseline becomes a
