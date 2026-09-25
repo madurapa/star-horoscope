@@ -14,6 +14,30 @@ The pre-existing store (`src/locale_si.inc` / `src/locale_ta.inc`).
 Machine-drafted, never reviewed — the new batch in §1–§6 below
 joins this same queue. Promote row-by-row per the process above.
 
+## Do-not-touch list (frozen keys and strings)
+
+These are data, not language. Correcting their spelling breaks
+engines, goldens, or the JSON API. They never enter review:
+
+- Engine planet keys (exact case): Lagna, Chandra, Ravi, Budha,
+  Sikuru, Kuja, Guru, Shani, Raahu, Kethu, Urenus, Neptune, Pluto
+- Engine aliases: Sandu, Chadra, Rav1, Urenes, Neptun, Pluuto,
+  Rahu/Ketu as engine keys (display forms are separate concepts)
+- DOS-literal screen strings: NRAYANA, MATHARA, Siderial,
+  PARAMAUSHA, DESHKANA, Dvadasansa, TRISANSAKA, SOORYARASI,
+  SANDURASI, LAGNA, NAVAMSAKA, HORA, "Colombo (Thathkala default)"
+  and "\"Thatkala Kendra\"" spellings as emitted (sic), "Manual entry"
+- JSON document keys (`schema`, `version`, `longitudes`, …) —
+  frozen by `docs/json_schema.md`
+- Concept IDs (`RasiMesha`, `DasaRavi`, …) and the English column
+  of every row (tests pin it; English fixes go through the
+  maintainer per the checklist in chat, never via translation)
+- `*` and `#` markers inside words (intentional, see glossary)
+
+If a frozen string looks wrong to you, flag it in a NOTE instead —
+the maintainer verifies against the original program first
+(fidelity contract: reproducing the original is deliberate).
+
 ## For the translator (how to return corrections)
 
 - Work on a **copy** of this file — never on code. For each wrong
@@ -30,6 +54,23 @@ joins this same queue. Promote row-by-row per the process above.
   `src/locale_si.inc` / `src/locale_ta.inc`, regenerate, gate,
   and commit. This file is a snapshot — it is regenerated, not
   edited in place.
+
+## For the maintainer (verify against git history after editing)
+
+Never commit transcription blind. After applying corrections:
+
+1. `git diff --stat` — expect only the two locale files (plus
+   regenerated artifacts below). Anything else is a red flag.
+2. `git diff src/locale_si.inc src/locale_ta.inc` — read every
+   hunk: only si/ta script cells, romanized cells, and
+   `Draft`→`Reviewed` flips may change. **Zero hunks may touch
+   an English cell or a Concept ID** (that means a frozen key
+   moved — stop and investigate).
+3. Regenerate and re-diff: `tools/gen_locales.py` (expect only
+   the translated rows to change in `console/i18n.py`),
+   `tools/dump_glossary.cpp` if a coded table shifted.
+4. Full gate green (ctest + pytest + `--verify` + `locales_check`),
+   then commit with the reviewer's name in the message.
 
 | Concept | English | Sinhala | Tamil |
 | --- | --- | --- | --- |

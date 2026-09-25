@@ -3438,3 +3438,11 @@ Gate: ctest 20/20 zero warnings.
   to docs/translator_handoff.md (work on a copy, English frozen,
   marker/status conventions, §6 needs fresh translations, snapshot
   regenerated not edited).
+
+### Session 179 — 2026-09-25 (handoff: frozen list + git check)
+- Owner: mark untouchables + document history comparison.
+  docs/translator_handoff.md gains a do-not-touch list (engine
+  keys/aliases, DOS literals, JSON keys, Concept IDs, English
+  column, markers) and a maintainer checklist (diff stat, hunk
+  review with zero-English-change rule, regen re-diff, gate).
+  Fixed own Columbo typo on the spot.
