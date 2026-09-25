@@ -142,9 +142,17 @@ A rich full-width console pilot lives in `console/` (needs the
 ```bash
 PYTHONPATH=/tmp/star-py:console python3.13 console/app.py \
   --name "Test User" --year 2000 --month 8 --day 17 \
-  --hour 14 --minute 5 --city 7
+  --hour 14 --minute 5 --city 7 --export-html /tmp/report.html
 python3.13 -m pytest console/ -q
 ```
+
+`--export-html FILE` writes a self-contained horoscope report
+(embedded Noto Sans Sinhala, inline zodiac art, 8 divisional charts,
+collapsible dasa timeline) — double-clickable in any browser, no
+server. `--locale en|si|ta` localizes it; `--chart east|north|south`
+picks the chart style (east default); `--dasa LORD|all` controls
+Antardasa detail. (The native binary has no HTML flag:
+`--format text|json` only.)
 
 Compare like with like: `--engine dos` reproduces the original
 program's dates, `--engine swisseph` (default everywhere) uses

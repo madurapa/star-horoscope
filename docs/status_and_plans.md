@@ -3230,3 +3230,12 @@ Gate: ctest 20/20 zero warnings.
   all 12 distinct per locale, Draft for review); short=True now
   applies to every locale. Verified ගතවූ 2010 ජූනි / கடந்த 2010 ஜூன்.
 - Gate: console 52/52 (no C++ change).
+
+### Session 161 — 2026-09-25 (README documents --export-html)
+- Owner: is the HTML flag documented? Yes, --export-html FILE lives in
+  star-console (app.py, kept working through the refactor — charts now
+  auto-generated); the native binary has no HTML flag. It was never in
+  README, so added a console-pilot paragraph (self-contained report,
+  locale/chart/dasa options). No Requirements change (in-repo assets,
+  no new deps). Verified app.py compiles; generation path is the
+  tested render_report().
