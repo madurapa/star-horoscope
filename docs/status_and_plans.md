@@ -3300,3 +3300,11 @@ Gate: ctest 20/20 zero warnings.
   Proven locally with a relative build dir (13MB binary, export
   byte-identical modulo the version footer). Bonus confirmation:
   setup-python@v6 works on CI runners.
+
+### Session 167 — 2026-09-25 (Windows freeze fix: Release config)
+- CI Windows failed: D8016 '/O2' vs '/RTC1' — freeze job built the
+  default Debug config while the project forces /O2 (the build job
+  already knew this: --config Release). Freeze now mirrors it on
+  Windows only. Same root cause class, second half: multi-config
+  generators drop pystar*.pyd into pybuild/Release/, so freeze.spec
+  globs that subdir too (proven with a fake tree).

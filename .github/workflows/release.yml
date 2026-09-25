@@ -143,7 +143,13 @@ jobs:
         run: |
           PYEXE="$(python -c 'import sys; print(sys.executable)')"
           cmake -S . -B pybuild -DSTAR_PYTHON=ON -DPython_EXECUTABLE="$PYEXE"
-          cmake --build pybuild --target pystar
+          # Windows generators are multi-config: Debug's /RTC1 clashes
+          # with the project's /O2, so build Release like the build job.
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cmake --build pybuild --target pystar --config Release
+          else
+            cmake --build pybuild --target pystar
+          fi
 
       - name: Freeze
         shell: bash

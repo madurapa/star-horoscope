@@ -20,6 +20,8 @@ if not os.path.isabs(pybuild):
 
 ext = glob.glob(os.path.join(pybuild, "pystar*.so"))
 ext += glob.glob(os.path.join(pybuild, "pystar*.pyd"))
+# Multi-config generators (Visual Studio) land the module in Release/.
+ext += glob.glob(os.path.join(pybuild, "Release", "pystar*.pyd"))
 assert ext, "no pystar extension in %s (build with -DSTAR_PYTHON=ON)" % pybuild
 binaries = [(ext[0], ".")]
 
