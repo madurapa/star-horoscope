@@ -85,6 +85,24 @@ _MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
                 'July', 'August', 'September', 'October', 'November',
                 'December']
 
+# Short month forms for the timeline (sample style). English uses the
+# standard 3-letter abbreviations; si/ta shorts are first-syllable
+# truncations — Draft for translator review.
+EXTRA_MONTHS_SHORT = {
+    'January': ('Jan', 'ජන', 'ஜன'),
+    'February': ('Feb', 'පෙබ', 'பிப்'),
+    'March': ('Mar', 'මාර්', 'மார்'),
+    'April': ('Apr', 'අප්‍රේ', 'ஏப்'),
+    'May': ('May', 'මැයි', 'மே'),
+    'June': ('Jun', 'ජූනි', 'ஜூன்'),
+    'July': ('Jul', 'ජූලි', 'ஜூலை'),
+    'August': ('Aug', 'අගෝ', 'ஓக்'),
+    'September': ('Sep', 'සැප්', 'செப்'),
+    'October': ('Oct', 'ඔක්', 'அக்'),
+    'November': ('Nov', 'නොවැ', 'நவ'),
+    'December': ('Dec', 'දෙසැ', 'டிச'),
+}
+
 # Report display names missing from i18n.VALUES['planets'] (which keys
 # modern display strings): english -> (si, ta). Translations reuse the
 # canonical concept rows (DasaRavi, PnameUrenus, ...).
@@ -147,18 +165,27 @@ def tr_avastha(text, locale):
 def tr_month(iso_date, locale, short=False):
     """Localized month name for an ISO date (YYYY-MM-DD).
 
-    short=True gives the sample-style 3-letter form in English
-    (Jun); si/ta keep full names (no canonical abbreviations exist).
+    short=True gives the sample-style short form in every locale
+    (Jun / ජූනි are already short; longer names abbreviate).
     """
     try:
         name = _MONTH_NAMES[int(iso_date[5:7]) - 1]
     except (ValueError, IndexError):
         return ""
+    if short:
+        row = EXTRA_MONTHS_SHORT.get(name)
+        if row:
+            if locale == "si":
+                return row[1]
+            if locale == "ta":
+                return row[2]
+            return row[0]
+        return name[:3]
     if locale in ("si", "ta"):
         row = EXTRA_MONTHS.get(name)
         if row:
             return row[0] if locale == "si" else row[1]
-    return name[:3] if short else name
+    return name
 
 
 _TITHI_RE = re.compile(r"^\s*(Pura|Ava)?\s*-?\s*(\S.*?)\s*-?\s*(\d+)\s*$")

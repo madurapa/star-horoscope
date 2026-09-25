@@ -112,7 +112,7 @@ def test_charts_autogenerate_eight_cards():
 
 def test_sinhala_chrome_and_values():
     from i18n import tr, trv
-    from report_l10n import EXTRA_AVASTHA, EXTRA_MONTHS, EXTRA_STRINGS
+    from report_l10n import EXTRA_AVASTHA, EXTRA_STRINGS
 
     html = _report(locale="si")
     for en in ["Panchanga", "Hora", "Chakra", "Nakshatra", "Nakshatra Pada",
@@ -132,7 +132,8 @@ def test_sinhala_chrome_and_values():
     assert trv("Ratnapura", "si", "cities") in html
     assert trv("Guru", "si", "planets") in html
     assert EXTRA_AVASTHA["Bhojana"][0] in html  # avastha column
-    assert EXTRA_MONTHS["June"][0] in html  # timeline month after year
+    from report_l10n import EXTRA_MONTHS_SHORT
+    assert EXTRA_MONTHS_SHORT["June"][1] in html  # short timeline month
     for en in ["Nirayana", "SI", "East"]:  # masthead values translated
         assert EXTRA_STRINGS[en][0] in html, en
     assert "Nirayana" not in html and ">East<" not in html
@@ -149,7 +150,7 @@ def test_sinhala_chrome_and_values():
 
 def test_tamil_chrome_and_values():
     from i18n import tr, trv
-    from report_l10n import EXTRA_AVASTHA, EXTRA_MONTHS, EXTRA_STRINGS
+    from report_l10n import EXTRA_AVASTHA, EXTRA_STRINGS
 
     html = _report(locale="ta")
     for en in ["Panchanga", "Hora", "Chakra",
@@ -164,7 +165,8 @@ def test_tamil_chrome_and_values():
     assert trv("Mesha", "ta", "rasis") in html
     assert trv("Guru", "ta", "planets") in html
     assert EXTRA_AVASTHA["Bhojana"][1] in html
-    assert EXTRA_MONTHS["June"][1] in html
+    from report_l10n import EXTRA_MONTHS_SHORT
+    assert EXTRA_MONTHS_SHORT["June"][2] in html  # short timeline month
     for en in ["Nirayana", "TA", "East"]:
         assert EXTRA_STRINGS[en][1] in html, en
     assert "Shadvarga Matrix" not in html

@@ -3223,3 +3223,10 @@ Gate: ctest 20/20 zero warnings.
   resolves through the renamed title. Verified si/ta charts carry zero
   Latin beyond glyphs; browser-checked si glyph legibility.
 - Gate: console 52/52, ctest 26/26 zero warnings, VERIFY_ALL_GREEN.
+
+### Session 160 — 2026-09-25 (short timeline months in si/ta)
+- Owner: timeline needs short months in Sinhala/Tamil too. Added
+  EXTRA_MONTHS_SHORT (en 3-letter + first-syllable si/ta truncations,
+  all 12 distinct per locale, Draft for review); short=True now
+  applies to every locale. Verified ගතවූ 2010 ජූනි / கடந்த 2010 ஜூன்.
+- Gate: console 52/52 (no C++ change).
