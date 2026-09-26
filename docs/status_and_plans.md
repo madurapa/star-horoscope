@@ -3531,3 +3531,11 @@ Gate: ctest 20/20 zero warnings.
   translator docs). No version pins anywhere; banner verified.
 - Gate on release state: ctest 26/26 zero warnings, fresh-binary
   VERIFY_ALL_GREEN + v3.3.0 banner, console 63/63, gui 15/15.
+
+### Session 190 — 2026-09-25 (CI waste: paths + concurrency)
+- Owner: are we wasting GitHub resources on every push? Yes —
+  doc-only pushes ran the full 9-job matrix. release.yml now:
+  `changes` job (dorny/paths-filter) gates build/freeze jobs by
+  touched paths (tags always build everything); concurrency cancels
+  superseded runs (never tags). Also fixed a latent race: release
+  only needed `build` but publishes freeze artifacts too.
