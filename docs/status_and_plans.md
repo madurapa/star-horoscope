@@ -3496,3 +3496,11 @@ Gate: ctest 20/20 zero warnings.
 - Aside: this box reaps /tmp aggressively (dist dirs vanished
   mid-session twice); build outputs now go to ~/star-fdist.
 - Gate: console green (spec-only change); true proof is the CI rerun.
+
+### Session 186 — 2026-09-25 (EGL runtime preload fallback)
+- CI still missing libEGL at smoke despite bundling: suspected
+  loader-path gap on minimal images. Added console/pyi_rth_egl.py
+  runtime hook (wired in freeze-gui.spec): system GL first
+  (proprietary drivers untouched), else dlopen bundled copies by
+  absolute path with RTLD_GLOBAL (no search involved). Verified in
+  bundle + smoke green locally; CI minimal image is the real test.

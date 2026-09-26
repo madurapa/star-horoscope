@@ -93,7 +93,7 @@ a = Analysis(
     hiddenimports=hiddenimports,
     hookspath=[],
     hooksconfig={},
-    runtime_hooks=[],
+    runtime_hooks=[os.path.join(ROOT, "console", "pyi_rth_egl.py")],
     excludes=excludes,
     noarchive=False,
 )
