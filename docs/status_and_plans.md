@@ -3504,3 +3504,13 @@ Gate: ctest 20/20 zero warnings.
   (proprietary drivers untouched), else dlopen bundled copies by
   absolute path with RTLD_GLOBAL (no search involved). Verified in
   bundle + smoke green locally; CI minimal image is the real test.
+
+### Session 187 — 2026-09-25 (preload order + fontconfig)
+- CI still missing libEGL with the hook live: root cause was
+  preload ORDER — libEGL/libGLESv2 link libGLdispatch, which loaded
+  last, so every CDLL failed into the silent swallow (worked
+  locally only via system GLdispatch). Deps-first order now, and
+  the swallow reports iff EGL/GLESv2 both fail (Qt-fatal case).
+- Preempted the next missing libs the same way: fontconfig +
+  freetype bundled (libxkbcommon precedent). All verified
+  in-bundle; smoke green, no hook noise on healthy systems.

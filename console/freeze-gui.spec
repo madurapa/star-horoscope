@@ -41,7 +41,8 @@ if sys.platform == "linux":
             check=False).stdout
     except OSError:
         _ldconfig = ""
-    for _lib in ("EGL", "GLESv2", "GL", "GLdispatch"):
+    for _lib in ("EGL", "GLESv2", "GL", "GLdispatch", "fontconfig",
+                 "freetype"):
         _soname = ctypes.util.find_library(_lib) or ""
         _path = ""
         for _line in _ldconfig.splitlines():
@@ -49,7 +50,7 @@ if sys.platform == "linux":
                 _path = _line.split("=>", 1)[1].strip()
                 break
         if _path and os.path.isfile(_path):
-            print(f"bundling system GL lib: {_path}")
+            print(f"bundling system lib: {_path}")
             binaries.append((_path, "."))
         else:
             print(f"WARNING: system GL lib not found: {_lib} ({_soname})")
