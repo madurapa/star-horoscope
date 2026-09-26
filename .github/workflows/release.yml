@@ -208,6 +208,12 @@ jobs:
         with:
           arch: amd64
 
+      - name: Install system GL/font libs (Linux)
+        # The frozen GUI bundles these for minimal end-user systems;
+        # they must exist on the BUILD host for ldconfig to find them.
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libegl1 libgl1 libfontconfig1 libfreetype6
+
       - name: Install freeze deps
         shell: bash
         run: python -m pip install nanobind pyinstaller rich typer PySide6-Essentials

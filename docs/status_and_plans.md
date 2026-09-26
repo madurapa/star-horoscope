@@ -3514,3 +3514,11 @@ Gate: ctest 20/20 zero warnings.
 - Preempted the next missing libs the same way: fontconfig +
   freetype bundled (libxkbcommon precedent). All verified
   in-bundle; smoke green, no hook noise on healthy systems.
+
+### Session 188 — 2026-09-25 (CI needs mesa to bundle mesa)
+- CI still missing libEGL with hook+bundling live, and the empty
+  diagnostic proved the files were never IN the CI bundle: the
+  minimal image has no mesa for ldconfig to find. freeze-gui now
+  apt-installs libegl1/libgl1/libfontconfig1/libfreetype6 on Linux
+  before freezing (build-host prerequisite, like setup-python).
+  Hook diagnostics now also report unbundeled-absent files.

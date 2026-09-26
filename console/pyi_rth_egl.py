@@ -28,6 +28,7 @@ def _rth_egl():
     for _lib in _BUNDLED:
         _path = os.path.join(sys._MEIPASS, _lib)
         if not os.path.isfile(_path):
+            problems.append(f"{_lib}: not bundled")
             continue
         try:
             ctypes.CDLL(_path, mode=ctypes.RTLD_GLOBAL)
