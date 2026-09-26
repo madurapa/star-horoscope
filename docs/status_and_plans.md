@@ -3522,3 +3522,12 @@ Gate: ctest 20/20 zero warnings.
   apt-installs libegl1/libgl1/libfontconfig1/libfreetype6 on Linux
   before freezing (build-host prerequisite, like setup-python).
   Hook diagnostics now also report unbundeled-absent files.
+
+### Session 189 — 2026-09-25 (v3.3.0 release)
+- Owner: release with version bump for the GUI work (minor per
+  policy: additive, nothing breaks — not 4.0). kAppVersion 3.3.0,
+  CHANGELOG + releases.md entries (25 commits since 3.2.0: Qt
+  shell/views/PDF, services, binding geo, freeze specs + CI,
+  translator docs). No version pins anywhere; banner verified.
+- Gate on release state: ctest 26/26 zero warnings, fresh-binary
+  VERIFY_ALL_GREEN + v3.3.0 banner, console 63/63, gui 15/15.

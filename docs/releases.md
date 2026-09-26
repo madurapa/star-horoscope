@@ -8,6 +8,28 @@ at the top of every release.
 
 ---
 
+## v3.3.0
+
+### Desktop GUI, print PDF, single-file binaries
+
+The headless engine gains two download-and-run companions — no
+Python, no installs. The C++ binary stays as batch/CI oracle.
+
+- **STAR Horoscope app** (`star-gui-*`): validated profile form,
+  tabbed results with tables and chart gallery, HTML + print-PDF
+  export, en/si/ta throughout.
+- **Report app** (`star-report-*`): terminal tables plus the
+  self-contained HTML report and print PDF.
+- Services shared by both: mirrored validation, manual
+  coordinates, Thathkala mode, localized timelines.
+- Linux/macOS/Windows builds, each smoke-tested in CI (compute +
+  export + GUI launch).
+
+Full changelog: CHANGELOG.md. Provenance: NOTICE.md.
+License: GNU AGPL-3.0 (see LICENSE).
+
+---
+
 ## v3.2.0
 
 ### Report redesign, Ravi everywhere, localized charts

@@ -4,6 +4,28 @@ Version policy: patch = fixes/docs, minor = features. `kAppVersion` in
 `src/ModernRenderer.hpp` is authoritative; tests pin the constant, never
 the literal.
 
+## 3.3.0
+
+- Qt desktop GUI: validated profile form (geo/thathkala toggles),
+  tabbed results (summary, Shadvarga Matrix, houses, dasa
+  timeline, 8-chart gallery), stacked navigation — all views share
+  `console/services.py` with the terminal (new: validation mirror,
+  compute, timeline/matrix/hero row builders, zodiac assets).
+- `pystar` gains manual geo (`lat_deg/lat_min/lon_deg/lon_min`)
+  and `thathkala`; console adds matching flags + interactive
+  prompts + `--export-pdf` (dedicated Qt print layout: A4
+  landscape, vector charts, localized short months).
+- Single-file binaries: `star-report` (13MB console) and `star-gui`
+  (Qt, ~65MB) via PyInstaller, CI-built for Linux/macOS/Windows
+  with frozen smoke gates (compute + export + GUI launch); system
+  GL/font libs bundled for minimal distros.
+- Console display/chart spellings consolidated to one source
+  (`display_names.py`); `.idea/` untracked; whole-tree typo sweep
+  (DOS literals, locale data, goldens untouched).
+- Translator handoff: `docs/translator_handoff.md` (all 363
+  concepts, still all Draft, plus new strings, frozen-keys list,
+  and the promotion/verification process).
+
 ## 3.2.0
 
 - HTML report redesigned to the sample layout: hero (birth line +
